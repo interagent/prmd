@@ -1,0 +1,102 @@
+## <%= title %>
+<%= schema['description'] %>
+
+<%- if schema['properties'] %>
+### Attributes
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Description</th>
+    <th>Example</th>
+  </tr>
+  <%- extract_attributes(schema['properties']).each do |(key, type, description, example)| %>
+  <tr>
+    <td><strong><%= key %></strong></td>
+    <td><em><%= type %></em></td>
+    <td><%= description %></td>
+    <td><%= example %></td>
+  </tr>
+  <%- end %>
+</table>
+
+<%- end %>
+<%- schema['links'].each do |link, datum| %>
+<%- path = link['href'].gsub(%r|(\{\([^\)]+\)\})|) do |ref|
+  ref = ref.gsub('%2F', '/').gsub('%23', '#').gsub(%r|[\{\(\)\}]|, '')
+  resource = ref.split('#').first.split('/').last.gsub('-', '_')
+  property = ref.split('#').last.split('/').last
+  '{' + resource + '_' + property + '}'
+end
+-%>
+### <%= title %> <%= link['title'] %>
+<%= link['description'] %>
+
+```
+<%= link['method'] %> <%= path %>
+```
+
+<%- if link.has_key?('schema') && link['schema'].has_key?('properties') %>
+<%-
+  required, optional = link['schema']['properties'].partition do |k, v|
+    (link['schema']['required'] || []).include?(k)
+  end.map { |partition| Hash[partition] }
+%>
+<%- unless required.empty? %>
+#### Required Parameters
+<%= Erubis::Eruby.new(params_template).result(params: required) %>
+
+<%- end %>
+<%- unless optional.empty? %>
+#### Optional Parameters
+<%= Erubis::Eruby.new(params_template).result(params: optional) %>
+<%- end %>
+<%- end %>
+
+#### Curl Example
+```term
+$ curl -n -X <%= link['method'] %> https://api.heroku.com<%= path.gsub(/{([^}]*)}/) {|match| '$' + match.gsub(/[{}]/, '').gsub('-', '_').upcase} %><%- if link.has_key?('schema') && (link['schema'].has_key?('properties') || link['schema'].has_key?('example')) %> \
+-H "Content-Type: application/json" \
+<%-
+  data = {}
+  if link['schema']['properties']
+    link['schema']['properties'].each do |key, value|
+      unless value.has_key?('anyOf')
+        data[key] = value['example']
+      else
+        id_ref = value['anyOf'].detect {|ref| ref['$ref'].split('/').last == 'id'}
+        data[key] = dereference(id_ref)['example']
+      end
+    end
+  else
+    data.merge!(link['schema']['example'])
+  end
+%>
+-d <%= data.to_json.inspect %>
+<%- else %>
+
+<%- end %>
+```
+
+#### Response Example
+```
+HTTP/1.1 <%= case link['rel']
+when 'create'
+  '201 Created'
+else
+  '200 OK'
+end %>
+<%- if link['rel'] == 'instances' && identifiers %>
+Accept-Range: <%= identifiers.join(', ') %>
+Content-Range: id 01234567-89ab-cdef-0123-456789abcdef..01234567-89ab-cdef-0123-456789abcdef; max=200
+<%- end %>
+```
+```javascript```
+<%- if link['rel'] == 'instances' %>
+<%= JSON.pretty_generate([serialization]) %>
+<%- else %>
+<%= JSON.pretty_generate(serialization) %>
+<%- end %>
+```
+
+<%- end -%>
