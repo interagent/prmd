@@ -10,7 +10,7 @@
     <th>Description</th>
     <th>Example</th>
   </tr>
-  <%- extract_attributes(schema['properties']).each do |(key, type, description, example)| %>
+  <%- extract_attributes(schemata, schema['properties']).each do |(key, type, description, example)| %>
   <tr>
     <td><strong><%= key %></strong></td>
     <td><em><%= type %></em></td>
@@ -44,12 +44,12 @@ end
 %>
 <%- unless required.empty? %>
 #### Required Parameters
-<%= Erubis::Eruby.new(params_template).result(params: required) %>
+<%= Erubis::Eruby.new(params_template).result(params: required, schemata: schemata) %>
 
 <%- end %>
 <%- unless optional.empty? %>
 #### Optional Parameters
-<%= Erubis::Eruby.new(params_template).result(params: optional) %>
+<%= Erubis::Eruby.new(params_template).result(params: optional, schemata: schemata) %>
 <%- end %>
 <%- end %>
 
@@ -65,7 +65,7 @@ $ curl -n -X <%= link['method'] %> https://api.heroku.com<%= path.gsub(/{([^}]*)
         data[key] = value['example']
       else
         id_ref = value['anyOf'].detect {|ref| ref['$ref'].split('/').last == 'id'}
-        data[key] = dereference(id_ref)['example']
+        data[key] = dereference(schemata, id_ref)['example']
       end
     end
   else
