@@ -2,15 +2,23 @@
 
 require 'prmd'
 
-command, path = ARGV[0], ARGV[1] || ''
+command = ARGV[0]
 
-if File.directory?(path)
-  directory = path
-elsif File.exists?(path)
-  schema = JSON.parse(File.read(path))
-else
-  schema = {}
+def directory
+  if File.directory?(ARGV[1])
+    ARGV[1]
+  end
 end
+
+def schema
+  if File.exists?(ARGV[1])
+    JSON.parse(File.read(ARGV[1]))
+  else
+    {}
+  end
+end
+
+command = ARGV[0]
 
 case command
 when 'combine'
@@ -18,7 +26,7 @@ when 'combine'
 when 'doc'
   Prmd.doc(directory)
 when 'init'
-  Prmd.init(path)
+  Prmd.init(ARGV[1], ARGV[2])
 when 'verify'
   Prmd.verify(schema)
 end
