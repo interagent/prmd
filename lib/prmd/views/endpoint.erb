@@ -72,7 +72,7 @@ $ curl -n -X <%= link['method'] %> https://api.heroku.com<%= path.gsub(/{([^}]*)
     data.merge!(link['schema']['example'])
   end
 %>
--d <%= data.to_json.inspect %>
+-d '<%= data.to_json %>'
 <%- else %>
 
 <%- end %>
