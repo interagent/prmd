@@ -28,5 +28,13 @@ when 'doc'
 when 'init'
   Prmd.init(ARGV[1], ARGV[2])
 when 'verify'
-  Prmd.verify(schema)
+  if directory
+    Dir.glob(File.join(directory, '**/*.json')).each do |path|
+      puts(path)
+      Prmd.verify(JSON.parse(File.read(path)))
+      puts
+    end
+  else
+    Prmd.verify(schema)
+  end
 end

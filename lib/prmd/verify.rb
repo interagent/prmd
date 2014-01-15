@@ -27,15 +27,15 @@ module Prmd
     end
 
     if schema['links']
-      schema['links'].each do |key, value|
+      schema['links'].each do |link|
         missing_requirements = []
         %w{description href method rel title}.each do |requirement|
-          unless expanded['links'][key].has_key?(requirement)
+          unless link.has_key?(requirement)
             missing_requirements << requirement
           end
         end
         unless missing_requirements.empty?
-          errors << "`#{key}` link missing fields: #{missing_requirements.join(', ')}"
+          errors << "`#{link}` link missing fields: #{missing_requirements.join(', ')}"
         end
       end
     end
