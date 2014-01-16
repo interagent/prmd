@@ -15,9 +15,16 @@ module Prmd
     if schema['definitions']
       schema['definitions'].each do |key, value|
         missing_requirements = []
-        %w{description example readOnly type}.each do |requirement|
+        %w{description readOnly type}.each do |requirement|
           unless schema['definitions'][key].has_key?(requirement)
             missing_requirements << requirement
+          end
+        end
+        # check for example, unless they are nested in array/object
+        type = schema['definitions'][key]['type']
+        unless type.nil? || type.include?('array') || type.include?('object')
+          unless schema['definitions'][key].has_key?('example')
+            missing_requirements << 'example'
           end
         end
         unless missing_requirements.empty?
