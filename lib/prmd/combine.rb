@@ -34,6 +34,11 @@ module Prmd
       schemata[id] = data
     end
 
+    meta_path = File.join(Dir.pwd, 'meta.json')
+    if File.exists?(meta_path)
+      schema.merge!(JSON.parse(File.read(meta_path)))
+    end
+
     schema_path = 'schema.json'
 
     old_json = if File.exists?(schema_path)

@@ -5,12 +5,18 @@ module Prmd
       'definitions' => {},
       'links'       => [],
       'properties'  => {},
+      'title'       => '...',
       'type'        => ['object']
     }
 
+    meta_path = File.join(Dir.pwd, 'meta.json')
+    if File.exists?(meta_path)
+      schema.merge!(JSON.parse(File.read(meta_path)))
+    end
+
     if resource
       schema['id']    = "schema/#{resource}"
-      schema['title'] = "... - #{resource[0...1].upcase}#{resource[1..-1]}"
+      schema['title'] = "#{schema['title']} - #{resource[0...1].upcase}#{resource[1..-1]}"
       schema['links'] = [
         {
           "description" => "Create a new #{resource}.",
