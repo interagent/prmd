@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'prmd'
+require(File.join(File.dirname(__FILE__), '..', 'lib', 'prmd'))
 
 command = ARGV[0]
 
