@@ -11,7 +11,7 @@ def directory
 end
 
 def schema
-  if File.exists?(ARGV[1])
+  if !File.directory?(ARGV[1]) && File.exists?(ARGV[1])
     JSON.parse(File.read(ARGV[1]))
   else
     {}
