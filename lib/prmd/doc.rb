@@ -1,9 +1,14 @@
 def dereference(schemata, data)
   if data.has_key?('$ref')
-    schema_id, key = data['$ref'].split('#')
-    schema_id = schema_id.gsub(%r{^/}, '') # drop leading slash if one exists
-    definition = key.gsub('/definitions/', '')
-    schemata[schema_id]['definitions'][definition]
+    begin
+      schema_id, key = data['$ref'].split('#')
+      schema_id = schema_id.gsub(%r{^/}, '') # drop leading slash if one exists
+      definition = key.gsub('/definitions/', '')
+      schemata[schema_id]['definitions'][definition]
+    rescue => error
+      $stderr.puts("Failed to dereference #{data}")
+      raise(error)
+    end
   else
     expand_references(schemata, data)
   end
