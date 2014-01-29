@@ -38,7 +38,7 @@ prmd verify $DIRECTORY
 prmd verify $SCHEMA
 ```
 
-Doc takes the path to a directory of schemas and outputs their documentation into a schema.md file in the current directory.
+Doc takes the path to a directory of schemas and outputs their documentation to stdout.
 
 ```
 prmd doc $DIRECTORY
