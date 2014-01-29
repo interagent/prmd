@@ -1,6 +1,6 @@
 # Prmd
 
-schema to rule them all
+`prmd` helps you manage your JSON schemas. It'll generate schemas from templates, combine schemas, verify schemas, and generate Markdown docs for them.
 
 ## Installation
 
