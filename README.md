@@ -18,7 +18,7 @@ Or install it yourself as:
 
 ## Usage
 
-Init takes a path as it's first argument and optionally a resource as it's second argument and generates a new schema file at that path (generically or using the resource name provided).
+Init takes a path as its first argument and optionally a resource as its second argument and generates a new schema file at that path (generically or using the resource name provided).
 
 ```
 prmd init $DIRECTORY
