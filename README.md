@@ -26,7 +26,7 @@ Or install it yourself as:
 
 ## Usage
 
-Combine takes the path to a directory of schemas and combines them into a schema.json file in the current directory.
+Combine takes the path to a directory of schemas and combines them into a schema.json file in the current directory. If a meta.json file exists, it will also be combined to override defaults/metadata.
 
 ```
 prmd combine $DIRECTORY
@@ -38,7 +38,7 @@ Doc takes the path to a directory of schemas and outputs their documentation int
 prmd doc $DIRECTORY
 ```
 
-Init takes a path as it's first argument and optionally a resource as it's second argument and generates a new schema file at that path (generically or using the resource name provided).
+Init takes a path as it's first argument and optionally a resource as it's second argument and generates a new schema file at that path (generically or using the resource name provided). If a meta.json file exists, it will override defaults/metadata in initialized file.
 
 ```
 prmd init $DIRECTORY
