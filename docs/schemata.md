@@ -1,0 +1,162 @@
+# schemata
+This document seeks to explain JSON schema in practice as well as our usage and associated implications. Everything described must be followed unless otherwise noted (or it is a bug). Unless otherwise noted (as in meta-data) keys should be alphabetized for ease of modification/review/updating.
+
+## json-schema
+
+JSON Schema provides a way to describe the resources, attributes and links of an API using JSON. This document will contain many examples and explanation, but going to the source can also be useful. There are three relevant specs, which are additive. You can read through them, ideally in this order:
+
+1. [JSON Schema Core](http://tools.ietf.org/html/draft-zyp-json-schema-04) - defines the basic foundation of JSON Schema - you probably will not need this often
+2. [JSON Schema Validation](http://tools.ietf.org/html/draft-fge-json-schema-validation-00) - defines the validation keywords of JSON Schema - covers most attributes
+3. [JSON Hyper-Schema](http://tools.ietf.org/html/draft-luff-json-hyper-schema-00) - defines the hyper-media keywords of JSON Schema - covers remaining links-specific attributes
+
+## structure
+
+We have opted to split apart the schema into individual resource schema and a root schema which references all of them. These individual schema are named based on the singular form of the resource in question.
+
+### meta-data
+
+Each schema MUST include some meta-data, which we cluster at the top of the file, including:
+
+* `description` - a description of the resource described by the schema
+* `id` - an id for this schema, it MUST be in the form `"schema/#{lower_case_singular_resource}"`
+* `$schema` - defines what meta-schema is in use, it MUST be `http://json-schema.org/draft-04/hyper-schema`
+* `title` - title for this resource, it MUST be in the form `"Heroku Platform API - #{title_case_plural_resource}"`
+* `type` - the type(s) of this schema, it MUST be `["object"]`
+
+### `definitions`
+
+We make heavy usage of the `definitions` attribute in each resource to provide a centralized collection of attributes related to each resource. By doing so we are able to refer to the same attribute in links, properties and even as foreign keys.
+
+The definitions object MUST include every attribute related directly to this resource, including:
+
+* all properties that are present in the serialization of the object
+* an `identity` property to provide an easy way to find what unique identifier(s) can be used with this object
+* all transient properties which may be passed into links related to the object, even if they are not serialized
+
+Each attribute MUST include the following properties:
+
+* `description` - a description of the attribute and how it relates to the resource
+* `example` - an example of the attributes value, useful for documentation and tests
+* `type` - an array of type(s) for this attribute, values MUST be one of `["array", "boolean", "integer", "number", "null", "object", "string"]`
+
+Each attribute MAY include the following properties:
+
+* `pattern` - a regex encoded in a string that the valid values MUST match
+* `readOnly` - boolean value defining if the attribute can be modified, assumes `false` if omitted
+* `format` - format of the value. MUST be one of spec defined `["date-time", "email", "hostname", "ipv4", "ipv6", "uri"]` or defined by us `["uuid"]`
+
+Examples:
+
+```javascript
+{
+  "definitions": {
+    "id": {
+      "description":  "unique identifier of resource",
+      "example":      "01234567-89ab-cdef-0123-456789abcdef",
+      "format":       "uuid",
+      "readOnly":     true,
+      "type":         ["string"]
+    },
+    "url": {
+      "description":  "URL of resource",
+      "example":      "http://example.com",
+      "format":       "uri",
+      "pattern":      "^http://[a-z][a-z0-9-]{3,30}\\.com$",
+      "type":         ["null", "string"]
+    }
+  }
+}
+```
+
+### `links`
+
+Links define the actions available on a given resource. They are listed as an array, which should be alphabetized by title.
+
+The links array MUST include an object defining each action available. Each action MUST include the following attributes:
+
+* `description` - a description of the action to perform
+* `href` - the path associated with this action, use [URI templates](http://tools.ietf.org/html/rfc6570) as needed, CGI escaping any JSON pointer values used for identity
+* `method` - the http method to be used with this actio
+* `rel` - describes relation of link to resource, SHOULD be one of `["create", "destroy", "self", "instances", "update"]`
+* `title` - title for the link
+
+Links that expect a json-encoded body as input MUST also include the following attributes:
+* `schema` - an object with a `properties` object that MUST include JSON pointers to the definitions for each associated attribute
+
+Schema properties MAY also include a `required` boolean to indicate if an attribute must be present, which is assumed to be false when omitted.
+
+```javascript
+{
+  "links": [
+    {
+      "description":  "Create a new resource.",
+      "href":         "/resources",
+      "method":       "POST",
+      "rel":          "create",
+      "schema":       {
+        "properties": {
+          "owner":  { "$ref": "/schema/user#/definitions/identity" },
+          "url":    { "$ref": "/schema/resource/definitions/url" }
+        }
+      },
+      "title":        "Create"
+    },
+    {
+      "description":  "Delete an existing resource.",
+      "href":         "/resources/{(%2Fschema%2Fresources%23%2Fdefinitions%2Fidentity)}",
+      "method":       "DELETE",
+      "rel":          "destroy",
+      "title":        "Delete"
+    },
+    {
+      "description":  "Info for existing resource.",
+      "href":         "/resources/{(%2Fschema%2Fresources%23%2Fdefinitions%2Fidentity)}",
+      "method":       "GET",
+      "rel":          "self",
+      "title":        "Info"
+    },
+    {
+      "description":  "List existing resources.",
+      "href":         "/resources",
+      "method":       "GET",
+      "rel":          "instances",
+      "title":        "List"
+    },
+    {
+      "description":  "Update an existing resource.",
+      "href":         "/resources/{(%2Fschema%2Fresource%23%2Fdefinitions%2Fidentity)}",
+      "method":       "PATCH",
+      "rel":          "update",
+      "schema":       {
+        "properties": {
+          "url":    { "$ref": "/schema/resource/definitions/url" }
+        }
+      },
+      "title":        "Update"
+    }
+}
+```
+
+### `properties`
+
+Properties defines the attributes that exist in the serialization of the object.
+
+The properties object MUST contain all the serialized attributes for the object. Each attribute MUST provide a [JSON pointer](http://tools.ietf.org/html/draft-ietf-appsawg-json-pointer-07) to the attribute in appropriate `definitions`, we have opted to always use absolute pointers for consistency. Properties MUST also add any data which overrides the values in definitions and SHOULD add any additional, relevant data.
+
+```javascript
+{
+  "properties": {
+    "id":       { "$ref": "/schema/resource#/definitions/id" },
+    "owner": {
+      "description": "unique identifier of the user who owns this resource",
+      "properties": {
+        "id": { "$ref": "/schema/user#/definitions/id" }
+      },
+      "type": ["object"]
+    },
+    "url":      { "$ref": "/schema/resource#/definitions/url" }
+  }
+}
+```
+
+Note: this assumes that schema/user will also be available and will have id defined in the definitions. If/when you need to refer to a foreign key, you MUST add a new schema and/or add the appropriate attribute to the foreign resource definitions unless it already exists.

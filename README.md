@@ -2,6 +2,14 @@
 
 schema to rule them all
 
+## Introduction
+
+JSON-Schema provides a great way to describe an API. prmd provides tools for bootstrapping a description like this, verifying it's completeness and generating documentation from the specification.
+
+The expectations for json-schema usage that are expected by prmd are described in [/docs/schemata.md](/docs/schemata.md).
+
+To learn more about json-schema in general, start with [this excellent guide](http://spacetelescope.github.io/understanding-json-schema/) and supplement with the [specification](http://json-schema.org/documentation.html).
+
 ## Installation
 
 Add this line to your application's Gemfile:
