@@ -26,7 +26,7 @@ Or install it yourself as:
 
 ## Usage
 
-Combine takes the path to a directory of schemas and combines them into a schema.json file in the current directory. If a meta.json file exists, it will also be combined to override defaults/metadata.
+Combine takes the path to a directory of schemas and combines them into a schema.json file in the current directory. If a `_meta.json` file exists, it will also be combined to override defaults/metadata.
 
 ```
 prmd combine $DIRECTORY
