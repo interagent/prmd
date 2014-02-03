@@ -38,7 +38,7 @@ Doc takes the path to a directory of schemas and outputs their documentation int
 prmd doc $DIRECTORY
 ```
 
-Init takes a path as it's first argument and optionally a resource as it's second argument and generates a new schema file at that path (generically or using the resource name provided). If a meta.json file exists, it will override defaults/metadata in initialized file.
+Init takes a path as it's first argument and optionally a resource as it's second argument and generates a new schema file at that path (generically or using the resource name provided). If a `_meta.json` file exists, it will override defaults/metadata in initialized file.
 
 ```
 prmd init $DIRECTORY

@@ -9,7 +9,7 @@ module Prmd
       'properties'  => {}
     }
 
-    meta_path = File.join(Dir.pwd, 'meta.json')
+    meta_path = File.join(File.basename(path), '_meta.json')
     if File.exists?(meta_path)
       schema.merge!(JSON.parse(File.read(meta_path)))
     end
