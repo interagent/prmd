@@ -23,20 +23,16 @@ module Prmd
     schemata = {}
 
     Dir.glob(File.join(directory, '*.*')).each do |path|
+      id = File.basename(path, '.json')
+      next if id[0] == "_"
+
       data = File.read(path)
 
       # rewrite to local json-references
       data.gsub!(%r{/schema/([^#]*)#}, '#/definitions/\1')
       data.gsub!(%r{%2Fschema%2F([^%]*)%23%2F}, '%23%2Fdefinitions%2F\1%2F')
 
-      id = File.basename(path, '.json')
-
       schemata[id] = data
-    end
-
-    meta_path = File.join(Dir.pwd, 'meta.json')
-    if File.exists?(meta_path)
-      schema.merge!(JSON.parse(File.read(meta_path)))
     end
 
     schema_path = 'schema.json'
@@ -47,8 +43,15 @@ module Prmd
       "{}"
     end
 
-    schema = Erubis::Eruby.new(template).result({schemata: schemata})
-    new_json = JSON.pretty_generate(JSON.parse(schema))
+    schema = JSON.parse(Erubis::Eruby.new(template).result({schemata: schemata}))
+
+    meta_path = File.join(directory, '_meta.json')
+    if File.exists?(meta_path)
+      merger = proc { |key, v1, v2| Hash === v1 && Hash === v2 ? v1.merge(v2, &merger) : v2 }
+      schema.merge!(JSON.parse(File.read(meta_path)), &merger)
+    end
+
+    new_json = JSON.pretty_generate(schema)
     # nuke empty lines
     new_json = new_json.split("\n").delete_if {|line| line.empty?}.join("\n")
     File.open(schema_path, 'w') do |file|
