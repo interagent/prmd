@@ -42,6 +42,11 @@ end
 def extract_attributes(schemata, properties)
   attributes = []
   properties.each do |key, value|
+    #normalize single value types to arrays
+    if value['type'].is_a?(String)
+      value['type'] = [value['type']]
+    end
+
     # found a reference to another element:
     if value.has_key?('anyOf')
       descriptions = []
