@@ -77,17 +77,15 @@ def extract_attributes(schemata, properties)
           prop_value['description'], doc_example(prop_value['example'])]
       end
 
-    #found an enum
-    elsif value['type'] == ['enum']
-      example = doc_example(*value['oneOf'])
-      attributes << [key, 'enum',
-        value['description'], example]
-
     # just a regular attribute
     else
+      description = value['description']
+      if value['enum']
+        description += '<br/><b>one of:</b>' + doc_example(*value['enum'])
+      end
       example = doc_example(value['example'])
       attributes << [key, doc_type(value),
-        value['description'], example]
+        description, example]
     end
   end
   return attributes
