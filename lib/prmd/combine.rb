@@ -12,7 +12,7 @@ module Prmd
       },
       "properties":   {
         <%- schemata.each do |key, schema| %>
-        "<%= key %>": { "$ref": "/definitions/<%= key %>" }<%= ',' unless key == schemata.keys.last %>
+        "<%= key %>": { "$ref": "#/definitions/<%= key %>" }<%= ',' unless key == schemata.keys.last %>
         <%- end -%>
       },
       "$schema":      "http://json-schema.org/draft-04/hyper-schema",
