@@ -47,10 +47,6 @@ module Prmd
       end
     end
 
-    if errors.empty?
-      puts("\e[32mNo schema errors detected.\e[0m")
-    else
-      $stderr.puts("\e[31mErrors:\n#{errors.join("\n")}\e[0m")
-    end
+    errors
   end
 end
