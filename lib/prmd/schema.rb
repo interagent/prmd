@@ -56,43 +56,16 @@ module Prmd
       @data = new_data
     end
 
-    def dereference(datum)
-      if datum.has_key?('$ref')
-        begin
-          schema_id, key = datum['$ref'].split('#')
-          if schema_id.empty? # already dereferenced
-            datum
-          else
-            definition = key.gsub('/definitions/', '')
-            @data['definitions'][schema_id]['definitions'][definition]
-          end
-        rescue => error
-          $stderr.puts("Failed to dereference #{datum}")
-          raise(error)
-        end
-      else
-        datum.keys.each do |k|
-          value = datum[k]
-          datum[k] = case value
-          when Hash
-            dereference(value)
-          when Array
-            if k == 'anyOf'
-              value
-            else
-              value.map do |item|
-                if item.is_a?(Hash)
-                  dereference(item)
-                else
-                  item
-                end
-              end
-            end
-          else
-            value
-          end
+    def dereference(key)
+      begin
+        datum = data
+        key.gsub(%r{^#/}, '').split('/').each do |fragment|
+          datum = datum[fragment]
         end
         datum
+      rescue => error
+        $stderr.puts("Failed to dereference `#{key}`")
+        raise(error)
       end
     end
 
