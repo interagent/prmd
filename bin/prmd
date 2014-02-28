@@ -45,6 +45,10 @@ global.order!
 
 command = ARGV.shift.to_sym
 option = commands[command]
+if option.nil?
+  puts global
+  exit(1)
+end
 
 if ARGV.empty? && $stdin.tty?
   puts option
