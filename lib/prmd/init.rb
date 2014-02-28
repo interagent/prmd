@@ -99,7 +99,7 @@ module Prmd
     end
 
     File.open(path, 'w') do |file|
-      file.write(JSON.pretty_generate(schema))
+      file.write(JSON.pretty_generate(schema) + "\n")
     end
   end
 end
