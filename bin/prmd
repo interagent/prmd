@@ -25,6 +25,11 @@ end.join("\n")
 
 global = OptionParser.new do |opts|
   opts.banner = "Usage: prmd [options] [command [options]]"
+  opts.separator "\nAvailable options:"
+  opts.on("--version", "Return version") do |opts|
+    puts "prmd #{Prmd::VERSION}"
+    exit(0)
+  end
   opts.separator "\nAvailable commands:"
   opts.separator help_text
 end
