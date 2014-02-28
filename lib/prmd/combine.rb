@@ -22,7 +22,7 @@ module Prmd
 
     schemata = {}
 
-    Dir.glob(File.join(directory, '*.*')).each do |path|
+    Dir.glob(File.join(directory, '*.json')).each do |path|
       id = File.basename(path, '.json')
       next if id[0] == "_"
 
