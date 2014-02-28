@@ -1,8 +1,5 @@
 module Prmd
   def self.combine(directory)
-    # FIXME: where to get description/title from?
-    #  "description":  "The direwolf API empowers developers to automate Heroku platform integration testing.",
-    #  "title":        "Heroku Direwolf API",
     template = <<-SCHEMA_TEMPLATE
     {
       "definitions":  {
