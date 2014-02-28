@@ -104,7 +104,7 @@ end
 module Prmd
   def self.doc(directory)
     schemata = {}
-    Dir.glob(File.join(directory, '*.*')).each do |path|
+    Dir.glob(File.join(directory, '*.json')).each do |path|
       data = JSON.parse(File.read(path))
       schemata[data['id']] = data
     end
