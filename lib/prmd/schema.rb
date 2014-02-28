@@ -99,7 +99,7 @@ module Prmd
     def to_s
       new_json = JSON.pretty_generate(@data)
       # nuke empty lines
-      new_json = new_json.split("\n").delete_if {|line| line.empty?}.join("\n")
+      new_json = new_json.split("\n").delete_if {|line| line.empty?}.join("\n") + "\n"
       new_json
     end
 
