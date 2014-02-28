@@ -147,7 +147,7 @@ module Prmd
 
       title = schema['title'].split(' - ', 2).last
 
-      puts Erubis::Eruby.new(File.read(File.dirname(__FILE__) + "/views/endpoint.erb")).result({
+      puts Erubis::Eruby.new(File.read(File.dirname(__FILE__) + "/../views/endpoint.erb")).result({
         identifiers:     identifiers,
         identity:        identity,
         resource:        resource,
