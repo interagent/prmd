@@ -1,24 +1,66 @@
 #!/usr/bin/env ruby
-
+require 'optparse'
 require(File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'prmd')))
 
-case ARGV[0]
-when 'combine'
-  Prmd.combine(ARGV[1])
-when 'doc'
-  Prmd.doc(ARGV[1])
-when 'init'
-  Prmd.init(ARGV[1], ARGV[2])
-when 'verify'
-  if File.directory?(ARGV[1])
-    Dir.glob(File.join(ARGV[1], '**/*.json')).each do |path|
-      puts(path)
-      Prmd.verify(JSON.parse(File.read(path)))
-      puts
-    end
-  else
-    Prmd.verify(
-      JSON.parse(File.read(ARGV[1]))
-    )
+options = {}
+
+commands = {
+  combine: OptionParser.new do |opts|
+    opts.banner = "prmd combine [options] <directory>"
+  end,
+  doc: OptionParser.new do |opts|
+    opts.banner = "prmd doc [options] <directory>"
+  end,
+  init: OptionParser.new do |opts|
+    opts.banner = "prmd init [options] <directory> <resource>"
+  end,
+  verify: OptionParser.new do |opts|
+    opts.banner = "prmd verify [options] <directory or schema>"
   end
+}
+
+help_text = commands.values.map do |command|
+  "   #{command.banner}"
+end.join("\n")
+
+global = OptionParser.new do |opts|
+  opts.banner = "Usage: prmd [options] [command [options]]"
+  opts.separator "\nAvailable commands:"
+  opts.separator help_text
+end
+
+if ARGV.empty?
+  puts global
+  exit(1)
+end
+global.order!
+
+command = ARGV.shift.to_sym
+option = commands[command]
+
+if ARGV.empty?
+  puts option
+  exit(1)
+end
+option.order!
+
+case command
+  when :combine
+    Prmd.combine(ARGV[0])
+  when :doc
+    Prmd.doc(ARGV[0])
+  when :init
+   Prmd.init(ARGV[0], ARGV[1])
+  when :verify
+    if File.directory?(ARGV[0])
+      Dir.glob(File.join(ARGV[0], '**/*.json')).each do |path|
+        puts(path)
+        Prmd.verify(JSON.parse(File.read(path)))
+        puts
+      end
+    else
+      Prmd.verify(
+        JSON.parse(File.read(ARGV[0]))
+      )
+    end
 end
