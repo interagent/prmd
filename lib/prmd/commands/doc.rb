@@ -155,7 +155,7 @@ module Prmd
         schemata:        schemata,
         serialization:   serialization,
         title:           title,
-        params_template: File.read(File.dirname(__FILE__) + "/views/parameters.erb"),
+        params_template: File.read(File.dirname(__FILE__) + "/../views/parameters.erb"),
       })
     end
   end
