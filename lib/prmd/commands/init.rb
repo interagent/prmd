@@ -1,23 +1,24 @@
 module Prmd
   def self.init(path, resource)
-    schema = {
+    schema = Prmd::Schema.new
+    schema.data.merge!({
       '$schema'     => 'http://json-schema.org/draft-04/hyper-schema',
       'title'       => '...',
       'type'        => ['object'],
       'definitions' => {},
       'links'       => [],
       'properties'  => {}
-    }
+    })
 
     meta_path = File.join(File.basename(path), '_meta.json')
     if File.exists?(meta_path)
-      schema.merge!(JSON.parse(File.read(meta_path)))
+      schema.data.merge!(JSON.parse(File.read(meta_path)))
     end
 
     if resource
-      schema['id']    = "schema/#{resource}"
-      schema['title'] = "#{schema['title']} - #{resource[0...1].upcase}#{resource[1..-1]}"
-      schema['definitions'] = {
+      schema.data['id']    = "schema/#{resource}"
+      schema.data['title'] = "#{schema.data['title']} - #{resource[0...1].upcase}#{resource[1..-1]}"
+      schema.data['definitions'] = {
         "created_at" => {
           "description" => "when #{resource} was created",
           "example"     => "2012-01-01T12:00:00Z",
@@ -45,7 +46,7 @@ module Prmd
           "type"        => ["string"]
         }
       }
-      schema['links'] = [
+      schema.data['links'] = [
         {
           "description" => "Create a new #{resource}.",
           "href"        => "/#{resource}s",
@@ -82,24 +83,15 @@ module Prmd
           "title"        => "Update"
         }
       ]
-      schema['properties'] = {
+      schema.data['properties'] = {
         "created_at"  => { "$ref" => "/schema/#{resource}#/definitions/created_at" },
         "id"          => { "$ref" => "/schema/#{resource}#/definitions/id" },
         "updated_at"  => { "$ref" => "/schema/#{resource}#/definitions/updated_at" }
       }
-      # ensure meta properties are at the top and otherwise alpha sorted keys
-      def schema.keys
-        ['$schema', 'id', 'title', 'type', 'definitions', 'links', 'properties']
-      end
-    else
-      # ensure meta properties are at the top and otherwise alpha sorted keys
-      def schema.keys
-        ['$schema', 'type', 'definitions', 'links', 'properties']
-      end
     end
 
     File.open(path, 'w') do |file|
-      file.write(JSON.pretty_generate(schema))
+      file.write(schema.to_s)
     end
   end
 end
