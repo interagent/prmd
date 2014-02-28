@@ -7,6 +7,9 @@ options = {}
 commands = {
   combine: OptionParser.new do |opts|
     opts.banner = "prmd combine [options] <directory>"
+    opts.on("-o", "--output [file]", "Write output to <file> instead of stdout") do |o|
+      options[:output] = o
+    end
   end,
   doc: OptionParser.new do |opts|
     opts.banner = "prmd doc [options] <directory>"
@@ -46,7 +49,14 @@ option.order!
 
 case command
   when :combine
-    Prmd.combine(ARGV[0])
+    schema = Prmd.combine(ARGV[0])
+    if (path = options[:output])
+      File.open(path, 'w') do |f|
+        f.write(schema.to_s)
+      end
+    else
+      puts schema.to_s
+    end
   when :doc
     Prmd.doc(ARGV[0])
   when :init
