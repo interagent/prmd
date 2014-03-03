@@ -1,45 +1,4 @@
-def dereference(schemata, data)
-  if data.has_key?('$ref')
-    begin
-      schema_id, key = data['$ref'].split('#')
-      schema_id = schema_id.gsub(%r{^/}, '') # drop leading slash if one exists
-      definition = key.gsub('/definitions/', '')
-      schemata[schema_id]['definitions'][definition]
-    rescue => error
-      $stderr.puts("Failed to dereference #{data}")
-      raise(error)
-    end
-  else
-    expand_references(schemata, data)
-  end
-end
-
-def expand_references(schemata, data)
-  data.keys.each do |key|
-    value = data[key]
-    data[key] = case value
-    when Hash
-      dereference(schemata, value)
-    when Array
-      if key == 'anyOf'
-        value
-      else
-        value.map do |item|
-          if item.is_a?(Hash)
-            dereference(schemata, item)
-          else
-            item
-          end
-        end
-      end
-    else
-      value
-    end
-  end
-  data
-end
-
-def extract_attributes(schemata, properties)
+def extract_attributes(schema, properties)
   attributes = []
   properties.each do |key, value|
     # found a reference to another element:
@@ -53,7 +12,7 @@ def extract_attributes(schemata, properties)
       end
 
       anyof.each do |ref|
-        nested_field = dereference(schemata, ref)
+        nested_field = schema.dereference(ref)
         descriptions << nested_field['description']
         examples << nested_field['example']
       end
@@ -72,6 +31,7 @@ def extract_attributes(schemata, properties)
       properties = value['properties'].sort_by { |k, v| k }
 
       properties.each do |prop_name, prop_value|
+        prop_value = schema.dereference(prop_value)
         new_key = "#{key}:#{prop_name}"
         attributes << [new_key, doc_type(prop_value),
           prop_value['description'], doc_example(prop_value['example'])]
@@ -79,6 +39,7 @@ def extract_attributes(schemata, properties)
 
     # just a regular attribute
     else
+      value = schema.dereference(value)
       description = value['description']
       if value['enum']
         description += '<br/><b>one of:</b>' + doc_example(*value['enum'])
@@ -102,62 +63,55 @@ def doc_example(*examples)
 end
 
 module Prmd
-  def self.doc(directory)
-    schemata = {}
-    Dir.glob(File.join(directory, '**', '*.json')).each do |path|
-      data = JSON.parse(File.read(path))
-      schemata[data['id']] = data
-    end
-
-    schemata.each do |key,value|
-      schemata[key] = expand_references(schemata, value)
-    end
-
-    devcenter_header_path = File.join(directory, 'devcenter_header.md')
-    if File.exists?(devcenter_header_path)
-      puts File.read(File.join(directory, 'devcenter_header.md'))
-    end
-    overview_path = File.join(directory, 'overview.md')
-    if File.exists?(overview_path)
-      puts File.read(File.join(directory, 'overview.md'))
-    end
-
-    schemata.each do |_, schema|
-      next if (schema['links'] || []).empty?
-      resource = schema['id'].split('/').last
-      if schema['definitions'].has_key?('identity')
-        identifiers = if schema['definitions']['identity'].has_key?('anyOf')
-          schema['definitions']['identity']['anyOf']
-        else
-          [schema['definitions']['identity']]
-        end
-        identifiers.map! {|ref| ref['$ref'].split('/').last }
-        identity = resource + '_' + identifiers.join('_or_')
+  def self.doc(path)
+    if File.directory?(path)
+      devcenter_header_path = File.join(path, 'devcenter_header.md')
+      if File.exists?(devcenter_header_path)
+        puts File.read(File.join(path, 'devcenter_header.md'))
       end
+      overview_path = File.join(path, 'overview.md')
+      if File.exists?(overview_path)
+        puts File.read(File.join(path, 'overview.md'))
+      end
+    end
+    schema = Prmd::Schema.load(path)
+    puts schema
+
+    schema.data['definitions'].each do |_, definition|
+      next if (definition['links'] || []).empty?
+      resource = definition['id'].split('/').last
       serialization = {}
-      if schema['properties']
-        schema['properties'].each do |key, value|
+      if definition['definitions'].has_key?('identity')
+        identifiers = if definition['definitions']['identity'].has_key?('anyOf')
+          definition['definitions']['identity']['anyOf']
+        else
+          [definitions['definitions']['identity']]
+        end
+
+        identifiers = identifiers.map {|ref| ref['$ref'].split('/').last }
+      end
+      if definition['properties']
+        definition['properties'].each do |key, value|
           unless value.has_key?('properties')
-            serialization[key] = value['example']
+            serialization[key] = schema.dereference(value)['example']
           else
             serialization[key] = {}
             value['properties'].each do |k,v|
-              serialization[key][k] = v['example']
+              serialization[key][k] = schema.dereference(v)['example']
             end
           end
         end
       else
-        serialization.merge!(schema['example'])
+        serialization.merge!(definition['example'])
       end
 
-      title = schema['title'].split(' - ', 2).last
+      title = definition['title'].split(' - ', 2).last
 
       puts Erubis::Eruby.new(File.read(File.dirname(__FILE__) + "/../views/endpoint.erb")).result({
+        definition:      definition,
         identifiers:     identifiers,
-        identity:        identity,
         resource:        resource,
         schema:          schema,
-        schemata:        schemata,
         serialization:   serialization,
         title:           title,
         params_template: File.read(File.dirname(__FILE__) + "/../views/parameters.erb"),

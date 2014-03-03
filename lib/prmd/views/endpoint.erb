@@ -1,7 +1,7 @@
 ## <%= title %>
-<%= schema['description'] %>
+<%= definition['description'] %>
 
-<%- if schema['properties'] %>
+<%- if definition['properties'] %>
 ### Attributes
 <table>
   <tr>
@@ -10,7 +10,7 @@
     <th>Description</th>
     <th>Example</th>
   </tr>
-  <%- extract_attributes(schemata, schema['properties']).each do |(key, type, description, example)| %>
+  <%- extract_attributes(schema, definition['properties']).each do |(key, type, description, example)| %>
   <tr>
     <td><strong><%= key %></strong></td>
     <td><em><%= type %></em></td>
@@ -21,8 +21,12 @@
 </table>
 
 <%- end %>
-<%- schema['links'].each do |link, datum| %>
-<%- path = link['href'].gsub(%r|(\{\([^\)]+\)\})|, "{#{identity}}") -%>
+<%- definition['links'].each do |link, datum| %>
+<%- path = link['href'].gsub(%r|(\{\([^\)]+\)\})|) do |ref|
+  ref = ref.gsub('%2F', '/').gsub('%23', '#').gsub(%r|[\{\(\)\}]|, '')
+  resource = ref.split('#/definitions/').last.split('/definitions/identity').first
+  '{' + resource + '_' + schema.dereference(ref)['anyOf'].map {|r| puts r; r['$ref'].split('/').last}.join('_or_') + '}'
+end -%>
 ### <%= title %> <%= link['title'] %>
 <%= link['description'] %>
 
@@ -38,12 +42,12 @@
 %>
 <%- unless required.empty? %>
 #### Required Parameters
-<%= Erubis::Eruby.new(params_template).result(params: required, schemata: schemata) %>
+<%= Erubis::Eruby.new(params_template).result(params: required, schema: schema) %>
 
 <%- end %>
 <%- unless optional.empty? %>
 #### Optional Parameters
-<%= Erubis::Eruby.new(params_template).result(params: optional, schemata: schemata) %>
+<%= Erubis::Eruby.new(params_template).result(params: optional, schema: schema) %>
 <%- end %>
 <%- end %>
 
@@ -57,7 +61,7 @@ $ curl -n -X <%= link['method'] %> https://api.heroku.com<%= path.gsub(/{([^}]*)
     link['schema']['properties'].each do |key, value|
       if value.has_key?('anyOf')
         id_ref = value['anyOf'].detect {|ref| ref['$ref'].split('/').last == 'id'}
-        data[key] = dereference(schemata, id_ref)['example']
+        data[key] = schema.dereference(id_ref)['example']
       elsif value.has_key?('properties')
         data[key] = {}
         value['properties'].each do |k,v|

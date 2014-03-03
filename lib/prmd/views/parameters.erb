@@ -5,7 +5,7 @@
     <th>Description</th>
     <th>Example</th>
   </tr>
-  <%- extract_attributes(schemata, params).each do |(key, type, description, example)| %>
+  <%- extract_attributes(schema, params).each do |(key, type, description, example)| %>
   <tr>
     <td><strong><%= key %></strong></td>
     <td><em><%= type %></em></td>

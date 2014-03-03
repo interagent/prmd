@@ -58,8 +58,10 @@ module Prmd
 
     def dereference(reference)
       if reference.is_a?(Hash)
-        unless key = reference['$ref']
-          raise "Failed to dereference `#{reference.inspect}`"
+        if reference.has_key?('$ref')
+          key = reference['$ref']
+        else
+          return reference # no dereference needed
         end
       else
         key = reference
