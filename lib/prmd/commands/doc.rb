@@ -2,6 +2,7 @@ def extract_attributes(schema, properties)
   attributes = []
   properties.each do |key, value|
     # found a reference to another element:
+    value = schema.dereference(value)
     if value.has_key?('anyOf')
       descriptions = []
       examples = []
@@ -28,25 +29,19 @@ def extract_attributes(schema, properties)
 
     # found a nested object
     elsif value['type'] == ['object'] && value['properties']
-      properties = value['properties'].sort_by { |k, v| k }
-
-      properties.each do |prop_name, prop_value|
-        prop_value = schema.dereference(prop_value)
-        new_key = "#{key}:#{prop_name}"
-        attributes << [new_key, doc_type(prop_value),
-          prop_value['description'], doc_example(prop_value['example'])]
+      nested = extract_attributes(schema, value['properties'])
+      nested.each do |attribute|
+        attribute[0] = "#{key}:#{attribute[0]}"
       end
-
+      attributes.concat(nested)
     # just a regular attribute
     else
-      value = schema.dereference(value)
       description = value['description']
       if value['enum']
         description += '<br/><b>one of:</b>' + doc_example(*value['enum'])
       end
       example = doc_example(value['example'])
-      attributes << [key, doc_type(value),
-        description, example]
+      attributes << [key, doc_type(value), description, example]
     end
   end
   return attributes
