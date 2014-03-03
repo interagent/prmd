@@ -22,13 +22,7 @@
 
 <%- end %>
 <%- schema['links'].each do |link, datum| %>
-<%- path = link['href'].gsub(%r|(\{\([^\)]+\)\})|) do |ref|
-  ref = ref.gsub('%2F', '/').gsub('%23', '#').gsub(%r|[\{\(\)\}]|, '')
-  resource = ref.split('#').first.split('/').last.gsub('-', '_')
-  property = ref.split('#').last.split('/').last
-  '{' + resource + '_' + property + '}'
-end
--%>
+<%- path = link['href'].gsub(%r|(\{\([^\)]+\)\})|, "{#{identity}}") -%>
 ### <%= title %> <%= link['title'] %>
 <%= link['description'] %>
 

@@ -34,9 +34,7 @@ module Prmd
           "type"        => ["string"]
         },
         "identity" => {
-          "anyOf" => [
-            { "$ref" => "/schema/#{resource}#/definitions/id" }
-          ]
+          "$ref" => "/schema/#{resource}#/definitions/id"
         },
         "updated_at" => {
           "description" => "when #{resource} was updated",

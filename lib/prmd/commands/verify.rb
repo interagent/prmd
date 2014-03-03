@@ -13,6 +13,9 @@ module Prmd
     end
 
     if schema['definitions']
+      unless schema['definitions'].has_key?('identity')
+        errors << "definitions missing field: identity"
+      end
       schema['definitions'].each do |key, value|
         missing_requirements = []
         %w{description readOnly type}.each do |requirement|

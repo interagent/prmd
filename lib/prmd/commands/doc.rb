@@ -126,7 +126,12 @@ module Prmd
       next if (schema['links'] || []).empty?
       resource = schema['id'].split('/').last
       if schema['definitions'].has_key?('identity')
-        identifiers = schema['definitions']['identity']['anyOf'].map {|ref| ref['$ref'].split('/').last }
+        identifiers = if schema['definitions']['identity'].has_key?('anyOf')
+          schema['definitions']['identity']['anyOf']
+        else
+          [schema['definitions']['identity']]
+        end
+        identifiers.map! {|ref| ref['$ref'].split('/').last }
         identity = resource + '_' + identifiers.join('_or_')
       end
       serialization = {}
