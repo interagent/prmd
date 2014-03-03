@@ -33,7 +33,7 @@ module Prmd
               datum.map {|element| reference_localizer.call(element)}
             when Hash
               if datum.has_key?('$ref')
-                datum['$ref'] = datum['$ref'].gsub("/schema/#{id}#", "#/definitions/#{id}")
+                datum['$ref'] = datum['$ref'].gsub(%r{/schema/([^#]*)#}, '#/definitions/\1')
               end
               if datum.has_key?('href')
                 datum['href'] = datum['href'].gsub(%r{%2Fschema%2F([^%]*)%23%2F}, '%23%2Fdefinitions%2F\1%2F')
@@ -56,10 +56,17 @@ module Prmd
       @data = new_data
     end
 
-    def dereference(key)
+    def dereference(reference)
+      if reference.is_a?(Hash)
+        unless key = reference['$ref']
+          raise "Failed to dereference `#{reference.inspect}`"
+        end
+      else
+        key = reference
+      end
       begin
         datum = data
-        key.gsub(%r{^#/}, '').split('/').each do |fragment|
+        key.gsub(%r{[^#]*#/}, '').split('/').each do |fragment|
           datum = datum[fragment]
         end
         datum
