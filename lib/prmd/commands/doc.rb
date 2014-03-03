@@ -75,7 +75,6 @@ module Prmd
       end
     end
     schema = Prmd::Schema.load(path)
-    puts schema
 
     schema.data['definitions'].each do |_, definition|
       next if (definition['links'] || []).empty?
