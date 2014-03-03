@@ -50,7 +50,7 @@ end
 def doc_type(property)
   schema_type = property["type"].dup
   type = "nullable " if schema_type.delete("null")
-  type.to_s + (property["format"] || schema_type.first)
+  type.to_s + (property["format"] || (schema_type.respond_to?(:first) ? schema_type.first : schema_type))
 end
 
 def doc_example(*examples)
