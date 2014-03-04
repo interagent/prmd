@@ -13,9 +13,15 @@ commands = {
   end,
   doc: OptionParser.new do |opts|
     opts.banner = "prmd doc [options] <directory>"
+    opts.on("-o", "--output [file]", "Write output to <file> instead of stdout") do |o|
+      options[:output] = o
+    end
   end,
   init: OptionParser.new do |opts|
     opts.banner = "prmd init [options] <directory> <resource>"
+    opts.on("-o", "--output [file]", "Write output to <file> instead of stdout") do |o|
+      options[:output] = o
+    end
   end,
   verify: OptionParser.new do |opts|
     opts.banner = "prmd verify [options] <directory or schema>"
@@ -61,15 +67,29 @@ case command
     schema = Prmd.combine(ARGV[0])
     if (path = options[:output])
       File.open(path, 'w') do |f|
-        f.write(schema.to_s)
+        f.write(schema)
       end
     else
-      puts schema.to_s
+      puts schema
     end
   when :doc
-    Prmd.doc(ARGV[0])
+    doc = Prmd.doc(ARGV[0])
+    if (path = options[:output])
+      File.open(path, 'w') do |f|
+        f.write(doc)
+      end
+    else
+      puts doc
+    end
   when :init
-    Prmd.init(ARGV[0], ARGV[1])
+    schema Prmd.init(ARGV[0])
+    if (path = options[:output])
+      File.open(path, 'w') do |f|
+        f.write(schema)
+      end
+    else
+      puts schema
+    end
   when :verify
     errors = []
     if ARGV.empty?

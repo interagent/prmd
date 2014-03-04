@@ -59,14 +59,16 @@ end
 
 module Prmd
   def self.doc(path)
+    doc = ''
+
     if File.directory?(path)
       devcenter_header_path = File.join(path, 'devcenter_header.md')
       if File.exists?(devcenter_header_path)
-        puts File.read(File.join(path, 'devcenter_header.md'))
+        doc << File.read(File.join(path, 'devcenter_header.md'))
       end
       overview_path = File.join(path, 'overview.md')
       if File.exists?(overview_path)
-        puts File.read(File.join(path, 'overview.md'))
+        doc << File.read(File.join(path, 'overview.md'))
       end
     end
     schema = Prmd::Schema.load(path)
@@ -103,7 +105,7 @@ module Prmd
 
       title = definition['title'].split(' - ', 2).last
 
-      puts Erubis::Eruby.new(File.read(File.dirname(__FILE__) + "/../views/endpoint.erb")).result({
+      doc << Erubis::Eruby.new(File.read(File.dirname(__FILE__) + "/../views/endpoint.erb")).result({
         definition:      definition,
         identifiers:     identifiers,
         resource:        resource,
@@ -114,5 +116,7 @@ module Prmd
         params_template: File.read(File.dirname(__FILE__) + "/../views/parameters.erb"),
       })
     end
+
+    doc
   end
 end

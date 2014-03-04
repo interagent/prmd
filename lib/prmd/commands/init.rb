@@ -1,5 +1,5 @@
 module Prmd
-  def self.init(path, resource)
+  def self.init(resource)
     schema = Prmd::Schema.new
     schema.data.merge!({
       '$schema'     => 'http://json-schema.org/draft-04/hyper-schema',
@@ -10,9 +10,8 @@ module Prmd
       'properties'  => {}
     })
 
-    meta_path = File.join(File.basename(path), '_meta.json')
-    if File.exists?(meta_path)
-      schema.data.merge!(JSON.parse(File.read(meta_path)))
+    if File.exists?('_meta.json')
+      schema.data.merge!(JSON.parse(File.read('_meta.json')))
     end
 
     if resource
@@ -88,8 +87,6 @@ module Prmd
       }
     end
 
-    File.open(path, 'w') do |file|
-      file.write(schema.to_s)
-    end
+    schema.to_s
   end
 end

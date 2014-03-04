@@ -1,5 +1,5 @@
 module Prmd
   def self.combine(directory)
-    return Prmd::Schema.load(directory)
+    Prmd::Schema.load(directory).to_s
   end
 end
