@@ -2,7 +2,7 @@ module Prmd
   def self.verify(schema)
     errors = []
 
-    id = schema['id'] && "`#{schema['id']}`" || 'schema'
+    id = schema['id']
 
     missing_requirements = []
     %w{description id $schema title type definitions links properties}.each do |requirement|
@@ -10,13 +10,13 @@ module Prmd
         missing_requirements << requirement
       end
     end
-    unless missing_requirements.empty?
-      errors << "#{id} missing fields: #{missing_requirements.join(', ')}"
+    missing_requirements.each do |missing_requirement|
+      errors << "Missing `#{id}#/#{missing_requirement}`"
     end
 
     if schema['definitions']
       unless schema['definitions'].has_key?('identity')
-        errors << "#{id} definitions missing field: identity"
+        errors << "Missing `#{id}#/definitions/identity`"
       end
       schema['definitions'].each do |key, value|
         missing_requirements = []
@@ -34,8 +34,8 @@ module Prmd
             missing_requirements << 'example'
           end
         end
-        unless missing_requirements.empty?
-          errors << "`#{key}` definition missing fields: #{missing_requirements.join(', ')}"
+        missing_requirements.each do |missing_requirement|
+          errors << "Missing `#{id}#/definitions/#{key}/#{missing_requirement}`"
         end
       end
     end
@@ -48,8 +48,8 @@ module Prmd
             missing_requirements << requirement
           end
         end
-        unless missing_requirements.empty?
-          errors << "`#{link}` link missing fields: #{missing_requirements.join(', ')}"
+        missing_requirements.each do |missing_requirement|
+          errors << "Missing #{missing_requirement} in `#{link}` link for `#{id}`"
         end
       end
     end
