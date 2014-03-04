@@ -13,6 +13,9 @@ commands = {
   end,
   doc: OptionParser.new do |opts|
     opts.banner = "prmd doc [options] <schema>"
+    opts.on("-p", "--prepend header,overview", Array, "Prepend files to output") do |p|
+      options[:prepend] = p
+    end
     opts.on("-o", "--output [file]", "Write output to <file> instead of stdout") do |o|
       options[:output] = o
     end
@@ -73,7 +76,10 @@ case command
       puts schema
     end
   when :doc
-    doc = if ARGV.empty?
+    doc = (options[:prepend] || []).map do |path|
+      File.open(path, 'r').read
+    end.join("\n")
+    doc << if ARGV.empty?
       data = JSON.parse($stdin.read)
       schema = Prmd::Schema.new(data)
       Prmd.doc(schema)
