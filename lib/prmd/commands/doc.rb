@@ -71,7 +71,7 @@ module Prmd
     end
     schema = Prmd::Schema.load(path)
 
-    url = schema.data['links'].find{|l| l['rel'] == 'root'}['href'] rescue schema.data['url']
+    root_url = schema.data['links'].find{|l| l['rel'] == 'root'}['href'] rescue schema.data['url']
 
     schema.data['definitions'].each do |_, definition|
       next if (definition['links'] || []).empty?
@@ -107,10 +107,10 @@ module Prmd
         definition:      definition,
         identifiers:     identifiers,
         resource:        resource,
+        root_url:        root_url,
         schema:          schema,
         serialization:   serialization,
         title:           title,
-        url:             url,
         params_template: File.read(File.dirname(__FILE__) + "/../views/parameters.erb"),
       })
     end

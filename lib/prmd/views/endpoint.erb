@@ -53,7 +53,7 @@ end -%>
 
 #### Curl Example
 ```term
-$ curl -n -X <%= link['method'] %> <%= url %><%= path.gsub(/{([^}]*)}/) {|match| '$' + match.gsub(/[{}]/, '').gsub('-', '_').upcase} %><%- if link.has_key?('schema') && (link['schema'].has_key?('properties') || link['schema'].has_key?('example')) %> \
+$ curl -n -X <%= link['method'] %> <%= root_url %><%= path.gsub(/{([^}]*)}/) {|match| '$' + match.gsub(/[{}]/, '').gsub('-', '_').upcase} %><%- if link.has_key?('schema') && (link['schema'].has_key?('properties') || link['schema'].has_key?('example')) %> \
 -H "Content-Type: application/json" \
 <%-
   data = {}
