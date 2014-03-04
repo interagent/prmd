@@ -10,6 +10,7 @@ GEM
   specs:
     diff-lcs (1.2.5)
     erubis (2.7.0)
+    minitest (4.7.5)
     rake (10.1.0)
 
 PLATFORMS
@@ -17,5 +18,6 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.3)
+  minitest
   prmd!
   rake
