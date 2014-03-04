@@ -58,24 +58,10 @@ def doc_example(*examples)
 end
 
 module Prmd
-  def self.doc(path)
-    doc = ''
-
-    if File.directory?(path)
-      devcenter_header_path = File.join(path, 'devcenter_header.md')
-      if File.exists?(devcenter_header_path)
-        doc << File.read(File.join(path, 'devcenter_header.md'))
-      end
-      overview_path = File.join(path, 'overview.md')
-      if File.exists?(overview_path)
-        doc << File.read(File.join(path, 'overview.md'))
-      end
-    end
-    schema = Prmd::Schema.load(path)
-
+  def self.doc(schema)
     root_url = schema.data['links'].find{|l| l['rel'] == 'root'}['href'] rescue schema.data['url']
 
-    schema.data['definitions'].each do |_, definition|
+    schema.data['definitions'].map do |_, definition|
       next if (definition['links'] || []).empty?
       resource = definition['id'].split('/').last
       serialization = {}
@@ -105,7 +91,7 @@ module Prmd
 
       title = definition['title'].split(' - ', 2).last
 
-      doc << Erubis::Eruby.new(File.read(File.dirname(__FILE__) + "/../views/endpoint.erb")).result({
+      Erubis::Eruby.new(File.read(File.dirname(__FILE__) + "/../views/endpoint.erb")).result({
         definition:      definition,
         identifiers:     identifiers,
         resource:        resource,
@@ -115,8 +101,6 @@ module Prmd
         title:           title,
         params_template: File.read(File.dirname(__FILE__) + "/../views/parameters.erb"),
       })
-    end
-
-    doc
+    end.join("\n")
   end
 end
