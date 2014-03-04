@@ -1,1 +1,2 @@
 language: ruby
+script: "bundle exec rake"
