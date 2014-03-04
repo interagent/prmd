@@ -7,24 +7,16 @@ options = {}
 commands = {
   combine: OptionParser.new do |opts|
     opts.banner = "prmd combine [options] <directory>"
-    opts.on("-o", "--output [file]", "Write output to <file> instead of stdout") do |o|
-      options[:output] = o
-    end
   end,
   doc: OptionParser.new do |opts|
     opts.banner = "prmd doc [options] <schema>"
     opts.on("-p", "--prepend header,overview", Array, "Prepend files to output") do |p|
       options[:prepend] = p
     end
-    opts.on("-o", "--output [file]", "Write output to <file> instead of stdout") do |o|
-      options[:output] = o
-    end
+    opts.banner = "prmd doc [options] <directory>"
   end,
   init: OptionParser.new do |opts|
     opts.banner = "prmd init [options] <directory> <resource>"
-    opts.on("-o", "--output [file]", "Write output to <file> instead of stdout") do |o|
-      options[:output] = o
-    end
   end,
   verify: OptionParser.new do |opts|
     opts.banner = "prmd verify [options] <directory or schema>"
@@ -67,14 +59,7 @@ option.order!
 
 case command
   when :combine
-    schema = Prmd.combine(ARGV[0])
-    if (path = options[:output])
-      File.open(path, 'w') do |f|
-        f.write(schema)
-      end
-    else
-      puts schema
-    end
+    puts Prmd.combine(ARGV[0])
   when :doc
     doc = (options[:prepend] || []).map do |path|
       File.open(path, 'r').read
@@ -87,22 +72,9 @@ case command
       schema = Prmd::Schema.load(ARGV[0])
       Prmd.doc(schema)
     end
-    if (path = options[:output])
-      File.open(path, 'w') do |f|
-        f.write(doc)
-      end
-    else
       puts doc
-    end
   when :init
-    schema Prmd.init(ARGV[0])
-    if (path = options[:output])
-      File.open(path, 'w') do |f|
-        f.write(schema)
-      end
-    else
-      puts schema
-    end
+    puts Prmd.init(ARGV[0])
   when :verify
     errors = []
     if ARGV.empty?
