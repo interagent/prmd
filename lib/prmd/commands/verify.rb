@@ -2,6 +2,8 @@ module Prmd
   def self.verify(schema)
     errors = []
 
+    id = schema['id'] && "`#{schema['id']}`" || 'schema'
+
     missing_requirements = []
     %w{description id $schema title type definitions links properties}.each do |requirement|
       unless schema.has_key?(requirement)
@@ -9,18 +11,20 @@ module Prmd
       end
     end
     unless missing_requirements.empty?
-      errors << "schema missing fields: #{missing_requirements.join(', ')}"
+      errors << "#{id} missing fields: #{missing_requirements.join(', ')}"
     end
 
     if schema['definitions']
       unless schema['definitions'].has_key?('identity')
-        errors << "definitions missing field: identity"
+        errors << "#{id} definitions missing field: identity"
       end
       schema['definitions'].each do |key, value|
         missing_requirements = []
-        %w{description readOnly type}.each do |requirement|
-          unless schema['definitions'][key].has_key?(requirement)
-            missing_requirements << requirement
+        unless key == 'identity'
+          %w{description readOnly type}.each do |requirement|
+            unless schema['definitions'][key].has_key?(requirement)
+              missing_requirements << requirement
+            end
           end
         end
         # check for example, unless they are nested in array/object
