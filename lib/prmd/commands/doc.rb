@@ -59,11 +59,6 @@ end
 
 module Prmd
   def self.doc(schema)
-    # verify schema first, output issues to stderr
-    schema.data['definitions'].each do |key, value|
-      Prmd.verify(value).each { |error| $stderr.puts(error) }
-    end
-
     root_url = schema.data['links'].find{|l| l['rel'] == 'root'}['href'] rescue schema.data['url']
 
     schema.data['definitions'].map do |_, definition|
