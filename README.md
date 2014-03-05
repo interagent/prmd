@@ -35,7 +35,7 @@ prmd combine <directory>
 Doc takes the path to a directory of schemas and outputs their documentation onto stdout.
 
 ```
-prmd doc <directory or schema>
+prmd doc <directory_or_schema>
 ```
 
 Prepend file to the documentation output.
@@ -54,8 +54,7 @@ prmd init <resource_name>
 Verify takes a path to a directory of schemas or a particular schema file and checks to see if it matches expectations.
 
 ```
-prmd verify <directory>
-prmd verify <schema>
+prmd verify <directory_or_schema>
 ```
 
 Combining commands works too.
