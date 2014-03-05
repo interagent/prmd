@@ -29,27 +29,39 @@ Or install it yourself as:
 Combine takes the path to a directory of schemas and combines them onto stdout. If a `_meta.json` file exists, it will also be combined to override defaults/metadata.
 
 ```
-prmd combine $DIRECTORY
+prmd combine <directory>
 ```
 
 Doc takes the path to a directory of schemas and outputs their documentation onto stdout.
 
 ```
-prmd doc $DIRECTORY
+prmd doc <directory or schema>
+```
+
+Prepend file to the documentation output.
+
+```
+prmd doc -p header.md,overview.md <directory or schema>
 ```
 
 Init optionally takes a resource as it's first argument and generates a new schema file to stdout (generically or using the resource name provided). If a `_meta.json` file exists, it will override defaults/metadata in initialized file.
 
 ```
 prmd init
-prmd init $RESOURCE
+prmd init <resource_name>
 ```
 
 Verify takes a path to a directory of schemas or a particular schema file and checks to see if it matches expectations.
 
 ```
-prmd verify $DIRECTORY
-prmd verify $SCHEMA
+prmd verify <directory>
+prmd verify <schema>
+```
+
+Combining commands works too.
+
+```
+prmd combine <directory> | prmd verify | prmd doc > schema.md
 ```
 
 ## Contributing
