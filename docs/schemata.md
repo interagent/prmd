@@ -1,5 +1,5 @@
 # schemata
-This document seeks to explain JSON schema in practice as well as our usage and associated implications. Everything described must be followed unless otherwise noted (or it is a bug). Unless otherwise noted (as in meta-data) keys should be alphabetized for ease of modification/review/updating.
+This document seeks to explain JSON schema in practice as well as our usage and associated implications. Everything described must be followed unless otherwise noted (or it is a bug). Unless otherwise noted (as in meta-data) keys should be alphabetized for ease of modification/review/updating. A great example in-the-wild is available for the Heroku Platform API, see [Heroku Devcenter](https://devcenter.heroku.com/articles/platform-api-reference#schema) for details.
 
 ## json-schema
 
