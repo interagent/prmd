@@ -30,7 +30,7 @@ We make heavy usage of the `definitions` attribute in each resource to provide a
 The definitions object MUST include every attribute related directly to this resource, including:
 
 * all properties that are present in the serialization of the object
-* an `identity` property to provide an easy way to find what unique identifier(s) can be used with this object
+* an `identity` property to provide an easy way to find what unique identifier(s) can be used with this object as well as what to use for foreign keys
 * all transient properties which may be passed into links related to the object, even if they are not serialized
 
 Each attribute MUST include the following properties:
