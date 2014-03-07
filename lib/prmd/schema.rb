@@ -53,7 +53,20 @@ module Prmd
     end
 
     def initialize(new_data = {})
-      @data = new_data
+      convert_type_to_array = lambda do |datum|
+        case datum
+        when Array
+          datum.map { |element| convert_type_to_array.call(element) }
+        when Hash
+          if datum.has_key?('type')
+            datum['type'] = [*datum['type']]
+          end
+          datum.each { |k,v| datum[k] = convert_type_to_array.call(v) }
+        else
+          datum
+        end
+      end
+      @data = convert_type_to_array.call(new_data)
     end
 
     def dereference(reference)
