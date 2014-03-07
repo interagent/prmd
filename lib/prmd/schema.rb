@@ -3,7 +3,7 @@ module Prmd
 
     attr_accessor :data
 
-    def self.load(path)
+    def self.load(path, options={})
       unless File.directory?(path)
         data = JSON.parse(File.read(path))
       else
@@ -14,9 +14,8 @@ module Prmd
           'type'        => ['object']
         }
 
-        meta_path = File.join(path, '_meta.json')
-        if File.exists?(meta_path)
-          data.merge!(JSON.parse(File.read(meta_path)))
+        if File.exists?(options[:meta])
+          data.merge!(JSON.parse(File.read(options[:meta])))
         end
 
         Dir.glob(File.join(path, '**', '*.json')).each do |schema|
@@ -24,7 +23,7 @@ module Prmd
           id = if schema_data['id']
             schema_data['id'].gsub('schema/', '')
           end
-          next if id.nil? || id[0..0] == '_'
+          next if id.nil? || id[0..0] == '_' # FIXME: remove this exception?
 
           data['definitions'][id] = schema_data
           reference_localizer = lambda do |datum|

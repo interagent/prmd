@@ -58,7 +58,7 @@ def doc_example(*examples)
 end
 
 module Prmd
-  def self.doc(schema)
+  def self.doc(schema, options={})
     root_url = schema.data['links'].find{|l| l['rel'] == 'root'}['href'] rescue schema.data['url']
 
     schema.data['definitions'].map do |_, definition|
