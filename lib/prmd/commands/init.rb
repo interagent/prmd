@@ -3,7 +3,7 @@ module Prmd
     schema = Prmd::Schema.new
     schema.data.merge!({
       '$schema'     => 'http://json-schema.org/draft-04/hyper-schema',
-      'title'       => '...',
+      'title'       => 'FIXME',
       'type'        => ['object'],
       'definitions' => {},
       'links'       => [],
@@ -49,6 +49,10 @@ module Prmd
           "href"        => "/#{resource}s",
           "method"      => "POST",
           "rel"         => "create",
+          "schema"      => {
+            "properties"  => {},
+            "type"        => ["object"]
+          },
           "title"       => "Create"
         },
         {
@@ -77,6 +81,10 @@ module Prmd
           "href"        => "/#{resource}s/{(%2Fschema%2F#{resource}%23%2Fdefinitions%2Fidentity)}",
           "method"       => "PATCH",
           "rel"          => "update",
+          "schema"      => {
+            "properties"  => {},
+            "type"        => ["object"]
+          },
           "title"        => "Update"
         }
       ]

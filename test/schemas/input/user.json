@@ -42,6 +42,13 @@
       "href": "/users",
       "method": "POST",
       "rel": "create",
+      "schema": {
+        "properties": {
+        },
+        "type": [
+          "object"
+        ]
+      },
       "title": "Create"
     },
     {
@@ -70,6 +77,13 @@
       "href": "/users/{(%2Fschema%2Fuser%23%2Fdefinitions%2Fidentity)}",
       "method": "PATCH",
       "rel": "update",
+      "schema": {
+        "properties": {
+        },
+        "type": [
+          "object"
+        ]
+      },
       "title": "Update"
     }
   ],
