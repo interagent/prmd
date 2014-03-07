@@ -59,9 +59,9 @@ end
 
 module Prmd
   def self.doc(schema, options={})
-    root_url = schema.data['links'].find{|l| l['rel'] == 'root'}['href'] rescue schema.data['url']
+    root_url = schema['links'].find{|l| l['rel'] == 'root'}['href'] rescue schema['url']
 
-    schema.data['definitions'].map do |_, definition|
+    schema['definitions'].map do |_, definition|
       next if (definition['links'] || []).empty?
       resource = definition['id'].split('/').last
       serialization = {}

@@ -1,23 +1,24 @@
 module Prmd
   def self.init(resource, options={})
-    schema = Prmd::Schema.new
-    schema.data.merge!({
+    data = {
       '$schema'     => 'http://json-schema.org/draft-04/hyper-schema',
       'title'       => 'FIXME',
       'type'        => ['object'],
       'definitions' => {},
       'links'       => [],
       'properties'  => {}
-    })
+    }
 
-    if File.exists?(options[:meta])
-      schema.data.merge!(JSON.parse(File.read(options[:meta])))
+    if options[:meta] && File.exists?(options[:meta])
+      data.merge!(JSON.parse(File.read(options[:meta])))
     end
 
+    schema = Prmd::Schema.new(data)
+
     if resource
-      schema.data['id']    = "schema/#{resource}"
-      schema.data['title'] = "#{schema.data['title']} - #{resource[0...1].upcase}#{resource[1..-1]}"
-      schema.data['definitions'] = {
+      schema['id']    = "schema/#{resource}"
+      schema['title'] = "#{schema['title']} - #{resource[0...1].upcase}#{resource[1..-1]}"
+      schema['definitions'] = {
         "created_at" => {
           "description" => "when #{resource} was created",
           "example"     => "2012-01-01T12:00:00Z",
@@ -43,7 +44,7 @@ module Prmd
           "type"        => ["string"]
         }
       }
-      schema.data['links'] = [
+      schema['links'] = [
         {
           "description" => "Create a new #{resource}.",
           "href"        => "/#{resource}s",
@@ -88,7 +89,7 @@ module Prmd
           "title"        => "Update"
         }
       ]
-      schema.data['properties'] = {
+      schema['properties'] = {
         "created_at"  => { "$ref" => "/schema/#{resource}#/definitions/created_at" },
         "id"          => { "$ref" => "/schema/#{resource}#/definitions/id" },
         "updated_at"  => { "$ref" => "/schema/#{resource}#/definitions/updated_at" }

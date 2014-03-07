@@ -1,7 +1,13 @@
 module Prmd
   class Schema
 
-    attr_accessor :data
+    def [](key)
+      @data[key]
+    end
+
+    def []=(key, value)
+      @data[key] = value
+    end
 
     def self.load(path, options={})
       unless File.directory?(path)
@@ -14,7 +20,7 @@ module Prmd
           'type'        => ['object']
         }
 
-        if File.exists?(options[:meta])
+        if options[:meta] && File.exists?(options[:meta])
           data.merge!(JSON.parse(File.read(options[:meta])))
         end
 
@@ -79,7 +85,7 @@ module Prmd
         key = reference
       end
       begin
-        datum = data
+        datum = @data
         key.gsub(%r{[^#]*#/}, '').split('/').each do |fragment|
           datum = datum[fragment]
         end
