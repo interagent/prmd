@@ -48,6 +48,13 @@ module Prmd
             missing_requirements << requirement
           end
         end
+        if link.has_key?('schema')
+          %w{properties type}.each do |requirement|
+            unless link['schema'].has_key?(requirement)
+              missing_requirements << "schema/#{requirement}"
+            end
+          end
+        end
         missing_requirements.each do |missing_requirement|
           errors << "Missing #{missing_requirement} in `#{link}` link for `#{id}`"
         end
