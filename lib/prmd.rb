@@ -1,4 +1,3 @@
-require "diff-lcs"
 require "erubis"
 require "json"
 
