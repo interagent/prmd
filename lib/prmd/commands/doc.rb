@@ -61,7 +61,11 @@ module Prmd
   def self.doc(schema, options={})
     root_url = schema['links'].find{|l| l['rel'] == 'root'}['href'] rescue schema['url']
 
-    schema['definitions'].map do |_, definition|
+    doc = (options[:prepend] || []).map do |path|
+      File.open(path, 'r').read + "\n"
+    end
+
+    doc << schema['definitions'].map do |_, definition|
       next if (definition['links'] || []).empty?
       resource = definition['id'].split('/').last
       serialization = {}
@@ -100,7 +104,7 @@ module Prmd
         serialization:   serialization,
         title:           title,
         params_template: File.read(File.dirname(__FILE__) + "/../views/parameters.erb"),
-      })
-    end.join("\n")
+      }) + "\n"
+    end
   end
 end

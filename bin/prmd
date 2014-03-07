@@ -70,18 +70,14 @@ case command
   when :combine
     puts Prmd.combine(ARGV[0], options)
   when :doc
-    doc = (options[:prepend] || []).map do |path|
-      File.open(path, 'r').read
-    end.join("\n")
-    doc << if ARGV.empty?
+    if ARGV.empty?
       data = JSON.parse($stdin.read)
       schema = Prmd::Schema.new(data, options)
-      Prmd.doc(schema, options)
+      puts Prmd.doc(schema, options)
     else
       schema = Prmd::Schema.load(ARGV[0])
-      Prmd.doc(schema, options)
+      puts Prmd.doc(schema, options)
     end
-      puts doc
   when :init
     puts Prmd.init(ARGV[0], options)
   when :verify
