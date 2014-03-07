@@ -2,13 +2,11 @@ PATH
   remote: .
   specs:
     prmd (0.0.1)
-      diff-lcs
       erubis
 
 GEM
   remote: https://rubygems.org/
   specs:
-    diff-lcs (1.2.5)
     erubis (2.7.0)
     minitest (4.7.5)
     rake (10.1.0)
