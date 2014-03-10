@@ -73,7 +73,7 @@ module Prmd
         identifiers = if definition['definitions']['identity'].has_key?('anyOf')
           definition['definitions']['identity']['anyOf']
         else
-          [definitions['definitions']['identity']]
+          [definition['definitions']['identity']]
         end
 
         identifiers = identifiers.map {|ref| ref['$ref'].split('/').last }
