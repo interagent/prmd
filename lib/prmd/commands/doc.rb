@@ -89,7 +89,7 @@ module Prmd
             end
           end
         end
-      else
+      elsif definition['example']
         serialization.merge!(definition['example'])
       end
 
