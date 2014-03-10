@@ -16,6 +16,9 @@ module Prmd
     schema = Prmd::Schema.new(data)
 
     if resource
+      if resource.include?('/')
+        parent, resource = resource.split('/')
+      end
       schema['id']    = "schema/#{resource}"
       schema['title'] = "#{schema['title']} - #{resource[0...1].upcase}#{resource[1..-1]}"
       schema['definitions'] = {
@@ -46,49 +49,60 @@ module Prmd
       }
       schema['links'] = [
         {
-          "description" => "Create a new #{resource}.",
-          "href"        => "/#{resource}s",
-          "method"      => "POST",
-          "rel"         => "create",
-          "schema"      => {
+          "description"   => "Create a new #{resource}.",
+          "href"          => "/#{resource}s",
+          "method"        => "POST",
+          "rel"           => "create",
+          "schema"        => {
             "properties"  => {},
             "type"        => ["object"]
           },
-          "title"       => "Create"
+          "title"         => "Create"
         },
         {
-          "description" => "Delete an existing #{resource}.",
-          "href"        => "/#{resource}s/{(%2Fschema%2F#{resource}%23%2Fdefinitions%2Fidentity)}",
-          "method"      => "DELETE",
-          "rel"         => "destroy",
-          "title"       => "Delete"
+          "description"   => "Delete an existing #{resource}.",
+          "href"          => "/#{resource}s/{(%2Fschema%2F#{resource}%23%2Fdefinitions%2Fidentity)}",
+          "method"        => "DELETE",
+          "rel"           => "destroy",
+          "title"         => "Delete"
         },
         {
-          "description"  => "Info for existing #{resource}.",
-          "href"        => "/#{resource}s/{(%2Fschema%2F#{resource}%23%2Fdefinitions%2Fidentity)}",
-          "method"       => "GET",
-          "rel"          => "self",
-          "title"        => "Info"
+          "description"   => "Info for existing #{resource}.",
+          "href"          => "/#{resource}s/{(%2Fschema%2F#{resource}%23%2Fdefinitions%2Fidentity)}",
+          "method"        => "GET",
+          "rel"           => "self",
+          "title"         => "Info"
         },
         {
-          "description"  => "List existing #{resource}.",
-          "href"        => "/#{resource}s",
-          "method"       => "GET",
-          "rel"          => "instances",
-          "title"        => "List"
+          "description"   => "List existing #{resource}s.",
+          "href"          => "/#{resource}s",
+          "method"        => "GET",
+          "rel"           => "instances",
+          "title"         => "List"
         },
         {
-          "description"  => "Update an existing #{resource}.",
-          "href"        => "/#{resource}s/{(%2Fschema%2F#{resource}%23%2Fdefinitions%2Fidentity)}",
-          "method"       => "PATCH",
-          "rel"          => "update",
-          "schema"      => {
+          "description"   => "Update an existing #{resource}.",
+          "href"          => "/#{resource}s/{(%2Fschema%2F#{resource}%23%2Fdefinitions%2Fidentity)}",
+          "method"        => "PATCH",
+          "rel"           => "update",
+          "schema"        => {
             "properties"  => {},
             "type"        => ["object"]
           },
-          "title"        => "Update"
+          "title"         => "Update"
         }
       ]
+      if parent
+        schema['links'] << [
+          {
+            "description"  => "List existing #{resource}s for existing #{parent}.",
+            "href"         => "/#{parent}s/{(%2Fschema%2F#{parent}%23%2Fdefinitions%2Fidentity)}/#{resource}s",
+            "method"       => "GET",
+            "rel"          => "instances",
+            "title"        => "List"
+          }
+        ]
+      end
       schema['properties'] = {
         "created_at"  => { "$ref" => "/schema/#{resource}#/definitions/created_at" },
         "id"          => { "$ref" => "/schema/#{resource}#/definitions/id" },
