@@ -93,15 +93,13 @@ module Prmd
         }
       ]
       if parent
-        schema['links'] << [
-          {
-            "description"  => "List existing #{resource}s for existing #{parent}.",
-            "href"         => "/#{parent}s/{(%2Fschema%2F#{parent}%23%2Fdefinitions%2Fidentity)}/#{resource}s",
-            "method"       => "GET",
-            "rel"          => "instances",
-            "title"        => "List"
-          }
-        ]
+        schema['links'] << {
+          "description"  => "List existing #{resource}s for existing #{parent}.",
+          "href"         => "/#{parent}s/{(%2Fschema%2F#{parent}%23%2Fdefinitions%2Fidentity)}/#{resource}s",
+          "method"       => "GET",
+          "rel"          => "instances",
+          "title"        => "List"
+        }
       end
       schema['properties'] = {
         "created_at"  => { "$ref" => "/schema/#{resource}#/definitions/created_at" },
