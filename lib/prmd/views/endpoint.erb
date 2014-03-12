@@ -24,7 +24,7 @@
 <%- definition['links'].each do |link, datum| %>
 <%- path = link['href'].gsub(%r|(\{\([^\)]+\)\})|) do |ref|
   ref = ref.gsub('%2F', '/').gsub('%23', '#').gsub(%r|[\{\(\)\}]|, '')
-  resource = ref.split('#/definitions/').last.split('/definitions/identity').first
+  resource = ref.split('#/definitions/').last.split('/definitions/identity').first.gsub('-', '_')
   identity = schema.dereference(ref)
   if identity.has_key?('anyOf')
     '{' + resource + '_' + schema.dereference(ref)['anyOf'].map {|r| r['$ref'].split('/').last}.join('_or_') + '}'
@@ -58,7 +58,7 @@ end -%>
 
 #### Curl Example
 ```term
-$ curl -n -X <%= link['method'] %> <%= root_url %><%= path.gsub(/{([^}]*)}/) {|match| '$' + match.gsub(/[{}]/, '').gsub('-', '_').upcase} %><%- if link.has_key?('schema') && (link['schema'].has_key?('properties') || link['schema'].has_key?('example')) %> \
+$ curl -n -X <%= link['method'] %> <%= root_url %><%= path.gsub(/{([^}]*)}/) {|match| '$' + match.gsub(/[{}]/, '')} %><%- if link.has_key?('schema') && (link['schema'].has_key?('properties') || link['schema'].has_key?('example')) %> \
 -H "Content-Type: application/json" \
 <%-
   data = {}
