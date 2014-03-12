@@ -63,7 +63,7 @@ module Prmd
         when Array
           datum.map { |element| convert_type_to_array.call(element) }
         when Hash
-          if datum.has_key?('type')
+          if datum.has_key?('type') && datum['type'].is_a?(String)
             datum['type'] = [*datum['type']]
           end
           datum.each { |k,v| datum[k] = convert_type_to_array.call(v) }
