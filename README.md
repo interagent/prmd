@@ -34,7 +34,7 @@ $ bundle
 
 Or install it yourself as:
 
-```
+```console
 $ gem install prmd
 ```
 
@@ -43,7 +43,7 @@ $ gem install prmd
 Combine takes the path to a directory of schemas and combines them onto
 stdout. If -m or --meta is supplied, it will override defaults/metadata:
 
-```
+```console
 $ prmd combine <directory>
 ```
 
@@ -51,13 +51,13 @@ Doc takes the path to a directory of schemas and outputs their
 documentation onto stdout. If -m or --meta is supplied, it will override
 defaults/metadata:
 
-```
+```console
 $ prmd doc <directory_or_schema>
 ```
 
 Prepend file to the documentation output:
 
-```
+```console
 $ prmd doc -p header.md,overview.md <directory or schema>
 ```
 
@@ -66,7 +66,7 @@ new schema file to stdout (generically or using the resource name
 provided). If -m or --meta is supplied, it will override
 defaults/metadata:
 
-```
+```console
 $ prmd init
 $ prmd init <resource_name>
 ```
@@ -74,13 +74,13 @@ $ prmd init <resource_name>
 Verify takes a path to a directory of schemas or a particular schema
 file and checks to see if it matches expectations:
 
-```
+```console
 $ prmd verify <directory_or_schema>
 ```
 
 Combining commands works too:
 
-```
+```console
 $ prmd combine <directory> | prmd verify | prmd doc > schema.md
 ```
 
