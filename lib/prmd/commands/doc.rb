@@ -95,7 +95,9 @@ module Prmd
 
       title = definition['title'].split(' - ', 2).last
 
-      Erubis::Eruby.new(File.read(File.dirname(__FILE__) + "/../views/endpoint.erb")).result({
+      views_dir = (options[:views] || File.dirname(__FILE__) + "/../views")
+      
+      Erubis::Eruby.new(File.read(views_dir + "/endpoint.erb")).result({
         definition:      definition,
         identifiers:     identifiers,
         resource:        resource,
@@ -103,7 +105,7 @@ module Prmd
         schema:          schema,
         serialization:   serialization,
         title:           title,
-        params_template: File.read(File.dirname(__FILE__) + "/../views/parameters.erb"),
+        params_template: File.read(views_dir + "/parameters.erb"),
       }) + "\n"
     end
   end

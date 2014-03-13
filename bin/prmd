@@ -19,6 +19,9 @@ commands = {
     opts.on("-p", "--prepend header,overview", Array, "Prepend files to output") do |p|
       options[:prepend] = p
     end
+    opts.on("-v", "--views directory", "Pull custom views from a directory") do |v|
+      options[:views] = v
+    end
     opts.banner = "prmd doc [options] <directory>"
   end,
   init: OptionParser.new do |opts|
