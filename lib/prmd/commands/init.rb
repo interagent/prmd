@@ -3,6 +3,7 @@ module Prmd
     data = {
       '$schema'     => 'http://json-schema.org/draft-04/hyper-schema',
       'title'       => 'FIXME',
+      'description' => 'FIXME',
       'type'        => ['object'],
       'definitions' => {},
       'links'       => [],
