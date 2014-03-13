@@ -14,59 +14,74 @@ specification.
 The expectations for JSON Schema usage that are expected by prmd are
 described in [/docs/schemata.md](/docs/schemata.md).
 
-To learn more about json-schema in general, start with [this excellent guide](http://spacetelescope.github.io/understanding-json-schema/) and supplement with the [specification](http://json-schema.org/documentation.html).
+To learn more about JSON Schema in general, start with
+[this excellent guide](http://spacetelescope.github.io/understanding-json-schema/)
+and supplement with the [specification](http://json-schema.org/documentation.html).
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'prmd'
+```ruby
+gem 'prmd'
+```
 
 And then execute:
 
-    $ bundle
+```console
+$ bundle
+```
 
 Or install it yourself as:
 
-    $ gem install prmd
+```
+$ gem install prmd
+```
 
 ## Usage
 
-Combine takes the path to a directory of schemas and combines them onto stdout. If -m or --meta is supplied, it will override defaults/metadata.
+Combine takes the path to a directory of schemas and combines them onto
+stdout. If -m or --meta is supplied, it will override defaults/metadata:
 
 ```
-prmd combine <directory>
+$ prmd combine <directory>
 ```
 
-Doc takes the path to a directory of schemas and outputs their documentation onto stdout. If -m or --meta is supplied, it will override defaults/metadata.
+Doc takes the path to a directory of schemas and outputs their
+documentation onto stdout. If -m or --meta is supplied, it will override
+defaults/metadata:
 
 ```
-prmd doc <directory_or_schema>
+$ prmd doc <directory_or_schema>
 ```
 
-Prepend file to the documentation output.
+Prepend file to the documentation output:
 
 ```
-prmd doc -p header.md,overview.md <directory or schema>
+$ prmd doc -p header.md,overview.md <directory or schema>
 ```
 
-Init optionally takes a resource as it's first argument and generates a new schema file to stdout (generically or using the resource name provided). If -m or --meta is supplied, it will override defaults/metadata.
+Init optionally takes a resource as it's first argument and generates a
+new schema file to stdout (generically or using the resource name
+provided). If -m or --meta is supplied, it will override
+defaults/metadata:
 
 ```
-prmd init
-prmd init <resource_name>
+$ prmd init
+$ prmd init <resource_name>
 ```
 
-Verify takes a path to a directory of schemas or a particular schema file and checks to see if it matches expectations.
+Verify takes a path to a directory of schemas or a particular schema
+file and checks to see if it matches expectations:
 
 ```
-prmd verify <directory_or_schema>
+$ prmd verify <directory_or_schema>
 ```
 
-Combining commands works too.
+Combining commands works too:
 
 ```
-prmd combine <directory> | prmd verify | prmd doc > schema.md
+$ prmd combine <directory> | prmd verify | prmd doc > schema.md
 ```
 
 ## Contributing
