@@ -11,8 +11,8 @@ an API. prmd provides tools for bootstrapping a description like this,
 verifying its completeness, and generating documentation from the
 specification.
 
-The expectations for JSON Schema usage that are expected by prmd are
-described in [/docs/schemata.md](/docs/schemata.md).
+The JSON Schema usage conventions expected by prmd are described in
+[/docs/schemata.md](/docs/schemata.md).
 
 To learn more about JSON Schema in general, start with
 [this excellent guide](http://spacetelescope.github.io/understanding-json-schema/)
