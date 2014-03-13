@@ -6,7 +6,7 @@ against JSON Schema documents.
 
 ## Introduction
 
-[JSON-Schema](http://json-schema.org/) provides a great way to describe
+[JSON Schema](http://json-schema.org/) provides a great way to describe
 an API. prmd provides tools for bootstrapping a description like this,
 verifying its completeness, and generating documentation from the
 specification.
