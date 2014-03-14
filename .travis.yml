@@ -1,2 +1,4 @@
 language: ruby
 script: "bundle exec rake"
+notifications:
+  email: false
