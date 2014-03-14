@@ -59,7 +59,7 @@ end
 
 module Prmd
   def self.doc(schema, options={})
-    root_url = schema['links'].find{|l| l['rel'] == 'root'}['href'] rescue schema['url']
+    root_url = schema['links'].find{|l| l['rel'] == 'root'}['href'] rescue schema['root_url']
 
     doc = (options[:prepend] || []).map do |path|
       File.open(path, 'r').read + "\n"
