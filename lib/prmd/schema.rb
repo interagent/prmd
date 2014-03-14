@@ -89,7 +89,7 @@ module Prmd
         key.gsub(%r{[^#]*#/}, '').split('/').each do |fragment|
           datum = datum[fragment]
         end
-        datum
+        dereference(datum)
       rescue => error
         $stderr.puts("Failed to dereference `#{key}`")
         raise(error)
