@@ -1,11 +1,23 @@
 module Prmd
   def self.verify(schema)
     errors = []
+    errors << verify_schema(schema)
+    if schema['definitions']
+      schema['definitions'].each do |key, value|
+        errors << verify_schema(value)
+        errors << verify_definitions_and_links(value)
+      end
+    end
+    errors.flatten!
+  end
+
+  def self.verify_schema(schema)
+    errors = []
 
     id = schema['id']
 
     missing_requirements = []
-    %w{description id $schema title type definitions links properties}.each do |requirement|
+    %w{description id $schema title type definitions properties}.each do |requirement|
       unless schema.has_key?(requirement)
         missing_requirements << requirement
       end
@@ -13,6 +25,14 @@ module Prmd
     missing_requirements.each do |missing_requirement|
       errors << "Missing `#{id}#/#{missing_requirement}`"
     end
+
+    errors
+  end
+
+  def self.verify_definitions_and_links(schema)
+    errors = []
+
+    id = schema['id']
 
     if schema['definitions']
       unless schema['definitions'].has_key?('identity')
@@ -59,6 +79,8 @@ module Prmd
           errors << "Missing #{missing_requirement} in `#{link}` link for `#{id}`"
         end
       end
+    else
+      errors << "Missing `#{id}/links`"
     end
 
     errors
