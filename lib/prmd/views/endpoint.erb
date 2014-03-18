@@ -29,7 +29,7 @@
   if identity.has_key?('anyOf')
     '{' + resource + '_' + schema.dereference(ref)['anyOf'].map {|r| r['$ref'].split('/').last}.join('_or_') + '}'
   else
-    '{' + resource + '_' + identity['$ref'].split('/').last + '}'
+    '{' + resource + '_' + ref.split('/').last + '}'
   end
 end -%>
 ### <%= title %> <%= link['title'] %>
