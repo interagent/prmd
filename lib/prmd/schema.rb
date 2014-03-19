@@ -74,7 +74,7 @@ module Prmd
       @data = convert_type_to_array.call(new_data)
     end
 
-    def dereference(reference)
+    def dereference(reference, recursive = true)
       if reference.is_a?(Hash)
         if reference.has_key?('$ref')
           key = reference['$ref']
@@ -89,7 +89,7 @@ module Prmd
         key.gsub(%r{[^#]*#/}, '').split('/').each do |fragment|
           datum = datum[fragment]
         end
-        dereference(datum)
+        recursive ? dereference(datum) : datum
       rescue => error
         $stderr.puts("Failed to dereference `#{key}`")
         raise(error)
