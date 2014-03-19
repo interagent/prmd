@@ -25,9 +25,9 @@
 <%- path = link['href'].gsub(%r|(\{\([^\)]+\)\})|) do |ref|
   ref = ref.gsub('%2F', '/').gsub('%23', '#').gsub(%r|[\{\(\)\}]|, '')
   resource = ref.split('#/definitions/').last.split('/definitions/identity').first.gsub('-', '_')
-  identity = schema.dereference(ref)
+  identity = schema.dereference(ref, false)
   if identity.has_key?('anyOf')
-    '{' + resource + '_' + schema.dereference(ref)['anyOf'].map {|r| r['$ref'].split('/').last}.join('_or_') + '}'
+    '{' + resource + '_' + identity['anyOf'].map {|r| r['$ref'].split('/').last}.join('_or_') + '}'
   else
     '{' + resource + '_' + ref.split('/').last + '}'
   end
