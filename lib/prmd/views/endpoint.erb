@@ -70,10 +70,10 @@ $ curl -n -X <%= link['method'] %> <%= root_url %><%= path.gsub(/{([^}]*)}/) {|m
       elsif value.has_key?('properties')
         data[key] = {}
         value['properties'].each do |k,v|
-          data[key][k] = v['example']
+          data[key][k] = schema.dereference(v)['example']
         end
       else
-        data[key] = value['example']
+        data[key] = schema.dereference(value)['example']
       end
     end
   else
