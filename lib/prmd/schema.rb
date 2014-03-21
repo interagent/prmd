@@ -74,26 +74,59 @@ module Prmd
       @data = convert_type_to_array.call(new_data)
     end
 
-    def dereference(reference)
+
+    # Get the definition pointed at by the given reference.
+    #
+    # @param reference [Hash, String] reference to dereference. Can be a Hash
+    #                                 containing a '$ref' key with a String
+    #                                 reference to the definition, a the '$ref'
+    #                                 value itself
+    #
+    # @param key [String] key from the schema that holds the given reference.
+    #                     This is mainly useful if you want to get back both
+    #                     the dereferenced value and its associated key, as the
+    #                     given reference object could already be a dereferenced
+    #                     one.
+    #
+    # @return [Array] the dereferenced definition and its associated key as an
+    #                 array: [definition, key]. The key part could be nil when
+    #                 no key argument has been given and the reference didn't
+    #                 need to be dereferenced.
+    #                 When the key part, is not wanted simply use:
+    #                 `value = schema.dereference(ref).first`
+    #
+    # @raise [Exception] when the reference cannot be found in the schema
+    #
+    def dereference(reference, key = nil)
+      # Reference can be a schema definition
       if reference.is_a?(Hash)
         if reference.has_key?('$ref')
-          key = reference['$ref']
+          ref = reference['$ref']
         else
-          return reference # no dereference needed
+          return [reference, key] # no dereference needed
         end
+      # Or the String content of a "$ref" attribute
       else
-        key = reference
+        ref = reference
       end
-      begin
-        datum = @data
-        key.gsub(%r{[^#]*#/}, '').split('/').each do |fragment|
-          datum = datum[fragment]
-        end
-        dereference(datum)
-      rescue => error
-        $stderr.puts("Failed to dereference `#{key}`")
-        raise(error)
+
+      # Assumes ref to be of the form '/schema/resource#/key1/key2', where
+      # '/schema/resource' is actually what's held in @data.
+      # Walk through each @data[keyX] until we get to the referenced definition
+      datum = @data
+      ref.gsub(%r{[^#]*#/}, '').split('/').each do |fragment|
+        key = fragment
+        datum = datum[fragment]
       end
+
+      # Dereference the definition we found for the key in ref.
+      # If datum contains a fully dereferenced object, the recursion will be
+      # stopped and datum will be returned.
+      dereference(datum, key)
+
+    rescue => error
+      $stderr.puts("Failed to dereference `#{ref}`")
+      raise(error)
     end
 
     def to_s
