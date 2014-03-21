@@ -72,7 +72,7 @@ case command
   when :doc
     if ARGV.empty?
       data = JSON.parse($stdin.read)
-      schema = Prmd::Schema.new(data, options)
+      schema = Prmd::Schema.new(data)
       puts Prmd.doc(schema, options)
     else
       schema = Prmd::Schema.load(ARGV[0])
