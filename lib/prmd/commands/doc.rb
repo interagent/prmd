@@ -80,13 +80,14 @@ module Prmd
       end
       if definition['properties']
         definition['properties'].each do |key, value|
-          unless value.has_key?('properties')
-            serialization[key] = schema.dereference(value)['example']
-          else
+          value = schema.dereference(value)
+          if value.has_key?('properties')
             serialization[key] = {}
             value['properties'].each do |k,v|
               serialization[key][k] = schema.dereference(v)['example']
             end
+          else
+            serialization[key] = value['example']
           end
         end
       else
