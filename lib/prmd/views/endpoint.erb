@@ -94,10 +94,6 @@ when 'create'
 else
   '200 OK'
 end %>
-<%- if link['rel'] == 'instances' && identifiers %>
-Accept-Range: <%= identifiers.join(', ') %>
-Content-Range: id 01234567-89ab-cdef-0123-456789abcdef..01234567-89ab-cdef-0123-456789abcdef; max=200
-<%- end %>
 ```
 ```javascript```
 <%- if link['rel'] == 'instances' %>
