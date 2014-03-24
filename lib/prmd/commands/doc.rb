@@ -90,7 +90,7 @@ module Prmd
             serialization[key] = value['example']
           end
         end
-      else
+      elsif definition['example']
         serialization.merge!(definition['example'])
       end
 
