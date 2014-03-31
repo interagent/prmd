@@ -25,11 +25,11 @@
 <%- path = link['href'].gsub(%r|(\{\([^\)]+\)\})|) do |ref|
   ref = ref.gsub('%2F', '/').gsub('%23', '#').gsub(%r|[\{\(\)\}]|, '')
   resource = ref.split('#/definitions/').last.split('/definitions/identity').first.gsub('-', '_')
-  identity = schema.dereference(ref)
-  if identity.has_key?('anyOf')
-    '{' + resource + '_' + schema.dereference(ref)['anyOf'].map {|r| r['$ref'].split('/').last}.join('_or_') + '}'
+  identity_key, identity_value = schema.dereference(ref)
+  if identity_value.has_key?('anyOf')
+    '{' + resource + '_' + identity_value['anyOf'].map {|r| r['$ref'].split('/').last}.join('_or_') + '}'
   else
-    '{' + resource + '_' + ref.split('/').last + '}'
+    '{' + resource + '_' + identity_key.split('/').last + '}'
   end
 end -%>
 ### <%= title %> <%= link['title'] %>
@@ -66,14 +66,14 @@ end -%>
       link['schema']['properties'].each do |key, value|
         if value.has_key?('anyOf')
           id_ref = value['anyOf'].detect {|ref| ref['$ref'].split('/').last == 'id'}
-          data[key] = schema.dereference(id_ref)['example']
+          data[key] = schema.dereference(id_ref).last['example']
         elsif value.has_key?('properties')
           data[key] = {}
           value['properties'].each do |k,v|
-            data[key][k] = schema.dereference(v)['example']
+            data[key][k] = schema.dereference(v).last['example']
           end
         else
-          data[key] = schema.dereference(value)['example']
+          data[key] = schema.dereference(value).last['example']
         end
       end
     else

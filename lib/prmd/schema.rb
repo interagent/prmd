@@ -79,7 +79,7 @@ module Prmd
         if reference.has_key?('$ref')
           key = reference['$ref']
         else
-          return reference # no dereference needed
+          return [nil, reference] # no dereference needed
         end
       else
         key = reference
@@ -89,7 +89,9 @@ module Prmd
         key.gsub(%r{[^#]*#/}, '').split('/').each do |fragment|
           datum = datum[fragment]
         end
-        dereference(datum)
+        # last dereference will have nil key, so compact it out
+        # [-2..-1] should be the final key reached before deref
+        [key, *dereference(datum).compact][-2..-1]
       rescue => error
         $stderr.puts("Failed to dereference `#{key}`")
         raise(error)
