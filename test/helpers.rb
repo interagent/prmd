@@ -6,5 +6,5 @@ def input_schemas_path
 end
 
 def user_input_schema
-  @user_input_schema ||= Prmd::Schema.load(File.join(input_schemas_path, 'user.json'))
+  @user_input_schema ||= Prmd.combine(File.join(input_schemas_path, 'user.json'))
 end

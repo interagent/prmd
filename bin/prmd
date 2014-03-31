@@ -68,7 +68,7 @@ option.order!
 
 case command
   when :combine
-    puts Prmd.combine(ARGV[0], options)
+    puts Prmd.combine(ARGV[0], options).to_s
   when :doc
     if ARGV.empty?
       data = JSON.parse($stdin.read)
