@@ -77,12 +77,13 @@ module Prmd
     def dereference(reference)
       if reference.is_a?(Hash)
         if reference.has_key?('$ref')
-          key = reference['$ref']
+          value = reference.dup
+          key = value.delete('$ref')
         else
           return [nil, reference] # no dereference needed
         end
       else
-        key = reference
+        key, value = reference, {}
       end
       begin
         datum = @data
@@ -91,7 +92,11 @@ module Prmd
         end
         # last dereference will have nil key, so compact it out
         # [-2..-1] should be the final key reached before deref
-        [key, *dereference(datum).compact][-2..-1]
+        dereferenced_key, dereferenced_value = dereference(datum)
+        [
+          [key, dereferenced_key].compact.last,
+          [dereferenced_value, value].inject({}) { |composite, element| composite.merge(element) }
+        ]
       rescue => error
         $stderr.puts("Failed to dereference `#{key}`")
         raise(error)
