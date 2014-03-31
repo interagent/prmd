@@ -92,7 +92,7 @@
       "$ref": "/schema/user#/definitions/created_at"
     },
     "id": {
-      "$ref": "/schema/user#/definitions/id"
+      "$ref": "/schema/user#/definitions/identity"
     },
     "updated_at": {
       "$ref": "/schema/user#/definitions/updated_at"

@@ -2,7 +2,7 @@ def extract_attributes(schema, properties)
   attributes = []
   properties.each do |key, value|
     # found a reference to another element:
-    value = schema.dereference(value)
+    value = schema.dereference(value).first
     if value.has_key?('anyOf')
       descriptions = []
       examples = []
@@ -13,7 +13,7 @@ def extract_attributes(schema, properties)
       end
 
       anyof.each do |ref|
-        nested_field = schema.dereference(ref)
+        nested_field = schema.dereference(ref).first
         descriptions << nested_field['description']
         examples << nested_field['example']
       end
@@ -83,11 +83,11 @@ module Prmd
       end
       if definition['properties']
         definition['properties'].each do |key, value|
-          value = schema.dereference(value)
+          value = schema.dereference(value).first
           if value.has_key?('properties')
             serialization[key] = {}
             value['properties'].each do |k,v|
-              serialization[key][k] = schema.dereference(v)['example']
+              serialization[key][k] = schema.dereference(v).first['example']
             end
           else
             serialization[key] = value['example']
