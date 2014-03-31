@@ -40,11 +40,12 @@ $ gem install prmd
 
 ## Usage
 
-Combine takes the path to a directory of schemas and combines them onto
-stdout. If -m or --meta is supplied, it will override defaults/metadata:
+Combine takes the path to a schema file or directory of schema files and
+combines them on to stdout. If -m or --meta is supplied, it will override
+defaults/metadata:
 
 ```console
-$ prmd combine <directory>
+$ prmd combine <file_or_directory>
 ```
 
 Doc takes the path to a directory of schemas and outputs their
