@@ -22,7 +22,7 @@ commands = {
     opts.banner = "prmd doc [options] <directory>"
   end,
   init: OptionParser.new do |opts|
-    opts.banner = "prmd init [options] <directory> <resource>"
+    opts.banner = "prmd init [options] <resource>"
     opts.on("-m", "--meta meta.json", "Set defaults for schemata") do |m|
       options[:meta] = m
     end
