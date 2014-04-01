@@ -48,15 +48,14 @@ defaults/metadata:
 $ prmd combine <file_or_directory>
 ```
 
-Doc takes the path to a directory of schemas and outputs their
-documentation onto stdout. If -m or --meta is supplied, it will override
-defaults/metadata:
+Doc takes the path to a combined schema and outputs documentation to stdout.
+If -m or --meta is supplied, it will override defaults/metadata:
 
 ```console
-$ prmd doc <directory_or_schema>
+$ prmd doc <combined_schema>
 ```
 
-Prepend file to the documentation output:
+You can also prepend files to the documention with -p or --prepend:
 
 ```console
 $ prmd doc -p header.md,overview.md <directory or schema>
@@ -72,14 +71,13 @@ $ prmd init
 $ prmd init <resource_name>
 ```
 
-Verify takes a path to a directory of schemas or a particular schema
-file and checks to see if it matches expectations:
+Verify takes a path to a combined schema and warns about missing attributes.
 
 ```console
-$ prmd verify <directory_or_schema>
+$ prmd verify <combined_schema>
 ```
 
-Combining commands works too:
+You can also chain commands as needed:
 
 ```console
 $ prmd combine <directory> | prmd verify | prmd doc > schema.md

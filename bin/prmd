@@ -75,7 +75,8 @@ case command
       schema = Prmd::Schema.new(data)
       puts Prmd.doc(schema, options)
     else
-      schema = Prmd::Schema.load(ARGV[0])
+      data = JSON.parse(File.read(ARGV[0]))
+      schema = Prmd::Schema.new(data)
       puts Prmd.doc(schema, options)
     end
   when :init
@@ -86,19 +87,14 @@ case command
       data = $stdin.read
       errors = Prmd.verify(JSON.parse(data))
       puts data
-    elsif File.directory?(ARGV[0])
-      Dir.glob(File.join(ARGV[0], '**/*.json')).each do |path|
-        Prmd.verify(JSON.parse(File.read(path))).each do |error|
-          errors << "#{path}: #{error}"
-        end
-      end
     else
-      Prmd.verify(JSON.parse(File.read(ARGV[0]))).each do |error|
+      data = JSON.parse(File.read(ARGV[0]))
+      Prmd.verify(data).each do |error|
         errors << "#{ARGV[0]}: #{error}"
       end
     end
     errors.each do |error|
-      $stderr.puts error
+      $stderr.puts(error)
     end
     exit(1) unless errors.empty?
 end
