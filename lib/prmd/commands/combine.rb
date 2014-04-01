@@ -1,7 +1,7 @@
 module Prmd
   def self.combine(path, options={})
     files = if File.directory?(path)
-      Dir.glob(File.join(path, '**', '*.json'))
+      Dir.glob(File.join(path, '**', '*.json')) - [options[:meta]]
     else
       [path]
     end
