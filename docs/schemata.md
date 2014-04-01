@@ -42,7 +42,6 @@ Each attribute MUST include the following properties:
 Each attribute MAY include the following properties:
 
 * `pattern` - a regex encoded in a string that the valid values MUST match
-* `readOnly` - boolean value defining if the attribute can be modified, assumes `false` if omitted
 * `format` - format of the value. MUST be one of spec defined `["date-time", "email", "hostname", "ipv4", "ipv6", "uri"]` or defined by us `["uuid"]`
 
 Examples:
@@ -54,7 +53,6 @@ Examples:
       "description":  "unique identifier of resource",
       "example":      "01234567-89ab-cdef-0123-456789abcdef",
       "format":       "uuid",
-      "readOnly":     true,
       "type":         ["string"]
     },
     "url": {

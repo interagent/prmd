@@ -39,25 +39,20 @@ if original['definitions']
     when 'uuid'
       {
         'example'   => '01234567-89ab-cdef-0123-456789abcdef',
-        'readOnly'  => true,
         'type'      => ['string']
       }
     when 'email'
       {
         'example'   => 'username@example.com',
-        'readOnly'  => false,
         'type'      => ['string']
       }
     when 'date-time'
       {
         'example'   => '2012-01-01T12:00:00Z',
-        'readOnly'  => true,
         'type'      => ['string']
       }
     else
-      {
-        'readOnly'  => false
-      }
+      {}
     end
     expanded['definitions'][key] = default.merge!(value)
   end

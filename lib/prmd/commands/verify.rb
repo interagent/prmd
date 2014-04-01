@@ -41,7 +41,7 @@ module Prmd
       schema['definitions'].each do |key, value|
         missing_requirements = []
         unless key == 'identity'
-          %w{description readOnly type}.each do |requirement|
+          %w{description type}.each do |requirement|
             unless schema['definitions'][key].has_key?(requirement)
               missing_requirements << requirement
             end

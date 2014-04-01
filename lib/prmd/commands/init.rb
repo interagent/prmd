@@ -27,14 +27,12 @@ module Prmd
           "description" => "when #{resource} was created",
           "example"     => "2012-01-01T12:00:00Z",
           "format"      => "date-time",
-          "readOnly"    => true,
           "type"        => ["string"]
         },
         "id" => {
           "description" => "unique identifier of #{resource}",
           "example"     => "01234567-89ab-cdef-0123-456789abcdef",
           "format"      => "uuid",
-          "readOnly"    => true,
           "type"        => ["string"]
         },
         "identity" => {
@@ -44,7 +42,6 @@ module Prmd
           "description" => "when #{resource} was updated",
           "example"     => "2012-01-01T12:00:00Z",
           "format"      => "date-time",
-          "readOnly"    => true,
           "type"        => ["string"]
         }
       }

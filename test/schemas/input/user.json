@@ -9,7 +9,6 @@
       "description": "when user was created",
       "example": "2012-01-01T12:00:00Z",
       "format": "date-time",
-      "readOnly": true,
       "type": [
         "string"
       ]
@@ -18,7 +17,6 @@
       "description": "unique identifier of user",
       "example": "01234567-89ab-cdef-0123-456789abcdef",
       "format": "uuid",
-      "readOnly": true,
       "type": [
         "string"
       ]
@@ -30,7 +28,6 @@
       "description": "when user was updated",
       "example": "2012-01-01T12:00:00Z",
       "format": "date-time",
-      "readOnly": true,
       "type": [
         "string"
       ]
