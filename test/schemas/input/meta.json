@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-04/hyper-schema",
+  "definitions": {},
+  "description": "API lets you interact with service",
+  "links": [{
+    "href": "https://api.example.com",
+    "rel": "self"
+  }],
+  "properties": {},
+  "title": "API",
+  "type": [
+    "object"
+  ]
+}

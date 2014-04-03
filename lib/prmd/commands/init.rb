@@ -3,11 +3,11 @@ module Prmd
     data = {
       '$schema'     => 'http://json-schema.org/draft-04/hyper-schema',
       'title'       => 'FIXME',
-      'description' => 'FIXME',
-      'type'        => ['object'],
       'definitions' => {},
+      'description' => 'FIXME',
       'links'       => [],
-      'properties'  => {}
+      'properties'  => {},
+      'type'        => ['object']
     }
 
     if options[:meta] && File.exists?(options[:meta])
