@@ -66,7 +66,7 @@ case command
   when :combine
     puts Prmd.combine(ARGV[0], options).to_s
   when :doc
-    if ARGV.empty?
+    unless $stdin.tty?
       data = JSON.parse($stdin.read)
       schema = Prmd::Schema.new(data)
       puts Prmd.doc(schema, options)
@@ -79,7 +79,7 @@ case command
     puts Prmd.init(ARGV[0], options)
   when :verify
     data, errors = '', []
-    if ARGV.empty?
+    unless $stdin.tty?
       data = $stdin.read
       errors.concat(Prmd.verify(JSON.parse(data)))
     else
