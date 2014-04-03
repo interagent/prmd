@@ -13,9 +13,6 @@ commands = {
   end,
   doc: OptionParser.new do |opts|
     opts.banner = "prmd doc [options] <combined schema>"
-    opts.on("-m", "--meta meta.json", "Set defaults for schemata") do |m|
-      options[:meta] = m
-    end
     opts.on("-p", "--prepend header,overview", Array, "Prepend files to output") do |p|
       options[:prepend] = p
     end
