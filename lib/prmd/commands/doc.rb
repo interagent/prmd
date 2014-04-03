@@ -24,8 +24,8 @@ def extract_attributes(schema, properties)
         descriptions[1..-1].map { |d| d.gsub!(/unique /, "") }
       end
 
-      last = description.pop
-      description = [description.join(", "), last].join(" or ")
+      last = descriptions.pop
+      description = [descriptions.join(", "), last].join(" or ")
 
       example = doc_example(*examples)
       attributes << [key, "string", description, example]
