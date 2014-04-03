@@ -45,14 +45,14 @@ combines them on to stdout. If -m or --meta is supplied, it will override
 defaults/metadata:
 
 ```console
-$ prmd combine <file_or_directory>
+$ prmd combine <file or directory>
 ```
 
 Doc takes the path to a combined schema and outputs documentation to stdout.
 If -m or --meta is supplied, it will override defaults/metadata:
 
 ```console
-$ prmd doc <combined_schema>
+$ prmd doc <combined schema>
 ```
 
 You can also prepend files to the documention with -p or --prepend:
@@ -68,13 +68,13 @@ defaults/metadata:
 
 ```console
 $ prmd init
-$ prmd init <resource_name>
+$ prmd init <resource name>
 ```
 
 Verify takes a path to a combined schema and warns about missing attributes.
 
 ```console
-$ prmd verify <combined_schema>
+$ prmd verify <combined schema>
 ```
 
 You can also chain commands as needed:

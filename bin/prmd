@@ -6,29 +6,28 @@ options = {}
 
 commands = {
   combine: OptionParser.new do |opts|
-    opts.banner = "prmd combine [options] <directory>"
+    opts.banner = "prmd combine [options] <file or directory>"
     opts.on("-m", "--meta meta.json", "Set defaults for schemata") do |m|
       options[:meta] = m
     end
   end,
   doc: OptionParser.new do |opts|
-    opts.banner = "prmd doc [options] <schema>"
+    opts.banner = "prmd doc [options] <combined schema>"
     opts.on("-m", "--meta meta.json", "Set defaults for schemata") do |m|
       options[:meta] = m
     end
     opts.on("-p", "--prepend header,overview", Array, "Prepend files to output") do |p|
       options[:prepend] = p
     end
-    opts.banner = "prmd doc [options] <directory>"
   end,
   init: OptionParser.new do |opts|
-    opts.banner = "prmd init [options] <resource>"
+    opts.banner = "prmd init [options] <resource name>"
     opts.on("-m", "--meta meta.json", "Set defaults for schemata") do |m|
       options[:meta] = m
     end
   end,
   verify: OptionParser.new do |opts|
-    opts.banner = "prmd verify [options] <directory or schema>"
+    opts.banner = "prmd verify [options] <combined schema>"
   end
 }
 
