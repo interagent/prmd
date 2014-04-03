@@ -82,11 +82,10 @@ case command
   when :init
     puts Prmd.init(ARGV[0], options)
   when :verify
-    errors = []
+    data, errors = '', []
     if ARGV.empty?
       data = $stdin.read
-      errors = Prmd.verify(JSON.parse(data))
-      puts data
+      errors.concat(Prmd.verify(JSON.parse(data)))
     else
       data = JSON.parse(File.read(ARGV[0]))
       Prmd.verify(data).each do |error|
@@ -97,4 +96,5 @@ case command
       $stderr.puts(error)
     end
     exit(1) unless errors.empty?
+    puts(data) unless $stdout.tty?
 end
