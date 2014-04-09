@@ -38,8 +38,8 @@ module Prmd
             datum['$ref'] = datum['$ref'].gsub(%r{/schemata/([^#]*)#}, '#/definitions/\1')
           end
           if datum.has_key?('href')
-            if datum['$ref'].include?('%2Fschema%2F')
-              $stderr.puts('`%2Fschema%2F` prefixed refs are deprecated, use `%2Fschemata%2F` prefixes')
+            if datum['href'].include?('%2Fschema%2F')
+              $stderr.puts('`%2Fschema%2F` prefixed hrefs are deprecated, use `%2Fschemata%2F` prefixes')
               datum['href'] = datum['href'].gsub(%r{%2Fschema%2F([^%]*)%23%2F}, '%23%2Fdefinitions%2F\1%2F')
             end
             datum['href'] = datum['href'].gsub(%r{%2Fschemata%2F([^%]*)%23%2F}, '%23%2Fdefinitions%2F\1%2F')
