@@ -20,7 +20,7 @@ module Prmd
 
     schemas.each do |schema_data|
       id = if schema_data['id']
-        schema_data['id'].gsub('schema/', '')
+        schema_data['id'].split('/').last
       end
       next if id.nil? || id[0..0] == '_' # FIXME: remove this exception?
 
@@ -31,10 +31,10 @@ module Prmd
           datum.map {|element| reference_localizer.call(element)}
         when Hash
           if datum.has_key?('$ref')
-            datum['$ref'] = datum['$ref'].gsub(%r{/schema/([^#]*)#}, '#/definitions/\1')
+            datum['$ref'] = datum['$ref'].gsub(%r{/schemata/([^#]*)#}, '#/definitions/\1')
           end
           if datum.has_key?('href')
-            datum['href'] = datum['href'].gsub(%r{%2Fschema%2F([^%]*)%23%2F}, '%23%2Fdefinitions%2F\1%2F')
+            datum['href'] = datum['href'].gsub(%r{%2Fschemata%2F([^%]*)%23%2F}, '%23%2Fdefinitions%2F\1%2F')
           end
           datum.each { |k,v| datum[k] = reference_localizer.call(v) }
         else

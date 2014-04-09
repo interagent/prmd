@@ -20,7 +20,7 @@ module Prmd
       if resource.include?('/')
         parent, resource = resource.split('/')
       end
-      schema['id']    = "schema/#{resource}"
+      schema['id']    = "schemata/#{resource}"
       schema['title'] = "#{schema['title']} - #{resource[0...1].upcase}#{resource[1..-1]}"
       schema['definitions'] = {
         "created_at" => {
@@ -36,7 +36,7 @@ module Prmd
           "type"        => ["string"]
         },
         "identity" => {
-          "$ref" => "/schema/#{resource}#/definitions/id"
+          "$ref" => "/schemata/#{resource}#/definitions/id"
         },
         "updated_at" => {
           "description" => "when #{resource} was updated",
@@ -59,14 +59,14 @@ module Prmd
         },
         {
           "description"   => "Delete an existing #{resource}.",
-          "href"          => "/#{resource}s/{(%2Fschema%2F#{resource}%23%2Fdefinitions%2Fidentity)}",
+          "href"          => "/#{resource}s/{(%2Fschemata%2F#{resource}%23%2Fdefinitions%2Fidentity)}",
           "method"        => "DELETE",
           "rel"           => "destroy",
           "title"         => "Delete"
         },
         {
           "description"   => "Info for existing #{resource}.",
-          "href"          => "/#{resource}s/{(%2Fschema%2F#{resource}%23%2Fdefinitions%2Fidentity)}",
+          "href"          => "/#{resource}s/{(%2Fschemata%2F#{resource}%23%2Fdefinitions%2Fidentity)}",
           "method"        => "GET",
           "rel"           => "self",
           "title"         => "Info"
@@ -80,7 +80,7 @@ module Prmd
         },
         {
           "description"   => "Update an existing #{resource}.",
-          "href"          => "/#{resource}s/{(%2Fschema%2F#{resource}%23%2Fdefinitions%2Fidentity)}",
+          "href"          => "/#{resource}s/{(%2Fschemata%2F#{resource}%23%2Fdefinitions%2Fidentity)}",
           "method"        => "PATCH",
           "rel"           => "update",
           "schema"        => {
@@ -93,16 +93,16 @@ module Prmd
       if parent
         schema['links'] << {
           "description"  => "List existing #{resource}s for existing #{parent}.",
-          "href"         => "/#{parent}s/{(%2Fschema%2F#{parent}%23%2Fdefinitions%2Fidentity)}/#{resource}s",
+          "href"         => "/#{parent}s/{(%2Fschemata%2F#{parent}%23%2Fdefinitions%2Fidentity)}/#{resource}s",
           "method"       => "GET",
           "rel"          => "instances",
           "title"        => "List"
         }
       end
       schema['properties'] = {
-        "created_at"  => { "$ref" => "/schema/#{resource}#/definitions/created_at" },
-        "id"          => { "$ref" => "/schema/#{resource}#/definitions/id" },
-        "updated_at"  => { "$ref" => "/schema/#{resource}#/definitions/updated_at" }
+        "created_at"  => { "$ref" => "/schemata/#{resource}#/definitions/created_at" },
+        "id"          => { "$ref" => "/schemata/#{resource}#/definitions/id" },
+        "updated_at"  => { "$ref" => "/schemata/#{resource}#/definitions/updated_at" }
       }
     end
 

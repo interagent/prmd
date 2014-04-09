@@ -22,7 +22,7 @@
       ]
     },
     "identity": {
-      "$ref": "/schema/user#/definitions/id"
+      "$ref": "/schemata/user#/definitions/id"
     },
     "updated_at": {
       "description": "when user was updated",
@@ -50,14 +50,14 @@
     },
     {
       "description": "Delete an existing user.",
-      "href": "/users/{(%2Fschema%2Fuser%23%2Fdefinitions%2Fidentity)}",
+      "href": "/users/{(%2Fschemata%2Fuser%23%2Fdefinitions%2Fidentity)}",
       "method": "DELETE",
       "rel": "destroy",
       "title": "Delete"
     },
     {
       "description": "Info for existing user.",
-      "href": "/users/{(%2Fschema%2Fuser%23%2Fdefinitions%2Fidentity)}",
+      "href": "/users/{(%2Fschemata%2Fuser%23%2Fdefinitions%2Fidentity)}",
       "method": "GET",
       "rel": "self",
       "title": "Info"
@@ -71,7 +71,7 @@
     },
     {
       "description": "Update an existing user.",
-      "href": "/users/{(%2Fschema%2Fuser%23%2Fdefinitions%2Fidentity)}",
+      "href": "/users/{(%2Fschemata%2Fuser%23%2Fdefinitions%2Fidentity)}",
       "method": "PATCH",
       "rel": "update",
       "schema": {
@@ -86,14 +86,14 @@
   ],
   "properties": {
     "created_at": {
-      "$ref": "/schema/user#/definitions/created_at"
+      "$ref": "/schemata/user#/definitions/created_at"
     },
     "id": {
-      "$ref": "/schema/user#/definitions/id"
+      "$ref": "/schemata/user#/definitions/id"
     },
     "updated_at": {
-      "$ref": "/schema/user#/definitions/updated_at"
+      "$ref": "/schemata/user#/definitions/updated_at"
     }
   },
-  "id": "schema/user"
+  "id": "schemata/user"
 }
