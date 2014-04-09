@@ -32,14 +32,14 @@ module Prmd
         when Hash
           if datum.has_key?('$ref')
             if datum['$ref'].include?('/schema/')
-              $stderr.puts('`/schema/` prefixed refs are deprecated, use `/schemata/` prefixes')
+              $stderr.puts("`#{schema_data['id']}` `/schema/` prefixed refs are deprecated, use `/schemata/` prefixes")
               datum['$ref'] = datum['$ref'].gsub(%r{/schema/([^#]*)#}, '#/definitions/\1')
             end
             datum['$ref'] = datum['$ref'].gsub(%r{/schemata/([^#]*)#}, '#/definitions/\1')
           end
           if datum.has_key?('href')
             if datum['href'].include?('%2Fschema%2F')
-              $stderr.puts('`%2Fschema%2F` prefixed hrefs are deprecated, use `%2Fschemata%2F` prefixes')
+              $stderr.puts("`#{id}` `%2Fschema%2F` prefixed hrefs are deprecated, use `%2Fschemata%2F` prefixes")
               datum['href'] = datum['href'].gsub(%r{%2Fschema%2F([^%]*)%23%2F}, '%23%2Fdefinitions%2F\1%2F')
             end
             datum['href'] = datum['href'].gsub(%r{%2Fschemata%2F([^%]*)%23%2F}, '%23%2Fdefinitions%2F\1%2F')
