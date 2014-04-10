@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = Prmd::VERSION
   spec.authors       = ["geemus"]
   spec.email         = ["geemus@gmail.com"]
-  spec.description   = %q{schema to rule them all}
-  spec.summary       = %q{schema to rule them all}
-  spec.homepage      = ""
+  spec.description   = %q{scaffold, verify and generate docs from JSON Schema}
+  spec.summary       = %q{JSON Schema tooling}
+  spec.homepage      = "https://github.com/heroku/prmd"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
@@ -18,9 +18,9 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "erubis"
+  spec.add_dependency "erubis", "~> 2.7"
 
-  spec.add_development_dependency "bundler", "~> 1.3"
-  spec.add_development_dependency "rake"
-  spec.add_development_dependency "minitest"
+  spec.add_development_dependency "bundler",  "~> 1.3"
+  spec.add_development_dependency "rake",     "~> 10.2"
+  spec.add_development_dependency "minitest", "~> 5.3"
 end
