@@ -1,7 +1,7 @@
 # Prmd
 
 JSON Schema tooling: scaffold, verify, and generate documentation
-against JSON Schema documents.
+from JSON Schema documents.
 
 
 ## Introduction
