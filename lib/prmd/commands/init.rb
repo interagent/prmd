@@ -10,10 +10,6 @@ module Prmd
       'type'        => ['object']
     }
 
-    if options[:meta] && File.exists?(options[:meta])
-      data.merge!(JSON.parse(File.read(options[:meta])))
-    end
-
     schema = Prmd::Schema.new(data)
 
     if resource
@@ -21,7 +17,7 @@ module Prmd
         parent, resource = resource.split('/')
       end
       schema['id']    = "schemata/#{resource}"
-      schema['title'] = "#{schema['title']} - #{resource[0...1].upcase}#{resource[1..-1]}"
+      schema['title'] = "#{FIXME - #{resource[0...1].upcase}#{resource[1..-1]}"
       schema['definitions'] = {
         "created_at" => {
           "description" => "when #{resource} was created",
