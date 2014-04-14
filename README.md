@@ -19,22 +19,21 @@ described in [/docs/schemata.md](/docs/schemata.md).
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Install the command-line tool with:
+
+```console
+$ gem install prmd
+```
+
+If you're using prmd within a Ruby project, you may want to add it
+to the application's Gemfile:
 
 ```ruby
 gem 'prmd'
 ```
 
-And then execute:
-
 ```console
-$ bundle
-```
-
-Or install it yourself as:
-
-```console
-$ gem install prmd
+$ bundle install
 ```
 
 ## Usage
