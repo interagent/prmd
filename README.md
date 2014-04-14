@@ -92,6 +92,21 @@ $ prmd combine --meta meta.json schemata/ | prmd verify | prmd doc --prepend ove
 
 See `prmd <command> --help` for additional usage details.
 
+## File Layout
+
+We suggest the following file layout for JSON schema related files:
+
+```
+/docs (top-level directory for project documentation)
+  /schema (API schema documentation)
+    /schemata
+      /{resource.json} (individual resource schema)
+    /meta.json (overall API metadata)
+    /overview.md (preamble for generated API docs)
+    /schema.json (complete generated JSON schema file)
+    /schema.md (complete generated API documentation file)
+```
+
 ## Contributing
 
 1. Fork it
