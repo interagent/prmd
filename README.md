@@ -1,7 +1,7 @@
 # Prmd
 
 JSON Schema tooling: scaffold, verify, and generate documentation
-against JSON Schema documents.
+from JSON Schema documents.
 
 
 ## Introduction
@@ -11,77 +11,86 @@ an API. prmd provides tools for bootstrapping a description like this,
 verifying its completeness, and generating documentation from the
 specification.
 
-The JSON Schema usage conventions expected by prmd are described in
-[/docs/schemata.md](/docs/schemata.md).
-
 To learn more about JSON Schema in general, start with
 [this excellent guide](http://spacetelescope.github.io/understanding-json-schema/)
 and supplement with the [specification](http://json-schema.org/documentation.html).
+The JSON Schema usage conventions expected by prmd specifically are
+described in [/docs/schemata.md](/docs/schemata.md).
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'prmd'
-```
-
-And then execute:
-
-```console
-$ bundle
-```
-
-Or install it yourself as:
+Install the command-line tool with:
 
 ```console
 $ gem install prmd
 ```
 
+If you're using prmd within a Ruby project, you may want to add it
+to the application's Gemfile:
+
+```ruby
+gem 'prmd'
+```
+
+```console
+$ bundle install
+```
+
 ## Usage
 
-Combine takes the path to a schema file or directory of schema files and
-combines them on to stdout. If -m or --meta is supplied, it will override
-defaults/metadata:
+Prmd provides four main commands:
+
+* `init`: Scaffold resource schemata
+* `combine`: Combine schemata and metadata into single schema
+* `verify`: Verify a schema
+* `doc`: Generate documentation from a schema
+
+Here's an example of using these commands in a typical workflow:
 
 ```console
-$ prmd combine <file or directory>
+# Fill out the resource schemata
+$ mkdir -p schemata
+$ prmd init app  > schemata/app.json
+$ prmd init user > schemata/user.json
+$ vim schemata/{app,user}.json   # edit scaffolded files
+
+# Provide top-level metadata
+$ cat <<EOF > meta.json
+{
+ "description": "Hello world prmd API",
+ "id": "hello-prmd",
+ "links": [{
+   "href": "https://api.hello.com",
+   "rel": "self"
+ }],
+ "title": "Hello Prmd"
+}
+EOF
+
+# Combine into a single schema
+$ prmd combine --meta meta.json schemata/ > schema.json
+
+# Check it’s all good
+$ prmd verify schema.json
+
+# Build docs
+$ prmd doc schema.json > schema.md
 ```
 
-Doc takes the path to a combined schema and outputs documentation to stdout.
-If -m or --meta is supplied, it will override defaults/metadata:
+Typically you'll want to prepend header and overview information to
+your API documentation. You can do this with the `--prepend` flag:
 
 ```console
-$ prmd doc <combined schema>
+$ prmd doc schema.json --prepend overview.md > schema.md
 ```
 
-You can also prepend files to the documention with -p or --prepend:
+You can also chain commands together as needed, e.g.:
 
 ```console
-$ prmd doc -p header.md,overview.md <directory or schema>
+$ prmd combine --meta meta.json schemata/ | prmd verify | prmd doc --prepend overview.md > schema.md
 ```
 
-Init optionally takes a resource as it's first argument and generates a
-new schema file to stdout (generically or using the resource name
-provided). If -m or --meta is supplied, it will override
-defaults/metadata:
-
-```console
-$ prmd init
-$ prmd init <resource name>
-```
-
-Verify takes a path to a combined schema and warns about missing attributes.
-
-```console
-$ prmd verify <combined schema>
-```
-
-You can also chain commands as needed:
-
-```console
-$ prmd combine <directory> | prmd verify | prmd doc > schema.md
-```
+See `prmd <command> --help` for additional usage details.
 
 ## Contributing
 
