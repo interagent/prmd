@@ -53,7 +53,7 @@ If -m or --meta is supplied, it will override defaults/metadata:
 $ prmd doc <combined schema>
 ```
 
-You can also prepend files to the documention with -p or --prepend:
+You can also prepend files to the documentation with -p or --prepend:
 
 ```console
 $ prmd doc -p header.md,overview.md <directory or schema>
