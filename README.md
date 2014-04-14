@@ -38,7 +38,7 @@ $ bundle install
 
 ## Usage
 
-Prmd provides 4 main commands:
+Prmd provides four main commands:
 
 * `init`: Scaffold resource schemata
 * `combine`: Combine schemata and metadata into single schema
