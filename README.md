@@ -43,7 +43,7 @@ Prmd provides 4 main commands:
 * `init`: Scaffold resource schemata
 * `combine`: Combine schemata and metadata into single schema
 * `verify`: Verify a schema
-* `doc`: generate documentation from a schema
+* `doc`: Generate documentation from a schema
 
 Here's an example of using these commands in a typical workflow:
 
