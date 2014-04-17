@@ -64,6 +64,7 @@ end -%>
     data = {}
     if link['schema']['properties']
       link['schema']['properties'].each do |key, value|
+        _, value = schema.dereference(value)
         if value.has_key?('anyOf')
           id_ref = value['anyOf'].detect {|ref| ref['$ref'].split('/').last == 'id'}
           data[key] = schema.dereference(id_ref).last['example']
