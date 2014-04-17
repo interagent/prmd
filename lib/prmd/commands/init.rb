@@ -17,7 +17,7 @@ module Prmd
         parent, resource = resource.split('/')
       end
       schema['id']    = "schemata/#{resource}"
-      schema['title'] = "#{FIXME - #{resource[0...1].upcase}#{resource[1..-1]}"
+      schema['title'] = "FIXME - #{resource[0...1].upcase}#{resource[1..-1]}"
       schema['definitions'] = {
         "created_at" => {
           "description" => "when #{resource} was created",
