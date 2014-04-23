@@ -7,7 +7,8 @@ module Prmd
     else
       [path]
     end
-    schemas = files.map { |file| YAML.load(File.read(file)) }
+    # sort for stable loading on any platform
+    schemas = files.sort.map { |file| YAML.load(File.read(file)) }
 
     data = {
       '$schema'     => 'http://json-schema.org/draft-04/hyper-schema',
