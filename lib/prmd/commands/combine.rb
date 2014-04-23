@@ -1,11 +1,13 @@
 module Prmd
   def self.combine(path, options={})
     files = if File.directory?(path)
-      Dir.glob(File.join(path, '**', '*.json')) - [options[:meta]]
+      Dir.glob(File.join(path, '**', '*.json')) +
+        Dir.glob(File.join(path, '**', '*.yaml')) -
+        [options[:meta]]
     else
       [path]
     end
-    schemas = files.map { |file| JSON.parse(File.read(file)) }
+    schemas = files.map { |file| YAML.load(File.read(file)) }
 
     data = {
       '$schema'     => 'http://json-schema.org/draft-04/hyper-schema',
@@ -15,7 +17,7 @@ module Prmd
     }
 
     if options[:meta] && File.exists?(options[:meta])
-      data.merge!(JSON.parse(File.read(options[:meta])))
+      data.merge!(YAML.load(File.read(options[:meta])))
     end
 
     schemas.each do |schema_data|

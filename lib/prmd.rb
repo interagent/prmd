@@ -1,6 +1,7 @@
 require "cgi"
 require "erubis"
 require "json"
+require "yaml"
 
 dir = File.dirname(__FILE__)
 require File.join(dir, 'prmd', 'commands', 'combine')
