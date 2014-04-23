@@ -19,6 +19,9 @@ commands = {
   end,
   init: OptionParser.new do |opts|
     opts.banner = "prmd init [options] <resource name>"
+    opts.on("-y", "--yaml", "Generate YAML") do |y|
+      options[:yaml] = y
+    end
   end,
   verify: OptionParser.new do |opts|
     opts.banner = "prmd verify [options] <combined schema>"

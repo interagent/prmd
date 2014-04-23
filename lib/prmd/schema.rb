@@ -55,11 +55,19 @@ module Prmd
       end
     end
 
-    def to_s
+    def to_json
       new_json = JSON.pretty_generate(@data)
       # nuke empty lines
       new_json = new_json.split("\n").delete_if {|line| line.empty?}.join("\n") + "\n"
       new_json
+    end
+
+    def to_yaml
+      YAML.dump(@data)
+    end
+
+    def to_s
+      to_json
     end
 
   end
