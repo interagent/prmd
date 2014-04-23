@@ -27,6 +27,10 @@ module Prmd
       end
       next if id.nil? || id[0..0] == '_' # FIXME: remove this exception?
 
+      if data['definitions'].key?(id)
+        $stderr.puts "`#{id}` was already defined and will be overwritten"
+      end
+
       data['definitions'][id] = schema_data
       reference_localizer = lambda do |datum|
         case datum
