@@ -8,7 +8,7 @@ module Prmd
       [path]
     end
     # sort for stable loading on any platform
-    schemas = files.sort.map { |file| YAML.load(File.read(file)) }
+    schemas = files.sort.map { |file| [file, YAML.load(File.read(file))] }
 
     data = {
       '$schema'     => 'http://json-schema.org/draft-04/hyper-schema',
@@ -17,19 +17,23 @@ module Prmd
       'type'        => ['object']
     }
 
+    # tracks which entities where defined in which file
+    definitions_map = {}
+
     if options[:meta] && File.exists?(options[:meta])
       data.merge!(YAML.load(File.read(options[:meta])))
     end
 
-    schemas.each do |schema_data|
+    schemas.each do |schema_file, schema_data|
       id = if schema_data['id']
         schema_data['id'].split('/').last
       end
       next if id.nil? || id[0..0] == '_' # FIXME: remove this exception?
 
-      if data['definitions'].key?(id)
-        $stderr.puts "`#{id}` was already defined and will be overwritten"
+      if file = definitions_map[id]
+        $stderr.puts "`#{id}` was already defined in `#{file}` and will be overwritten"
       end
+      definitions_map[id] = schema_file
 
       data['definitions'][id] = schema_data
       reference_localizer = lambda do |datum|
