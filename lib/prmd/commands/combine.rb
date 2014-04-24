@@ -1,11 +1,14 @@
 module Prmd
   def self.combine(path, options={})
     files = if File.directory?(path)
-      Dir.glob(File.join(path, '**', '*.json')) - [options[:meta]]
+      Dir.glob(File.join(path, '**', '*.json')) +
+        Dir.glob(File.join(path, '**', '*.yaml')) -
+        [options[:meta]]
     else
       [path]
     end
-    schemas = files.map { |file| JSON.parse(File.read(file)) }
+    # sort for stable loading on any platform
+    schemas = files.sort.map { |file| [file, YAML.load(File.read(file))] }
 
     data = {
       '$schema'     => 'http://json-schema.org/draft-04/hyper-schema',
@@ -14,15 +17,23 @@ module Prmd
       'type'        => ['object']
     }
 
+    # tracks which entities where defined in which file
+    definitions_map = {}
+
     if options[:meta] && File.exists?(options[:meta])
-      data.merge!(JSON.parse(File.read(options[:meta])))
+      data.merge!(YAML.load(File.read(options[:meta])))
     end
 
-    schemas.each do |schema_data|
+    schemas.each do |schema_file, schema_data|
       id = if schema_data['id']
         schema_data['id'].split('/').last
       end
       next if id.nil? || id[0..0] == '_' # FIXME: remove this exception?
+
+      if file = definitions_map[id]
+        $stderr.puts "`#{id}` (from #{schema_file}) was already defined in `#{file}` and will overwrite the first definition"
+      end
+      definitions_map[id] = schema_file
 
       data['definitions'][id] = schema_data
       reference_localizer = lambda do |datum|

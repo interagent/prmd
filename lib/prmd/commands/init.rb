@@ -102,6 +102,10 @@ module Prmd
       }
     end
 
-    schema.to_s
+    if options[:yaml]
+      schema.to_yaml
+    else
+      schema.to_json
+    end
   end
 end
