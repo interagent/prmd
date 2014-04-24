@@ -31,7 +31,7 @@ module Prmd
       next if id.nil? || id[0..0] == '_' # FIXME: remove this exception?
 
       if file = definitions_map[id]
-        $stderr.puts "`#{id}` was already defined in `#{file}` and will be overwritten"
+        $stderr.puts "`#{id}` (from #{schema_file}) was already defined in `#{file}` and will overwrite the first definition"
       end
       definitions_map[id] = schema_file
 
