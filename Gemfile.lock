@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    prmd (0.1.1)
+    prmd (0.2.0)
       erubis (~> 2.7)
 
 GEM
