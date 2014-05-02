@@ -23,6 +23,15 @@ commands = {
       options[:yaml] = y
     end
   end,
+  render: OptionParser.new do |opts|
+    opts.banner = "prmd doc [options] <combined schema>"
+    opts.on("-p", "--prepend header,overview", Array, "Prepend files to output") do |p|
+      options[:prepend] = p
+    end
+    opts.on("-t", "--template schemata.erb", String, "Use alternate template") do |t|
+      options[:template] = t
+    end
+  end,
   verify: OptionParser.new do |opts|
     opts.banner = "prmd verify [options] <combined schema>"
   end
@@ -66,17 +75,26 @@ case command
   when :combine
     puts Prmd.combine(ARGV[0], options).to_s
   when :doc
-    unless $stdin.tty?
-      data = JSON.parse($stdin.read)
-      schema = Prmd::Schema.new(data)
-      puts Prmd.doc(schema, options)
+    data = unless $stdin.tty?
+      $stdin.read
     else
-      data = JSON.parse(File.read(ARGV[0]))
-      schema = Prmd::Schema.new(data)
-      puts Prmd.doc(schema, options)
+      File.read(ARGV[0])
     end
+    schema = Prmd::Schema.new(JSON.parse(data))
+
+    options[:template] = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'prmd', 'views', 'schemata.erb'))
+
+    puts Prmd.render(schema, options)
   when :init
     puts Prmd.init(ARGV[0], options)
+  when :render
+    data = unless $stdin.tty?
+      $stdin.read
+    else
+      File.read(ARGV[0])
+    end
+    schema = Prmd::Schema.new(JSON.parse(data))
+    puts Prmd.render(schema, options)
   when :verify
     data, errors = '', []
     unless $stdin.tty?
