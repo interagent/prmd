@@ -1,4 +1,65 @@
 <%- params_template = File.read(File.join(File.dirname(template_path), 'parameters.erb')) %>
+<%-
+def extract_attributes(schema, properties)
+  attributes = []
+  properties.each do |key, value|
+    # found a reference to another element:
+    _, value = schema.dereference(value)
+    if value.has_key?('anyOf')
+      descriptions = []
+      examples = []
+
+      # sort anyOf! always show unique identifier first
+      anyof = value['anyOf'].sort_by do |property|
+        property['$ref'].split('/').last.gsub('id', 'a')
+      end
+
+      anyof.each do |ref|
+        _, nested_field = schema.dereference(ref)
+        descriptions << nested_field['description']
+        examples << nested_field['example']
+      end
+
+      # avoid repetition :}
+      if descriptions.size > 1
+        descriptions.first.gsub!(/ of (this )?.*/, "")
+        descriptions[1..-1].map { |d| d.gsub!(/unique /, "") }
+      end
+
+      last = descriptions.pop
+      description = [descriptions.join(", "), last].join(" or ")
+
+      example = [*examples].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
+      attributes << [key, "string", description, example]
+
+    # found a nested object
+    elsif value['type'] == ['object'] && value['properties']
+      nested = extract_attributes(schema, value['properties'])
+      nested.each do |attribute|
+        attribute[0] = "#{key}:#{attribute[0]}"
+      end
+      attributes.concat(nested)
+    # just a regular attribute
+    else
+      description = value['description']
+      if value['enum']
+        description += '<br/><b>one of:</b>' + [*value['enum']].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
+      end
+      example = [*value['example']].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
+      type = if value['type'].include?('null')
+        'nullable '
+      else
+        ''
+      end
+      type += (value['format'] || (value['type'] - ['null']).first)
+      attributes << [key, type, description, example]
+    end
+  end
+  return attributes
+end
+
+%>
+
 ## <%= title %>
 <%= definition['description'] %>
 
