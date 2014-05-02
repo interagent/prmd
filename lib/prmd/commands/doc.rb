@@ -5,8 +5,6 @@ module Prmd
     end
 
     doc << schema['definitions'].map do |_, definition|
-      resource = definition['id'].split('/').last
-
       identifiers = if definition['definitions'].has_key?('identity')
         identity = definition['definitions']['identity']
         (identity['anyOf'] || [identity]).map {|ref| ref['$ref'].split('/').last }
@@ -20,7 +18,6 @@ module Prmd
       Erubis::Eruby.new(template).result({
         definition:      definition,
         identifiers:     identifiers,
-        resource:        resource,
         schema:          schema,
         template_path:   template_path
       }) + "\n"

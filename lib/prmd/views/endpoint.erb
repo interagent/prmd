@@ -1,6 +1,7 @@
 <%-
   return unless definition.has_key?('links') && !definition['links'].empty?
   params_template = File.read(File.join(File.dirname(template_path), 'parameters.erb'))
+  resource = definition['id'].split('/').last
   title = definition['title'].split(' - ', 2).last
 
   def extract_attributes(schema, properties)
@@ -88,7 +89,6 @@
 <%- definition['links'].each do |link, datum| %>
 <%- path = link['href'].gsub(%r|(\{\([^\)]+\)\})|) do |ref|
   ref = ref.gsub('%2F', '/').gsub('%23', '#').gsub(%r|[\{\(\)\}]|, '')
-  resource = ref.match(%r{^#/definitions/([^/]*)}).captures.first
   identity_key, identity_value = schema.dereference(ref)
   if identity_value.has_key?('anyOf')
     '{' + resource + '_' + identity_value['anyOf'].map {|r| r['$ref'].split('/').last}.join('_or_') + '}'
