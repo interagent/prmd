@@ -24,6 +24,7 @@ module Prmd
         end
       end
       @data = convert_type_to_array.call(new_data)
+      @schemata_examples = {}
     end
 
     def dereference(reference)
@@ -57,23 +58,25 @@ module Prmd
 
     def schemata_example(schemata_id)
       definition = @data['definitions'][schemata_id]
-      serialization = {}
-      if definition['properties']
-        definition['properties'].each do |key, value|
-          _, value = dereference(value)
-          if value.has_key?('properties')
-            serialization[key] = {}
-            value['properties'].each do |k,v|
-              serialization[key][k] = dereference(v).last['example']
+      @schemata_examples[schemata_id] ||= begin
+        example = {}
+        if definition['properties']
+          definition['properties'].each do |key, value|
+            _, value = dereference(value)
+            if value.has_key?('properties')
+              example[key] = {}
+              value['properties'].each do |k,v|
+                example[key][k] = dereference(v).last['example']
+              end
+            else
+              example[key] = value['example']
             end
-          else
-            serialization[key] = value['example']
           end
+        else
+          example.merge!(definition['example'])
         end
-      else
-        serialization.merge!(definition['example'])
+        example
       end
-      serialization
     end
 
     def href
