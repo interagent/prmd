@@ -4,21 +4,21 @@ module Prmd
       File.open(path, 'r').read + "\n"
     end
 
-    doc << schema['definitions'].map do |_, definition|
-      identifiers = if definition['definitions'].has_key?('identity')
-        identity = definition['definitions']['identity']
+    doc << schema['definitions'].map do |_, schemata|
+      identifiers = if schemata['definitions'].has_key?('identity')
+        identity = schemata['definitions']['identity']
         (identity['anyOf'] || [identity]).map {|ref| ref['$ref'].split('/').last }
       else
         []
       end
 
-      template_path = File.expand_path(File.join(File.dirname(__FILE__), '..', 'views', 'endpoint.erb'))
+      template_path = File.expand_path(File.join(File.dirname(__FILE__), '..', 'views', 'schemata.erb'))
       template = File.read(template_path)
 
       Erubis::Eruby.new(template).result({
-        definition:      definition,
         identifiers:     identifiers,
         schema:          schema,
+        schemata:        schemata,
         template_path:   template_path
       }) + "\n"
     end

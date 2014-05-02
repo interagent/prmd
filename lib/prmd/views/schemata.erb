@@ -1,8 +1,8 @@
 <%-
-  return unless definition.has_key?('links') && !definition['links'].empty?
-  params_template = File.read(File.join(File.dirname(template_path), 'parameters.erb'))
-  resource = definition['id'].split('/').last
-  title = definition['title'].split(' - ', 2).last
+  return unless schemata.has_key?('links') && !schemata['links'].empty?
+  link_schema_properties_template = File.read(File.join(File.dirname(template_path), 'link_schema_properties.erb'))
+  resource = schemata['id'].split('/').last
+  title = schemata['title'].split(' - ', 2).last
 
   def extract_attributes(schema, properties)
     attributes = []
@@ -64,9 +64,9 @@
 %>
 
 ## <%= title %>
-<%= definition['description'] %>
+<%= schemata['description'] %>
 
-<%- if definition['properties'] %>
+<%- if schemata['properties'] %>
 ### Attributes
 <table>
   <tr>
@@ -75,7 +75,7 @@
     <th>Description</th>
     <th>Example</th>
   </tr>
-  <%- extract_attributes(schema, definition['properties']).each do |(key, type, description, example)| %>
+  <%- extract_attributes(schema, schemata['properties']).each do |(key, type, description, example)| %>
   <tr>
     <td><strong><%= key %></strong></td>
     <td><em><%= type %></em></td>
@@ -86,7 +86,7 @@
 </table>
 
 <%- end %>
-<%- definition['links'].each do |link, datum| %>
+<%- schemata['links'].each do |link, datum| %>
 <%- path = link['href'].gsub(%r|(\{\([^\)]+\)\})|) do |ref|
   ref = ref.gsub('%2F', '/').gsub('%23', '#').gsub(%r|[\{\(\)\}]|, '')
   identity_key, identity_value = schema.dereference(ref)
@@ -111,12 +111,12 @@ end -%>
 %>
 <%- unless required.empty? %>
 #### Required Parameters
-<%= Erubis::Eruby.new(params_template).result(params: required, schema: schema) %>
+<%= Erubis::Eruby.new(link_schema_properties_template).result(params: required, schema: schema) %>
 
 <%- end %>
 <%- unless optional.empty? %>
 #### Optional Parameters
-<%= Erubis::Eruby.new(params_template).result(params: optional, schema: schema) %>
+<%= Erubis::Eruby.new(link_schema_properties_template).result(params: optional, schema: schema) %>
 <%- end %>
 <%- end %>
 
