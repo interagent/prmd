@@ -1,5 +1,12 @@
 <%-
   return unless schemata.has_key?('links') && !schemata['links'].empty?
+
+  identifiers = if schemata['definitions'].has_key?('identity')
+    identity = schemata['definitions']['identity']
+    (identity['anyOf'] || [identity]).map {|ref| ref['$ref'].split('/').last }
+  else
+    []
+  end
   link_schema_properties_template = File.read(File.join(File.dirname(template_path), 'link_schema_properties.erb'))
   resource = schemata['id'].split('/').last
   title = schemata['title'].split(' - ', 2).last
