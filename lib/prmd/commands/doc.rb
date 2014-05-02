@@ -17,23 +17,6 @@ module Prmd
         []
       end
 
-      serialization = {}
-      if definition['properties']
-        definition['properties'].each do |key, value|
-          _, value = schema.dereference(value)
-          if value.has_key?('properties')
-            serialization[key] = {}
-            value['properties'].each do |k,v|
-              serialization[key][k] = schema.dereference(v).last['example']
-            end
-          else
-            serialization[key] = value['example']
-          end
-        end
-      else
-        serialization.merge!(definition['example'])
-      end
-
       title = definition['title'].split(' - ', 2).last
 
       template_path = File.expand_path(File.join(File.dirname(__FILE__), '..', 'views', 'endpoint.erb'))
@@ -45,7 +28,6 @@ module Prmd
         resource:        resource,
         root_url:        root_url,
         schema:          schema,
-        serialization:   serialization,
         template_path:   template_path,
         title:           title
       }) + "\n"

@@ -55,6 +55,27 @@ module Prmd
       end
     end
 
+    def example(schemata_id)
+      definition = @data['definitions'][schemata_id]
+      serialization = {}
+      if definition['properties']
+        definition['properties'].each do |key, value|
+          _, value = dereference(value)
+          if value.has_key?('properties')
+            serialization[key] = {}
+            value['properties'].each do |k,v|
+              serialization[key][k] = dereference(v).last['example']
+            end
+          else
+            serialization[key] = value['example']
+          end
+        end
+      else
+        serialization.merge!(definition['example'])
+      end
+      serialization
+    end
+
     def to_json
       new_json = JSON.pretty_generate(@data)
       # nuke empty lines

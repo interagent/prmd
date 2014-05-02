@@ -181,9 +181,9 @@ end %>
 ```
 ```javascript```
 <%- if link['rel'] == 'instances' %>
-<%= JSON.pretty_generate([serialization]) %>
+<%= JSON.pretty_generate([schema.example(resource)]) %>
 <%- else %>
-<%= JSON.pretty_generate(serialization) %>
+<%= JSON.pretty_generate(schema.example(resource)) %>
 <%- end %>
 ```
 
