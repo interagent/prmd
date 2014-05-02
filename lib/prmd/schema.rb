@@ -55,7 +55,7 @@ module Prmd
       end
     end
 
-    def example(schemata_id)
+    def schemata_example(schemata_id)
       definition = @data['definitions'][schemata_id]
       serialization = {}
       if definition['properties']
