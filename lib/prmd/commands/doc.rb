@@ -15,8 +15,6 @@ module Prmd
         []
       end
 
-      title = definition['title'].split(' - ', 2).last
-
       template_path = File.expand_path(File.join(File.dirname(__FILE__), '..', 'views', 'endpoint.erb'))
       template = File.read(template_path)
 
@@ -25,8 +23,7 @@ module Prmd
         identifiers:     identifiers,
         resource:        resource,
         schema:          schema,
-        template_path:   template_path,
-        title:           title
+        template_path:   template_path
       }) + "\n"
     end
   end
