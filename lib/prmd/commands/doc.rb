@@ -5,7 +5,6 @@ module Prmd
     end
 
     doc << schema['definitions'].map do |_, definition|
-      next if (definition['links'] || []).empty?
       resource = definition['id'].split('/').last
 
       identifiers = if definition['definitions'].has_key?('identity')

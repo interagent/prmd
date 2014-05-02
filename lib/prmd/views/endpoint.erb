@@ -1,4 +1,5 @@
 <%-
+  return unless definition.has_key?('links') && !definition['links'].empty?
   params_template = File.read(File.join(File.dirname(template_path), 'parameters.erb'))
   title = definition['title'].split(' - ', 2).last
 
