@@ -1,7 +1,5 @@
 module Prmd
   def self.doc(schema, options={})
-    root_url = schema['links'].find{|l| l['rel'] == 'self'}['href']
-
     doc = (options[:prepend] || []).map do |path|
       File.open(path, 'r').read + "\n"
     end
@@ -26,7 +24,6 @@ module Prmd
         definition:      definition,
         identifiers:     identifiers,
         resource:        resource,
-        root_url:        root_url,
         schema:          schema,
         template_path:   template_path,
         title:           title

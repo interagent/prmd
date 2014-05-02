@@ -159,14 +159,14 @@ end -%>
         path.chop! # remove trailing '&'
       end
     %>
-$ curl -n -X <%= link['method'] %> <%= root_url %><%= path %>
+$ curl -n -X <%= link['method'] %> <%= schema.href %><%= path %>
   <%- else %>
-$ curl -n -X <%= link['method'] %> <%= root_url %><%= path %> \
+$ curl -n -X <%= link['method'] %> <%= schema.href %><%= path %> \
 -H "Content-Type: application/json" \
 -d '<%= data.to_json %>'
   <%- end %>
 <%- else %>
-$ curl -n -X <%= link['method'] %> <%= root_url %><%= path %>
+$ curl -n -X <%= link['method'] %> <%= schema.href %><%= path %>
 <%- end %>
 ```
 

@@ -76,6 +76,10 @@ module Prmd
       serialization
     end
 
+    def href
+      (@data['links'].detect { |link| link['rel'] == 'self' } || {})['href']
+    end
+
     def to_json
       new_json = JSON.pretty_generate(@data)
       # nuke empty lines
