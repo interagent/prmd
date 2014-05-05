@@ -8,7 +8,7 @@ module Prmd
       [path]
     end
     # sort for stable loading on any platform
-    schemas = files.sort.map { |file| [file, YAML.load(File.read(file))] }
+    schemata = files.sort.map { |file| [file, YAML.load(File.read(file))] }
 
     data = {
       '$schema'     => 'http://json-schema.org/draft-04/hyper-schema',
@@ -18,51 +18,41 @@ module Prmd
     }
 
     # tracks which entities where defined in which file
-    definitions_map = {}
+    schemata_map = {}
 
     if options[:meta] && File.exists?(options[:meta])
       data.merge!(YAML.load(File.read(options[:meta])))
     end
 
-    schemas.each do |schema_file, schema_data|
-      id = if schema_data['id']
-        schema_data['id'].split('/').last
-      end
-      next if id.nil? || id[0..0] == '_' # FIXME: remove this exception?
+    schemata.each do |schema_file, schema_data|
+      id_prefix, id = schema_data['id'].split('/')
 
-      if file = definitions_map[id]
-        $stderr.puts "`#{id}` (from #{schema_file}) was already defined in `#{file}` and will overwrite the first definition"
+      if file = schemata_map[schema_data['id']]
+        $stderr.puts "`#{schema_data['id']}` (from #{schema_file}) was already defined in `#{file}` and will overwrite the first definition"
       end
-      definitions_map[id] = schema_file
+      schemata_map[schema_data['id']] = schema_file
 
-      data['definitions'][id] = schema_data
+      data['definitions'][id_prefix] ||= {}
+      data['definitions'][id_prefix][id] = schema_data
       reference_localizer = lambda do |datum|
         case datum
         when Array
           datum.map {|element| reference_localizer.call(element)}
         when Hash
           if datum.has_key?('$ref')
-            if datum['$ref'].include?('/schema/')
-              $stderr.puts("`#{schema_data['id']}` `/schema/` prefixed refs are deprecated, use `/schemata/` prefixes")
-              datum['$ref'] = datum['$ref'].gsub(%r{/schema/([^#]*)#}, '#/definitions/\1')
-            end
-            datum['$ref'] = datum['$ref'].gsub(%r{/schemata/([^#]*)#}, '#/definitions/\1')
+            datum['$ref'] = '#/definitions' + datum['$ref'].gsub('#', '')
           end
           if datum.has_key?('href')
-            if datum['href'].include?('%2Fschema%2F')
-              $stderr.puts("`#{id}` `%2Fschema%2F` prefixed hrefs are deprecated, use `%2Fschemata%2F` prefixes")
-              datum['href'] = datum['href'].gsub(%r{%2Fschema%2F([^%]*)%23%2F}, '%23%2Fdefinitions%2F\1%2F')
-            end
-            datum['href'] = datum['href'].gsub(%r{%2Fschemata%2F([^%]*)%23%2F}, '%23%2Fdefinitions%2F\1%2F')
+            datum['href'] = datum['href'].gsub('%23', '').gsub(%r{(%2Fschemata%2F[^%]*%2F)}, '%23%2Fdefinitions\1')
           end
           datum.each { |k,v| datum[k] = reference_localizer.call(v) }
         else
           datum
         end
       end
-      reference_localizer.call(data['definitions'][id])
+      reference_localizer.call(data['definitions'][id_prefix][id])
 
-      data['properties'][id] = { '$ref' => "#/definitions/#{id}" }
+      data['properties'][id] = { '$ref' => "#/definitions/#{id_prefix}/#{id}" }
     end
 
     Prmd::Schema.new(data)

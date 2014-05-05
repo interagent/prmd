@@ -178,9 +178,9 @@ HTTP/1.1 <%= case link['rel']
 ```
 ```javascript```
   <%- if link['rel'] == 'instances' %>
-<%= JSON.pretty_generate([schema.schemata_example(resource)]) %>
+<%= JSON.pretty_generate([schema.schemata_example(schemata['id'])]) %>
   <%- else %>
-<%= JSON.pretty_generate(schema.schemata_example(resource)) %>
+<%= JSON.pretty_generate(schema.schemata_example(schemata['id'])) %>
   <%- end %>
 ```
 

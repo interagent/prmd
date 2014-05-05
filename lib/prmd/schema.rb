@@ -57,7 +57,7 @@ module Prmd
     end
 
     def schemata_example(schemata_id)
-      definition = @data['definitions'][schemata_id]
+      _, definition = dereference("#/definitions/#{schemata_id}")
       @schemata_examples[schemata_id] ||= begin
         example = {}
         if definition['properties']
