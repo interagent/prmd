@@ -128,7 +128,7 @@
 ```term
   <%-
     data = {}
-    path = path.gsub(/{([^}]*)}/) {|match| '$' + match.gsub(/[{}]/, '')}
+    path = path.gsub(/{([^}]*)}/) {|match| '$' + match.gsub(/[{}]/, '').upcase}
 
     if link.has_key?('schema') && (link['schema'].has_key?('properties') || link['schema'].has_key?('example'))
       if link['schema']['properties']
