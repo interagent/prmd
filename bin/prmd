@@ -82,7 +82,7 @@ case command
     end
     schema = Prmd::Schema.new(JSON.parse(data))
 
-    options[:template] = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'prmd', 'templates', 'schemata.erb'))
+    options[:template] = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'prmd', 'templates', 'schema.erb'))
 
     puts Prmd.render(schema, options)
   when :init
