@@ -7,6 +7,8 @@
 
   def extract_attributes(schema, properties)
     attributes = []
+    properties = properties.sort_by {|k,v| k} # ensure consistent ordering
+
     properties.each do |key, value|
       # found a reference to another element:
       _, value = schema.dereference(value)
