@@ -20,7 +20,7 @@ Each schema MUST include some meta-data, which we cluster at the top of the file
 * `description` - a description of the resource described by the schema
 * `id` - an id for this schema, it MUST be in the form `"schema/#{lower_case_singular_resource}"`
 * `$schema` - defines what meta-schema is in use, it MUST be `http://json-schema.org/draft-04/hyper-schema`
-* `title` - title for this resource, it MUST be in the form `"Heroku Platform API - #{title_case_plural_resource}"`
+* `title` - title for this resource, it MUST be in the form `"#{title_case_API_name} - #{title_case_plural_resource}"`
 * `type` - the type(s) of this schema, it MUST be `["object"]`
 
 ### `definitions`
@@ -41,7 +41,7 @@ Each attribute MUST include the following properties:
 
 Each attribute MAY include the following properties:
 
-* `pattern` - a regex encoded in a string that the valid values MUST match
+* `pattern` - a javascript regex encoded in a string that the valid values MUST match
 * `format` - format of the value. MUST be one of spec defined `["date-time", "email", "hostname", "ipv4", "ipv6", "uri"]` or defined by us `["uuid"]`
 
 Examples:
