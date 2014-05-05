@@ -3,7 +3,7 @@ module Prmd
     doc = ''
 
     if options[:prepend]
-      doc << options.prepend.map {|path| File.read(path)}.join("\n") << "\n"
+      doc << options[:prepend].map {|path| File.read(path)}.join("\n") << "\n"
     end
 
     doc << schema['properties'].map do |_, property|
