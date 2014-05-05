@@ -91,11 +91,12 @@
   <%-
     path = link['href'].gsub(%r|(\{\([^\)]+\)\})|) do |ref|
       ref = ref.gsub('%2F', '/').gsub('%23', '#').gsub(%r|[\{\(\)\}]|, '')
+      ref_resource = ref.split('#/definitions/schemata/').last.split('/').first.gsub('-','_')
       identity_key, identity_value = schema.dereference(ref)
       if identity_value.has_key?('anyOf')
-        '{' + resource + '_' + identity_value['anyOf'].map {|r| r['$ref'].split('/').last}.join('_or_') + '}'
+        '{' + ref_resource + '_' + identity_value['anyOf'].map {|r| r['$ref'].split('/').last}.join('_or_') + '}'
       else
-        '{' + resource + '_' + identity_key.split('/').last + '}'
+        '{' + ref_resource + '_' + identity_key.split('/').last + '}'
       end
     end
   -%>
