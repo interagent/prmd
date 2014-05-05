@@ -44,6 +44,7 @@ Prmd provides four main commands:
 * `combine`: Combine schemata and metadata into single schema
 * `verify`: Verify a schema
 * `doc`: Generate documentation from a schema
+* `render`: Render views from schema
 
 Here's an example of using these commands in a typical workflow:
 
@@ -76,6 +77,9 @@ $ prmd verify schema.json
 # Build docs
 $ prmd doc schema.json > schema.md
 ```
+
+# Render from schema
+$ prmd render --template schemata.erb schema.json > schema.md
 
 Typically you'll want to prepend header and overview information to
 your API documentation. You can do this with the `--prepend` flag:
