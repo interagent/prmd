@@ -56,34 +56,32 @@ module Prmd
       end
     end
 
-    def properties_example(properties)
+    def schema_example(schema)
       example = {}
 
-      properties.each do |key, value|
-        _, value = dereference(value)
-        if value.has_key?('properties')
-          example[key] = {}
-          value['properties'].each do |k,v|
-            example[key][k] = dereference(v).last['example']
+      if schema.has_key?('example')
+        example.merge!(schema['example'])
+      elsif schema.has_key?('properties')
+        schema['properties'].each do |key, value|
+          _, value = dereference(value)
+          if value.has_key?('properties') # nested properties
+            example[key] = {}
+            value['properties'].each do |k,v|
+              example[key][k] = dereference(v).last['example']
+            end
+          else
+            example[key] = value['example']
           end
-        else
-          example[key] = value['example']
         end
       end
 
-      return example
+      example
     end
 
     def schemata_example(schemata_id)
-      _, definition = dereference("#/definitions/#{schemata_id}")
+      _, schema = dereference("#/definitions/#{schemata_id}")
       @schemata_examples[schemata_id] ||= begin
-        example = {}
-        if definition['properties']
-          example = properties_example(definition['properties'])
-        else
-          example.merge!(definition['example'])
-        end
-        example
+        schema_example(schema)
       end
     end
 

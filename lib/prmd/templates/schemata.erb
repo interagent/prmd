@@ -131,25 +131,9 @@
     data = {}
     path = path.gsub(/{([^}]*)}/) {|match| '$' + match.gsub(/[{}]/, '').upcase}
 
-    if link.has_key?('schema') && (link['schema'].has_key?('properties') || link['schema'].has_key?('example'))
-      if link['schema']['properties']
-        link['schema']['properties'].each do |key, value|
-          _, value = schema.dereference(value)
-          if value.has_key?('anyOf')
-            id_ref = value['anyOf'].detect {|ref| ref['$ref'].split('/').last == 'id'}
-            data[key] = schema.dereference(id_ref).last['example']
-          elsif value.has_key?('properties')
-            data[key] = {}
-            value['properties'].each do |k,v|
-              data[key][k] = schema.dereference(v).last['example']
-            end
-          else
-            data[key] = schema.dereference(value).last['example']
-          end
-        end
-      else
-        data.merge!(link['schema']['example'])
-      end
+    if link.has_key?('schema')
+      data.merge!(schema_example(link['schema']))
+    end
 
       if link['method'].upcase == 'GET' && !data.empty?
         path << '?'
