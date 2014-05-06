@@ -65,9 +65,13 @@ module Prmd
         schema['properties'].each do |key, value|
           _, value = dereference(value)
           if value.has_key?('properties') # nested properties
-            example[key] = {}
-            value['properties'].each do |k,v|
-              example[key][k] = dereference(v).last['example']
+            example[key] = schema_example(value)
+          elsif value.has_key?('items') # array of objects
+            _, items = dereference(value['items'])
+            if value['items'].has_key?('example')
+                example[key] = [items['example']]
+            else
+                example[key] = [schema_example(items)]
             end
           else
             example[key] = value['example']
