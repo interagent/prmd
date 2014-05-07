@@ -132,8 +132,7 @@
     path = path.gsub(/{([^}]*)}/) {|match| '$' + match.gsub(/[{}]/, '').upcase}
 
     if link.has_key?('schema')
-      data.merge!(schema_example(link['schema']))
-    end
+      data.merge!(schema.schema_example(link['schema']))
 
       if link['method'].upcase == 'GET' && !data.empty?
         path << '?'
