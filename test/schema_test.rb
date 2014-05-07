@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), 'helpers'))
 
-class SchemaTest < Minitest::Unit::TestCase
+class SchemaTest < Minitest::Test
   def test_dereference_with_ref
     key, value = user_input_schema.dereference({
       '$ref' => '#/definitions/schemata/user/definitions/id'
