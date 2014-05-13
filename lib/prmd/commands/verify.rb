@@ -2,10 +2,12 @@ module Prmd
   def self.verify(schema)
     errors = []
     errors << verify_schema(schema)
-    if schema['definitions']
-      schema['definitions'].each do |key, value|
-        errors << verify_schema(value)
-        errors << verify_definitions_and_links(value)
+    schema = Prmd::Schema.new(schema)
+    if schema['properties']
+      schema['properties'].each do |key, value|
+        _, schemata = schema.dereference(value)
+        errors << verify_schema(schemata)
+        errors << verify_definitions_and_links(schemata)
       end
     end
     errors.flatten!
