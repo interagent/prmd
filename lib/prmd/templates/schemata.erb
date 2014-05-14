@@ -92,7 +92,7 @@
   <%-
     path = link['href'].gsub(%r|(\{\([^\)]+\)\})|) do |ref|
       ref = ref.gsub('%2F', '/').gsub('%23', '#').gsub(%r|[\{\(\)\}]|, '')
-      ref_resource = ref.split('#/definitions/schemata/').last.split('/').first.gsub('-','_')
+      ref_resource = ref.split('#/definitions/').last.split('/').first.gsub('-','_')
       identity_key, identity_value = schema.dereference(ref)
       if identity_value.has_key?('anyOf')
         '{' + ref_resource + '_' + identity_value['anyOf'].map {|r| r['$ref'].split('/').last}.join('_or_') + '}'
@@ -163,9 +163,9 @@ HTTP/1.1 <%= case link['rel']
 ```
 ```javascript```
   <%- if link['rel'] == 'instances' %>
-<%= JSON.pretty_generate([schema.schemata_example(schemata['id'])]) %>
+<%= JSON.pretty_generate([schema.schemata_example(resource)]) %>
   <%- else %>
-<%= JSON.pretty_generate(schema.schemata_example(schemata['id'])) %>
+<%= JSON.pretty_generate(schema.schemata_example(resource)) %>
   <%- end %>
 ```
 <%- end -%>
