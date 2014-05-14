@@ -52,7 +52,13 @@
         if value['enum']
           description += '<br/><b>one of:</b>' + [*value['enum']].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
         end
-        example = [*value['example']].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
+
+        if value.has_key?('example')
+          example = [*value['example']].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
+        elsif value['type'] == ['array'] && value.has_key?('items')
+          example = "<code>#{schema.schema_value_example(value)}</code>"
+        end
+
         type = if value['type'].include?('null')
           'nullable '
         else
