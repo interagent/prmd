@@ -25,34 +25,34 @@ module Prmd
     end
 
     schemata.each do |schema_file, schema_data|
-      id_prefix, id = schema_data['id'].split('/')
+      id = schema_data['id'].split('/').last
 
       if file = schemata_map[schema_data['id']]
         $stderr.puts "`#{schema_data['id']}` (from #{schema_file}) was already defined in `#{file}` and will overwrite the first definition"
       end
       schemata_map[schema_data['id']] = schema_file
 
-      data['definitions'][id_prefix] ||= {}
-      data['definitions'][id_prefix][id] = schema_data
+      data['definitions']
+      data['definitions'][id] = schema_data
       reference_localizer = lambda do |datum|
         case datum
         when Array
           datum.map {|element| reference_localizer.call(element)}
         when Hash
           if datum.has_key?('$ref')
-            datum['$ref'] = '#/definitions' + datum['$ref'].gsub('#', '')
+            datum['$ref'] = '#/definitions' + datum['$ref'].gsub('#', '').gsub('/schemata', '')
           end
           if datum.has_key?('href')
-            datum['href'] = datum['href'].gsub('%23', '').gsub(%r{(%2Fschemata%2F[^%]*%2F)}, '%23%2Fdefinitions\1')
+            datum['href'] = datum['href'].gsub('%23', '').gsub(%r{%2Fschemata(%2F[^%]*%2F)}, '%23%2Fdefinitions\1')
           end
           datum.each { |k,v| datum[k] = reference_localizer.call(v) }
         else
           datum
         end
       end
-      reference_localizer.call(data['definitions'][id_prefix][id])
+      reference_localizer.call(data['definitions'][id])
 
-      data['properties'][id] = { '$ref' => "#/definitions/#{id_prefix}/#{id}" }
+      data['properties'][id] = { '$ref' => "#/definitions/#{id}" }
     end
 
     Prmd::Schema.new(data)
