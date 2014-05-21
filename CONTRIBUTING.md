@@ -5,14 +5,14 @@ New contributors are always welcome, when it doubt please ask questions. We stri
 ### Coding
 
 * Pick a task:
-  * Offer feedback on open [pull requests](https://github.com/heroku/prmd/pulls).
-  * Review open [issues](https://github.com/heroku/prmd/issues) for things to help on.
-  * [Create an issue](https://github.com/heroku/prmd/issues/new) to start a discussion on additions or features.
+  * Offer feedback on open [pull requests](https://github.com/interagent/prmd/pulls).
+  * Review open [issues](https://github.com/interagent/prmd/issues) for things to help on.
+  * [Create an issue](https://github.com/interagent/prmd/issues/new) to start a discussion on additions or features.
 * Fork the project, add your changes and tests to cover them in a topic branch.
-* Commit your changes and rebase against `heroku/prmd` to ensure everything is up to date.
-* [Submit a pull request](https://github.com/heroku/prmd/compare/).
+* Commit your changes and rebase against `interagent/prmd` to ensure everything is up to date.
+* [Submit a pull request](https://github.com/interagent/prmd/compare/).
 
 ### Non-Coding
 
-* Offer feedback on open [issues](https://github.com/heroku/prmd/issues).
+* Offer feedback on open [issues](https://github.com/interagent/prmd/issues).
 * Organize or volunteer at events.
