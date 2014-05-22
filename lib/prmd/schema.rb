@@ -72,18 +72,16 @@ module Prmd
     end
 
     def schema_example(schema)
-      example = {}
-
       if schema.has_key?('example')
-        example.merge!(schema['example'])
+        schema['example']
       elsif schema.has_key?('properties')
+        example = {}
         schema['properties'].each do |key, value|
           _, value = dereference(value)
           example[key] = schema_value_example(value)
         end
+        example
       end
-
-      example
     end
 
     def schemata_example(schemata_id)
