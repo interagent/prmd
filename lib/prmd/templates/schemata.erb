@@ -2,7 +2,6 @@
   return unless schemata.has_key?('links') && !schemata['links'].empty?
 
   link_schema_properties_template = File.read(File.join(File.dirname(options[:template]), 'link_schema_properties.erb'))
-  resource = schemata['id'].split('/').last
   title = schemata['title'].split(' - ', 2).last
 
   def extract_attributes(schema, properties)

@@ -1,10 +1,11 @@
 <%=
   schemata_template = File.read(File.join(File.dirname(options[:template]), 'schemata.erb'))
 
-  schema['properties'].map do |_, property|
+  schema['properties'].map do |resource, property|
     _, schemata = schema.dereference(property)
     Erubis::Eruby.new(schemata_template).result({
       options:         options,
+      resource:        resource,
       schema:          schema,
       schemata:        schemata
     })
