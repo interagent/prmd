@@ -4,6 +4,7 @@
   "type": [
     "object"
   ],
+  "description": "User represents an API account.",
   "definitions": {
     "created_at": {
       "description": "when user was created",
