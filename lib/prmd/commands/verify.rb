@@ -19,7 +19,7 @@ module Prmd
     id = schema['id']
 
     missing_requirements = []
-    %w{$schema definitions description id links properties title type}.each do |requirement|
+    %w{$schema definitions description links properties title type}.each do |requirement|
       unless schema.has_key?(requirement)
         missing_requirements << requirement
       end
