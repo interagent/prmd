@@ -32,6 +32,9 @@ module Prmd
       end
       schemata_map[schema_data['id']] = schema_file
 
+      # schemas are now in a single scope by combine
+      schema_data.delete('id')
+
       data['definitions']
       data['definitions'][id] = schema_data
       reference_localizer = lambda do |datum|
