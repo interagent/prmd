@@ -2,7 +2,7 @@ require "minitest/autorun"
 require "prmd"
 
 def input_schemas_path
-  @@data_path ||= File.join(File.dirname(__FILE__), 'schemas', 'input')
+  @@data_path ||= File.join(File.dirname(__FILE__), 'schemata', 'input')
 end
 
 def user_input_schema
