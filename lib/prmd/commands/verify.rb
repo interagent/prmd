@@ -26,7 +26,7 @@ module Prmd
     return JsonSchema::SchemaError.aggregate(errors) if !valid
 
     if !(meta_schema = store.lookup_schema(schema_uri))
-      return ["Unknown $schema: schema_uri."]
+      return ["Unknown $schema: #{schema_uri}."]
     end
 
     valid, errors = meta_schema.validate(schema_data)
