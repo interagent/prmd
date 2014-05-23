@@ -1,87 +1,51 @@
+require "json"
+require "json_schema"
+
 module Prmd
-  def self.verify(schema)
-    errors = []
-    errors << verify_schema(schema['id'], schema)
-    schema = Prmd::Schema.new(schema)
-    if schema['properties']
-      schema['properties'].each do |key, value|
-        id, schemata = schema.dereference(value)
+  # These schemas are listed manually and in order because they reference each
+  # other.
+  SCHEMAS = [
+    "schema.json",
+    "hyper-schema.json",
+    "interagent-hyper-schema.json"
+  ]
 
-        errors << verify_schema(id, schemata)
-        errors << verify_definitions_and_links(id, schemata)
-      end
+  def self.verify(schema_data)
+    store = init_document_store
+
+    if !(schema_uri = schema_data["$schema"])
+      return ["Missing $schema."]
     end
-    errors.flatten!
+
+    # for good measure, make sure that the schema parses and that its
+    # references can be expanded
+    schema, errors = JsonSchema.parse!(schema_data)
+    return JsonSchema::SchemaError.aggregate(errors) if !schema
+
+    valid, errors = schema.expand_references(store: store)
+    return JsonSchema::SchemaError.aggregate(errors) if !valid
+
+    if !(meta_schema = store.lookup_schema(schema_uri))
+      return ["Unknown $schema: schema_uri."]
+    end
+
+    valid, errors = meta_schema.validate(schema_data)
+    return JsonSchema::SchemaError.aggregate(errors) if !valid
+
+    []
   end
 
-  def self.verify_schema(id, schema)
-    errors = []
+  private
 
-    missing_requirements = []
-    %w{$schema definitions description links properties title type}.each do |requirement|
-      unless schema.has_key?(requirement)
-        missing_requirements << requirement
-      end
+  def self.init_document_store
+    store = JsonSchema::DocumentStore.new
+    SCHEMAS.each do |file|
+      file = File.expand_path("../../../../schemas/#{file}", __FILE__)
+      data = JSON.parse(File.read(file))
+      schema = JsonSchema::Parser.new.parse!(data)
+      schema.expand_references!(store: store)
+      store.add_schema(schema)
     end
-    missing_requirements.each do |missing_requirement|
-      errors << "Missing `#{id}#/#{missing_requirement}`"
-    end
-
-    errors
-  end
-
-  def self.verify_definitions_and_links(id, schema)
-    errors = []
-
-    if schema['definitions']
-      unless schema['definitions'].has_key?('identity')
-        errors << "Missing `#{id}#/definitions/identity`"
-      end
-      schema['definitions'].each do |key, value|
-        missing_requirements = []
-        unless key == 'identity'
-          %w{description type}.each do |requirement|
-            unless schema['definitions'][key].has_key?(requirement)
-              missing_requirements << requirement
-            end
-          end
-        end
-        # check for example, unless they are nested in array/object
-        type = schema['definitions'][key]['type']
-        unless type.nil? || type.include?('array') || type.include?('object')
-          unless schema['definitions'][key].has_key?('example')
-            missing_requirements << 'example'
-          end
-        end
-        missing_requirements.each do |missing_requirement|
-          errors << "Missing `#{id}#/definitions/#{key}/#{missing_requirement}`"
-        end
-      end
-    end
-
-    if schema['links']
-      schema['links'].each do |link|
-        missing_requirements = []
-        %w{description href method rel title}.each do |requirement|
-          unless link.has_key?(requirement)
-            missing_requirements << requirement
-          end
-        end
-        if link.has_key?('schema')
-          %w{properties type}.each do |requirement|
-            unless link['schema'].has_key?(requirement)
-              missing_requirements << "schema/#{requirement}"
-            end
-          end
-        end
-        missing_requirements.each do |missing_requirement|
-          errors << "Missing #{missing_requirement} in `#{link}` link for `#{id}`"
-        end
-      end
-    else
-      errors << "Missing `#{id}/links`"
-    end
-
-    errors
+    store
   end
 end
