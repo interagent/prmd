@@ -11,6 +11,7 @@ require File.join(dir, 'prmd', 'commands', 'render')
 require File.join(dir, 'prmd', 'commands', 'verify')
 require File.join(dir, 'prmd', 'schema')
 require File.join(dir, 'prmd', 'version')
+require File.join(dir, 'prmd', 'template')
 
 module Prmd
 end
