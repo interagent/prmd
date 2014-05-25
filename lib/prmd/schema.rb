@@ -72,11 +72,13 @@ module Prmd
     end
 
     def schema_example(schema)
-      if schema.has_key?('example')
-        schema['example']
-      elsif schema.has_key?('properties')
+      _, _schema = dereference(schema)
+
+      if _schema.has_key?('example')
+        _schema['example']
+      elsif _schema.has_key?('properties')
         example = {}
-        schema['properties'].each do |key, value|
+        _schema['properties'].each do |key, value|
           _, value = dereference(value)
           example[key] = schema_value_example(value)
         end
