@@ -10,5 +10,10 @@ module Prmd
 
       return File.read(resolved)
     end
+
+    def self.render(path, base, *args)
+      template = self.load(path, base)
+      Erubis::Eruby.new(template).result(*args)
+    end
   end
 end
