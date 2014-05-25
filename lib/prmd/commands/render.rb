@@ -6,7 +6,13 @@ module Prmd
       doc << options[:prepend].map {|path| File.read(path)}.join("\n") << "\n"
     end
 
-    doc << Erubis::Eruby.new(File.read(options[:template])).result({
+    template_dir = File::expand_path(options[:template])
+    if not File.directory?(template_dir)  # to keep backward compatibility
+      template_dir = File.dirname(options[:template])
+    end
+    options[:template] = template_dir
+
+    doc << Prmd::Template::render('schema.erb', template_dir, {
       options:         options,
       schema:          schema
     })

@@ -1,7 +1,7 @@
 <%-
   return unless schemata.has_key?('links') && !schemata['links'].empty?
 
-  Prmd::Template::render(File.join('schemata', 'helper.erb'), File.dirname(options[:template]), {
+  Prmd::Template::render(File.join('schemata', 'helper.erb'), options[:template], {
     options:         options,
     resource:        resource,
     schema:          schema,
@@ -35,7 +35,7 @@
 <%- end %>
 <%- schemata['links'].each do |link, datum| %>
 <%=
-  Prmd::Template::render(File.join('schemata', 'link.erb'), File.dirname(options[:template]), {
+  Prmd::Template::render(File.join('schemata', 'link.erb'), options[:template], {
     options:         options,
     resource:        resource,
     schema:          schema,
