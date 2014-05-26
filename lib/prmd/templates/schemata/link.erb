@@ -1,6 +1,6 @@
 <%-
   path = build_link_path(schema, link)
-  link_schema_properties_template = Prmd::Template::load('link_schema_properties.erb', File.dirname(options[:template]))
+  link_schema_properties_template = Prmd::Template::load('link_schema_properties.erb', options[:template])
 -%>
 ### <%= title %> <%= link['title'] %>
 <%= link['description'] %>
