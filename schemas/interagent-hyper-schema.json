@@ -44,20 +44,21 @@
         "resourceProperty": {
             "anyOf": [
                 {
-                    "required": ["description", "example", "type"]
+                    "required": ["example", "type"]
                 },
                 {
-                    "required": ["description", "type"],
+                    "required": ["type"],
                     "type": ["array"]
                 },
                 {
-                    "required": ["description", "type"],
+                    "required": ["type"],
                     "type": ["object"]
                 }
             ],
             "not": {
                 "required": ["links"]
-            }
+            },
+            "required": ["description"]
         },
         "identity": {
             "additionalProperties": false,
