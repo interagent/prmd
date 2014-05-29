@@ -14,7 +14,7 @@
                     "properties": {
                         "definitions": {
                             "additionalProperties": {
-                                "$ref": "#/definitions/resourceProperty"
+                                "$ref": "#/definitions/resourceDefinition"
                             },
                             "properties": {
                                 "identity": {
@@ -33,35 +33,12 @@
                     }
                 },
                 "properties": {
-                    "additionalProperties": {
-                        "anyOf": [
-                            {
-                                "$ref": "#/definitions/ref"
-                            },
-                            {
-                                "properties": {
-                                    "properties": {
-                                        "additionalProperties": {
-                                            "$ref": "#/definitions/resource/properties/properties/additionalProperties"
-                                        }
-                                    },
-                                    "strictProperties": {
-                                        "enum": [true],
-                                        "type": "boolean"
-                                    }
-                                },
-                                "required": ["description", "properties", "type"]
-                            },
-                            {
-                                "properties": {
-                                    "items": {
-                                        "$ref": "#/definitions/ref"
-                                    }
-                                },
-                                "required": ["description", "items", "type"]
-                            }
-                        ]
-                    }
+                    "patternProperties": {
+                        "^[a-z][a-z_]*[a-z]$": {
+                            "$ref": "#/definitions/resourceProperty"
+                        }
+                    },
+                    "strictProperties": true
                 },
                 "strictProperties": {
                     "enum": [true],
@@ -76,7 +53,7 @@
                 "type"
             ]
         },
-        "resourceProperty": {
+        "resourceDefinition": {
             "anyOf": [
                 {
                     "required": ["example", "type"]
@@ -94,6 +71,35 @@
                 "required": ["links"]
             },
             "required": ["description"]
+        },
+        "resourceProperty": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/ref"
+                },
+                {
+                    "properties": {
+                        "properties": {
+                            "additionalProperties": {
+                                "$ref": "#/definitions/resourceProperty"
+                            }
+                        },
+                        "strictProperties": {
+                            "enum": [true],
+                            "type": "boolean"
+                        }
+                    },
+                    "required": ["description", "properties", "type"]
+                },
+                {
+                    "properties": {
+                        "items": {
+                            "$ref": "#/definitions/ref"
+                        }
+                    },
+                    "required": ["description", "items", "type"]
+                }
+            ]
         },
         "identity": {
             "additionalProperties": false,
