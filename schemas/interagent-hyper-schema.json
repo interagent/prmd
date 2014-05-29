@@ -9,16 +9,24 @@
     ],
     "definitions": {
         "identity": {
-            "additionalProperties": false,
-            "properties": {
-                "anyOf": {
-                    "additionalProperties": {
-                        "$ref": "#/definitions/ref"
+            "anyOf": [
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "anyOf": {
+                            "additionalProperties": {
+                                "$ref": "#/definitions/ref"
+                            },
+                            "minProperties": 1
+                        }
                     },
-                    "minProperties": 1
+                    "required": ["anyOf"]
+                },
+                {
+                    "properties": {},
+                    "strictProperties": true
                 }
-            },
-            "required": ["anyOf"]
+            ]
         },
         "link": {
             "properties": {
