@@ -8,13 +8,55 @@
         }
     ],
     "definitions": {
+        "identity": {
+            "anyOf": [
+                {
+                    "additionalProperties": false,
+                    "properties": {
+                        "anyOf": {
+                            "additionalProperties": {
+                                "$ref": "#/definitions/ref"
+                            },
+                            "minProperties": 1
+                        }
+                    },
+                    "required": ["anyOf"]
+                },
+                {
+                    "properties": {},
+                    "strictProperties": true
+                }
+            ]
+        },
+        "link": {
+            "properties": {
+                "href": {
+                    "pattern": "^(/([a-z][a-z\\-]*[a-z]|\\{\\(.*\\)\\}))+$"
+                },
+                "schema": {
+                    "anyOf": [
+                        {
+                            "required": ["properties"]
+                        },
+                        {
+                            "required": ["patternProperties"]
+                        }
+                    ],
+                    "required": ["type"]
+                }
+            },
+            "required": ["description", "href", "method", "rel", "title"]
+        },
+        "ref": {
+            "required": ["$ref"]
+        },
         "resource": {
             "dependencies": {
                 "properties": {
                     "properties": {
                         "definitions": {
                             "additionalProperties": {
-                                "$ref": "#/definitions/resourceProperty"
+                                "$ref": "#/definitions/resourceDefinition"
                             },
                             "properties": {
                                 "identity": {
@@ -31,6 +73,18 @@
                     "items": {
                         "$ref": "#/definitions/link"
                     }
+                },
+                "properties": {
+                    "patternProperties": {
+                        "^[a-z][a-z_]*[a-z]$": {
+                            "$ref": "#/definitions/resourceProperty"
+                        }
+                    },
+                    "strictProperties": true
+                },
+                "strictProperties": {
+                    "enum": [true],
+                    "type": "boolean"
                 }
             },
             "required": [
@@ -41,7 +95,7 @@
                 "type"
             ]
         },
-        "resourceProperty": {
+        "resourceDefinition": {
             "anyOf": [
                 {
                     "required": ["example", "type"]
@@ -60,36 +114,34 @@
             },
             "required": ["description"]
         },
-        "identity": {
-            "additionalProperties": false,
-            "properties": {
-                "anyOf": {
-                    "additionalProperties": {
-                        "$ref": "#/definitions/ref"
-                    },
-                    "minProperties": 1
-                }
-            },
-            "required": ["anyOf"]
-        },
-        "link": {
-            "properties": {
-                "schema": {
-                    "anyOf": [
-                        {
-                            "required": ["properties"]
+        "resourceProperty": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/ref"
+                },
+                {
+                    "properties": {
+                        "properties": {
+                            "additionalProperties": {
+                                "$ref": "#/definitions/resourceProperty"
+                            }
                         },
-                        {
-                            "required": ["patternProperties"]
+                        "strictProperties": {
+                            "enum": [true],
+                            "type": "boolean"
                         }
-                    ],
-                    "required": ["type"]
+                    },
+                    "required": ["description", "properties", "type"]
+                },
+                {
+                    "properties": {
+                        "items": {
+                            "$ref": "#/definitions/ref"
+                        }
+                    },
+                    "required": ["description", "items", "type"]
                 }
-            },
-            "required": ["description", "method", "rel", "title"]
-        },
-        "ref": {
-            "required": ["$ref"]
+            ]
         }
     },
     "properties": {
