@@ -3,11 +3,13 @@ PATH
   specs:
     prmd (0.3.2)
       erubis (~> 2.7)
+      json_schema (~> 0.1)
 
 GEM
   remote: https://rubygems.org/
   specs:
     erubis (2.7.0)
+    json_schema (0.1.4)
     minitest (5.3.2)
     rake (10.2.2)
 
