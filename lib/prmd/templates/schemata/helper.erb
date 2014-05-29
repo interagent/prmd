@@ -1,0 +1,80 @@
+<%-
+  def extract_attributes(schema, properties)
+    attributes = []
+    properties = properties.sort_by {|k,v| k} # ensure consistent ordering
+
+    properties.each do |key, value|
+      # found a reference to another element:
+      _, value = schema.dereference(value)
+      if value.has_key?('anyOf')
+        descriptions = []
+        examples = []
+
+        # sort anyOf! always show unique identifier first
+        anyof = value['anyOf'].sort_by do |property|
+          property['$ref'].split('/').last.gsub('id', 'a')
+        end
+
+        anyof.each do |ref|
+          _, nested_field = schema.dereference(ref)
+          descriptions << nested_field['description']
+          examples << nested_field['example']
+        end
+
+        # avoid repetition :}
+        description = if descriptions.size > 1
+          descriptions.first.gsub!(/ of (this )?.*/, "")
+          descriptions[1..-1].map { |d| d.gsub!(/unique /, "") }
+          [descriptions[0...-1].join(", "), descriptions.last].join(" or ")
+        else
+          description = descriptions.last
+        end
+
+        example = [*examples].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
+        attributes << [key, "string", description, example]
+
+      # found a nested object
+      elsif value['type'] == ['object'] && value['properties']
+        nested = extract_attributes(schema, value['properties'])
+        nested.each do |attribute|
+          attribute[0] = "#{key}:#{attribute[0]}"
+        end
+        attributes.concat(nested)
+      # just a regular attribute
+      else
+        description = value['description']
+        if value['enum']
+          description += '<br/><b>one of:</b>' + [*value['enum']].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
+        end
+
+        if value.has_key?('example')
+          example = [*value['example']].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
+        elsif value['type'] == ['array'] && value.has_key?('items')
+          example = "<code>#{schema.schema_value_example(value)}</code>"
+        end
+
+        type = if value['type'].include?('null')
+          'nullable '
+        else
+          ''
+        end
+        type += (value['format'] || (value['type'] - ['null']).first)
+        attributes << [key, type, description, example]
+      end
+    end
+    return attributes
+  end
+
+  def build_link_path(schema, link)
+    link['href'].gsub(%r|(\{\([^\)]+\)\})|) do |ref|
+      ref = ref.gsub('%2F', '/').gsub('%23', '#').gsub(%r|[\{\(\)\}]|, '')
+      ref_resource = ref.split('#/definitions/').last.split('/').first.gsub('-','_')
+      identity_key, identity_value = schema.dereference(ref)
+      if identity_value.has_key?('anyOf')
+        '{' + ref_resource + '_' + identity_value['anyOf'].map {|r| r['$ref'].split('/').last}.join('_or_') + '}'
+      else
+        '{' + ref_resource + '_' + identity_key.split('/').last + '}'
+      end
+    end
+  end
+%>

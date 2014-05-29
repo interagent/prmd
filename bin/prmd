@@ -28,7 +28,7 @@ commands = {
     opts.on("-p", "--prepend header,overview", Array, "Prepend files to output") do |p|
       options[:prepend] = p
     end
-    opts.on("-t", "--template schemata.erb", String, "Use alternate template") do |t|
+    opts.on("-t", "--template templates", String, "Use alternate template") do |t|
       options[:template] = t
     end
   end,
@@ -82,7 +82,7 @@ case command
     end
     schema = Prmd::Schema.new(JSON.parse(data))
 
-    options[:template] = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'prmd', 'templates', 'schema.erb'))
+    options[:template] = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'prmd', 'templates'))
 
     puts Prmd.render(schema, options)
   when :init

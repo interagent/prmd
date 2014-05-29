@@ -1,0 +1,25 @@
+```term
+  <%-
+    data = {}
+    path = path.gsub(/{([^}]*)}/) {|match| '$' + match.gsub(/[{}]/, '').upcase}
+
+    if link.has_key?('schema')
+      data.merge!(schema.schema_example(link['schema']))
+
+      if link['method'].upcase == 'GET' && !data.empty?
+        path << '?'
+        data.sort_by {|k,_| k.to_s }.each do |key, values|
+          [values].flatten.each do |value|
+            path << [key.to_s, CGI.escape(value.to_s)].join('=') << '&'
+          end
+        end
+        path.chop! # remove trailing '&'
+      end
+    end
+  %>
+$ curl -n -X <%= link['method'] %> <%= schema.href %><%= path %>
+  <%- unless data.empty? || link['method'].upcase == 'GET' %>
+-H "Content-Type: application/json" \
+-d '<%= data.to_json %>'
+  <%- end %>
+```

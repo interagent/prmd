@@ -1,5 +1,5 @@
 <%=
-  schemata_template = File.read(File.join(File.dirname(options[:template]), 'schemata.erb'))
+  schemata_template = Prmd::Template::load('schemata.erb', options[:template])
 
   schema['properties'].map do |resource, property|
     _, schemata = schema.dereference(property)

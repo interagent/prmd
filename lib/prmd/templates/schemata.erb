@@ -1,74 +1,14 @@
 <%-
   return unless schemata.has_key?('links') && !schemata['links'].empty?
 
-  link_schema_properties_template = File.read(File.join(File.dirname(options[:template]), 'link_schema_properties.erb'))
+  Prmd::Template::render(File.join('schemata', 'helper.erb'), options[:template], {
+    options:         options,
+    resource:        resource,
+    schema:          schema,
+    schemata:        schemata
+  })
+
   title = schemata['title'].split(' - ', 2).last
-
-  def extract_attributes(schema, properties)
-    attributes = []
-    properties = properties.sort_by {|k,v| k} # ensure consistent ordering
-
-    properties.each do |key, value|
-      # found a reference to another element:
-      _, value = schema.dereference(value)
-      if value.has_key?('anyOf')
-        descriptions = []
-        examples = []
-
-        # sort anyOf! always show unique identifier first
-        anyof = value['anyOf'].sort_by do |property|
-          property['$ref'].split('/').last.gsub('id', 'a')
-        end
-
-        anyof.each do |ref|
-          _, nested_field = schema.dereference(ref)
-          descriptions << nested_field['description']
-          examples << nested_field['example']
-        end
-
-        # avoid repetition :}
-        description = if descriptions.size > 1
-          descriptions.first.gsub!(/ of (this )?.*/, "")
-          descriptions[1..-1].map { |d| d.gsub!(/unique /, "") }
-          [descriptions[0...-1].join(", "), descriptions.last].join(" or ")
-        else
-          description = descriptions.last
-        end
-
-        example = [*examples].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
-        attributes << [key, "string", description, example]
-
-      # found a nested object
-      elsif value['type'] == ['object'] && value['properties']
-        nested = extract_attributes(schema, value['properties'])
-        nested.each do |attribute|
-          attribute[0] = "#{key}:#{attribute[0]}"
-        end
-        attributes.concat(nested)
-      # just a regular attribute
-      else
-        description = value['description']
-        if value['enum']
-          description += '<br/><b>one of:</b>' + [*value['enum']].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
-        end
-
-        if value.has_key?('example')
-          example = [*value['example']].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
-        elsif value['type'] == ['array'] && value.has_key?('items')
-          example = "<code>#{schema.schema_value_example(value)}</code>"
-        end
-
-        type = if value['type'].include?('null')
-          'nullable '
-        else
-          ''
-        end
-        type += (value['format'] || (value['type'] - ['null']).first)
-        attributes << [key, type, description, example]
-      end
-    end
-    return attributes
-  end
 %>
 ## <%= title %>
 <%= schemata['description'] %>
@@ -94,83 +34,14 @@
 
 <%- end %>
 <%- schemata['links'].each do |link, datum| %>
-  <%-
-    path = link['href'].gsub(%r|(\{\([^\)]+\)\})|) do |ref|
-      ref = ref.gsub('%2F', '/').gsub('%23', '#').gsub(%r|[\{\(\)\}]|, '')
-      ref_resource = ref.split('#/definitions/').last.split('/').first.gsub('-','_')
-      identity_key, identity_value = schema.dereference(ref)
-      if identity_value.has_key?('anyOf')
-        '{' + ref_resource + '_' + identity_value['anyOf'].map {|r| r['$ref'].split('/').last}.join('_or_') + '}'
-      else
-        '{' + ref_resource + '_' + identity_key.split('/').last + '}'
-      end
-    end
-  -%>
-### <%= title %> <%= link['title'] %>
-<%= link['description'] %>
-
-```
-<%= link['method'] %> <%= path %>
-```
-
-  <%- if link.has_key?('schema') && link['schema'].has_key?('properties') %>
-    <%-
-      required, optional = link['schema']['properties'].partition do |k, v|
-        (link['schema']['required'] || []).include?(k)
-      end.map { |partition| Hash[partition] }
-    %>
-    <%- unless required.empty? %>
-#### Required Parameters
-<%= Erubis::Eruby.new(link_schema_properties_template).result(params: required, schema: schema) %>
-
-    <%- end %>
-      <%- unless optional.empty? %>
-#### Optional Parameters
-<%= Erubis::Eruby.new(link_schema_properties_template).result(params: optional, schema: schema) %>
-    <%- end %>
-  <%- end %>
-
-#### Curl Example
-```term
-  <%-
-    data = {}
-    path = path.gsub(/{([^}]*)}/) {|match| '$' + match.gsub(/[{}]/, '').upcase}
-
-    if link.has_key?('schema')
-      data.merge!(schema.schema_example(link['schema']))
-
-      if link['method'].upcase == 'GET' && !data.empty?
-        path << '?'
-        data.sort_by {|k,_| k.to_s }.each do |key, values|
-          [values].flatten.each do |value|
-            path << [key.to_s, CGI.escape(value.to_s)].join('=') << '&'
-          end
-        end
-        path.chop! # remove trailing '&'
-      end
-    end
-  %>
-$ curl -n -X <%= link['method'] %> <%= schema.href %><%= path %>
-  <%- unless data.empty? || link['method'].upcase == 'GET' %>
--H "Content-Type: application/json" \
--d '<%= data.to_json %>'
-  <%- end %>
-```
-
-#### Response Example
-```
-HTTP/1.1 <%= case link['rel']
-  when 'create'
-    '201 Created'
-  else
-    '200 OK'
-  end %>
-```
-```javascript```
-  <%- if link['rel'] == 'instances' %>
-<%= JSON.pretty_generate([schema.schemata_example(resource)]) %>
-  <%- else %>
-<%= JSON.pretty_generate(schema.schemata_example(resource)) %>
-  <%- end %>
-```
+<%=
+  Prmd::Template::render(File.join('schemata', 'link.erb'), options[:template], {
+    options:         options,
+    resource:        resource,
+    schema:          schema,
+    schemata:        schemata,
+    link:            link,
+    title:           title
+  })
+%>
 <%- end -%>
