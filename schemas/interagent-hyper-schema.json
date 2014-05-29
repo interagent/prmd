@@ -32,6 +32,37 @@
                         "$ref": "#/definitions/link"
                     }
                 },
+                "properties": {
+                    "additionalProperties": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/definitions/ref"
+                            },
+                            {
+                                "properties": {
+                                    "properties": {
+                                        "additionalProperties": {
+                                            "$ref": "#/definitions/resource/properties/properties/additionalProperties"
+                                        }
+                                    },
+                                    "strictProperties": {
+                                        "enum": [true],
+                                        "type": "boolean"
+                                    }
+                                },
+                                "required": ["description", "properties", "type"]
+                            },
+                            {
+                                "properties": {
+                                    "items": {
+                                        "$ref": "#/definitions/ref"
+                                    }
+                                },
+                                "required": ["description", "items", "type"]
+                            }
+                        ]
+                    }
+                },
                 "strictProperties": {
                     "enum": [true],
                     "type": "boolean"
