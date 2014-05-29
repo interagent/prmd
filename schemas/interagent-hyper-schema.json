@@ -8,13 +8,13 @@
         }
     ],
     "definitions": {
-        "entity": {
+        "resource": {
             "dependencies": {
                 "properties": {
                     "properties": {
                         "definitions": {
                             "additionalProperties": {
-                                "$ref": "#/definitions/entityProperty"
+                                "$ref": "#/definitions/resourceProperty"
                             },
                             "properties": {
                                 "identity": {
@@ -41,7 +41,7 @@
                 "type"
             ]
         },
-        "entityProperty": {
+        "resourceProperty": {
             "anyOf": [
                 {
                     "required": ["description", "example", "type"]
@@ -74,7 +74,15 @@
         "link": {
             "properties": {
                 "schema": {
-                    "required": ["properties", "type"]
+                    "anyOf": [
+                        {
+                            "required": ["properties"]
+                        },
+                        {
+                            "required": ["patternProperties"]
+                        }
+                    ],
+                    "required": ["type"]
                 }
             },
             "required": ["description", "method", "rel", "title"]
@@ -86,7 +94,7 @@
     "properties": {
         "definitions": {
             "additionalProperties": {
-                "$ref": "#/definitions/entity"
+                "$ref": "#/definitions/resource"
             }
         },
         "links": {
