@@ -31,6 +31,10 @@
                     "items": {
                         "$ref": "#/definitions/link"
                     }
+                },
+                "strictProperties": {
+                    "enum": [true],
+                    "type": "boolean"
                 }
             },
             "required": [
