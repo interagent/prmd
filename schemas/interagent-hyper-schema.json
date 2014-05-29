@@ -115,6 +115,9 @@
         },
         "link": {
             "properties": {
+                "href": {
+                    "pattern": "^(/([a-z][a-z\-]*[a-z]|\{\(.*\)\}))+$"
+                },
                 "schema": {
                     "anyOf": [
                         {
@@ -127,7 +130,7 @@
                     "required": ["type"]
                 }
             },
-            "required": ["description", "method", "rel", "title"]
+            "required": ["description", "href", "method", "rel", "title"]
         },
         "ref": {
             "required": ["$ref"]
