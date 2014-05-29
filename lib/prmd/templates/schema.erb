@@ -2,12 +2,17 @@
   schemata_template = Prmd::Template::load('schemata.erb', options[:template])
 
   schema['properties'].map do |resource, property|
-    _, schemata = schema.dereference(property)
-    Erubis::Eruby.new(schemata_template).result({
-      options:         options,
-      resource:        resource,
-      schema:          schema,
-      schemata:        schemata
-    })
+    begin
+      _, schemata = schema.dereference(property)
+      Erubis::Eruby.new(schemata_template).result({
+        options:         options,
+        resource:        resource,
+        schema:          schema,
+        schemata:        schemata
+      })
+    rescue => e 
+      $stdout.puts("Error in resource: #{resource}")
+      raise e
+    end
   end.join("\n") << "\n"
 %>
