@@ -47,7 +47,7 @@ HTTP/1.1 <%= case link['rel']
     '200 OK'
   end %>
 ```
-```javascript```
+```json
   <%- if link['rel'] == 'instances' %>
 <%= JSON.pretty_generate([schema.schemata_example(resource)]) %>
   <%- else %>
