@@ -60,6 +60,17 @@ class InteragentHyperSchemaVerifyTest < Minitest::Test
     assert_equal [], verify
   end
 
+  # "my-property" does match fit our regex of lowercase letters and underscores only
+  def test_resource_property_format
+    pointer("#/definitions/app/properties").merge!({
+      "my-property" => {}
+    })
+    errors = verify
+    assert_equal 1, errors.count
+    assert_match %r{^#/definitions/app/properties: }, errors[0]
+    assert_match %r{Extra keys in object: my-property}, errors[0]
+  end
+
   def test_resource_strict_properties
     pointer("#/definitions/app").merge!({
       "strictProperties" => false
