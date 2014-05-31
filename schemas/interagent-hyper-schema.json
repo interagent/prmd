@@ -29,6 +29,7 @@
             ]
         },
         "ref": {
+            "additionalProperties": false,
             "properties": {
                 "$ref": {
                     "type": "string"

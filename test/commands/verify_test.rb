@@ -21,9 +21,7 @@ class InteragentHyperSchemaVerifyTest < Minitest::Test
 
   def test_api_property_format
     pointer("#/properties").merge!({
-      "app" => {
-        "type" => "string"
-      }
+      "app" => {}
     })
     errors = verify
     assert_match %r{^#/properties/app: }, errors[0]
