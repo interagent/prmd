@@ -48,7 +48,9 @@ HTTP/1.1 <%= case link['rel']
   end %>
 ```
 ```json
-  <%- if link['rel'] == 'instances' %>
+  <%- if link.has_key?('targetSchema') %>
+<%= JSON.pretty_generate(schema.schema_example(link['targetSchema'])) %>
+  <%- elsif link['rel'] == 'instances' %>
 <%= JSON.pretty_generate([schema.schemata_example(resource)]) %>
   <%- else %>
 <%= JSON.pretty_generate(schema.schemata_example(resource)) %>
