@@ -81,7 +81,8 @@ The links array MUST include an object defining each action available. Each acti
 Links that expect a json-encoded body as input MUST also include the following attributes:
 * `schema` - an object with a `properties` object that MUST include JSON pointers to the definitions for each associated attribute
 
-Schema properties MAY also include a `required` boolean to indicate if an attribute must be present, which is assumed to be false when omitted.
+The `schema` object MAY also include a `required` array to define all attributes for this link, which can not be omitted.
+If this field is not present, all attributes in this link are considered as optional.
 
 ```javascript
 {
@@ -95,7 +96,8 @@ Schema properties MAY also include a `required` boolean to indicate if an attrib
         "properties": {
           "owner":  { "$ref": "/schema/user#/definitions/identity" },
           "url":    { "$ref": "/schema/resource/definitions/url" }
-        }
+        },
+        "required": [ "owner", "url" ]
       },
       "title":        "Create"
     },
