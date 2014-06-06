@@ -16,6 +16,9 @@ commands = {
     opts.on("-p", "--prepend header,overview", Array, "Prepend files to output") do |p|
       options[:prepend] = p
     end
+    opts.on("-c", "--content-type application/json", String, "Content-Type header") do |c|
+      options[:content_type] = c
+    end
   end,
   init: OptionParser.new do |opts|
     opts.banner = "prmd init [options] <resource name>"
