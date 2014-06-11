@@ -27,7 +27,7 @@ commands = {
     end
   end,
   render: OptionParser.new do |opts|
-    opts.banner = "prmd doc [options] <combined schema>"
+    opts.banner = "prmd render [options] <combined schema>"
     opts.on("-p", "--prepend header,overview", Array, "Prepend files to output") do |p|
       options[:prepend] = p
     end
