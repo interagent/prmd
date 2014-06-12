@@ -83,6 +83,8 @@ module Prmd
           example[key] = schema_value_example(value)
         end
         example
+      elsif _schema.has_key?('items')
+        schema_value_example(_schema)
       end
     end
 
