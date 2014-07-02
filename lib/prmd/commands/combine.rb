@@ -8,7 +8,17 @@ module Prmd
       [path]
     end
     # sort for stable loading on any platform
-    schemata = files.sort.map { |file| [file, YAML.load(File.read(file))] }
+    schemata = []
+    files.sort.each do |file|
+      begin
+        schemata << [file, YAML.load(File.read(file))]
+      rescue
+        $stderr.puts "unable to parse #{file}"
+      end
+    end
+    unless schemata.length == files.length
+      exit(1) # one or more files failed to parse
+    end
 
     data = {
       '$schema'     => 'http://json-schema.org/draft-04/hyper-schema',
