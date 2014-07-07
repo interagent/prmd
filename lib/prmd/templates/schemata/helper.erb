@@ -40,6 +40,13 @@
           attribute[0] = "#{key}:#{attribute[0]}"
         end
         attributes.concat(nested)
+      # found an array with nested objects
+      elsif value['type'] == ['array'] && value['items']
+        nested = extract_attributes(schema, value['items']['properties'])
+        nested.each do |attribute|
+          attribute[0] = "#{key}/#{attribute[0]}"
+        end
+        attributes.concat(nested)
       # just a regular attribute
       else
         description = value['description']
