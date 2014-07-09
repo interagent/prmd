@@ -54,7 +54,9 @@
           description += '<br/><b>one of:</b>' + [*value['enum']].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
         end
 
-        if value.has_key?('example')
+        if value.has_key?('example') && value.is_a?(Hash)
+          example = "<code>#{value['example'].to_json}</code>"
+        elsif value.has_key?('example')
           example = [*value['example']].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
         elsif value['type'] == ['array'] && value.has_key?('items')
           example = "<code>#{schema.schema_value_example(value)}</code>"
