@@ -55,7 +55,7 @@
         end
 
         if value.has_key?('example')
-          example = [*value['example']].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
+          example = "<code>#{value['example'].to_json}</code>"
         elsif value['type'] == ['array'] && value.has_key?('items')
           example = "<code>#{schema.schema_value_example(value)}</code>"
         end
