@@ -79,7 +79,10 @@ $ prmd doc schema.json > schema.md
 ```
 
 # Render from schema
+
+```console
 $ prmd render --template schemata.erb schema.json > schema.md
+```
 
 Typically you'll want to prepend header and overview information to
 your API documentation. You can do this with the `--prepend` flag:
