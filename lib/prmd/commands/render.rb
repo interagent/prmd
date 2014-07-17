@@ -3,6 +3,7 @@ module Prmd
     doc = ''
 
     options[:content_type] ||= 'application/json'
+    options[:style] ||= 'default'
 
     if options[:prepend]
       doc << options[:prepend].map {|path| File.read(path)}.join("\n") << "\n"

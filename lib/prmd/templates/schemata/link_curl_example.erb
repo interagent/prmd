@@ -1,25 +1,23 @@
-```term
+```bash
   <%-
     data = {}
     path = path.gsub(/{([^}]*)}/) {|match| '$' + match.gsub(/[{}]/, '').upcase}
+    get_params = []
 
     if link.has_key?('schema')
       data.merge!(schema.schema_example(link['schema']))
 
       if link['method'].upcase == 'GET' && !data.empty?
-        path << '?'
-        data.sort_by {|k,_| k.to_s }.each do |key, values|
-          [values].flatten.each do |value|
-            path << [key.to_s, CGI.escape(value.to_s)].join('=') << '&'
-          end
-        end
-        path.chop! # remove trailing '&'
+        get_params << Prmd::UrlGenerator.new({schema: schema, link: link, options: options}).url_params
       end
     end
   %>
-$ curl -n -X <%= link['method'] %> <%= schema.href %><%= path %>
-  <%- unless data.empty? || link['method'].upcase == 'GET' %>
--H "Content-Type: <%= options[:content_type] %>" \
--d '<%= data.to_json %>'
-  <%- end %>
+$ curl -n -X <%= link['method'] %> <%= schema.href %><%= path -%>
+<%- unless data.empty? || link['method'].upcase == 'GET' %> \
+  -H "Content-Type: <%= options[:content_type] %>" \
+  -d '<%= data.to_json %>'
+<%- end %>
+<%- unless get_params.empty? || link['method'].upcase != 'GET' %> -G \
+  -d <%= get_params.join(" \\\n  -d ") %>
+<%- end %>
 ```
