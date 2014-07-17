@@ -59,7 +59,7 @@
         end
 
         if value.has_key?('example')
-          example = if value['example'].has_key?('oneOf')
+          example = if value['example'].is_a?(Hash) && value['example'].has_key?('oneOf')
             value['example']['oneOf'].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
           else
             "<code>#{value['example'].to_json}</code>"
