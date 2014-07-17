@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    prmd (0.4.0)
+    prmd (0.3.2)
       erubis (~> 2.7)
       json_schema (~> 0.1)
 
