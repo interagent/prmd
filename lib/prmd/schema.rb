@@ -57,7 +57,9 @@ module Prmd
     end
 
     def schema_value_example(value)
-      if value.has_key?('properties') # nested properties
+      if value.has_key?('example')
+        return value['example']
+      elsif value.has_key?('properties') # nested properties
         return schema_example(value)
       elsif value.has_key?('items') # array of objects
         _, items = dereference(value['items'])
@@ -66,8 +68,6 @@ module Prmd
         else
           return [schema_example(items)]
         end
-      else
-        return value['example']
       end
     end
 
