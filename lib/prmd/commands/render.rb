@@ -13,7 +13,6 @@ module Prmd
     if not File.directory?(template_dir)  # to keep backward compatibility
       template_dir = File.dirname(options[:template])
     end
-    options[:template] = template_dir
 
     doc << Prmd::Template::render('schema.erb', template_dir, {
       options:         options,
