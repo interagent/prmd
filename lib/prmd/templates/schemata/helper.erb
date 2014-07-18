@@ -34,14 +34,14 @@
         attributes << [key, "string", description, example]
 
       # found a nested object
-      elsif value['type'] == ['object'] && value['properties']
+      elsif value['properties']
         nested = extract_attributes(schema, value['properties'])
         nested.each do |attribute|
           attribute[0] = "#{key}:#{attribute[0]}"
         end
         attributes.concat(nested)
       # found an array with nested objects
-      elsif value['type'] == ['array'] && value['items'] && value['items']['properties']
+      elsif value['items'] && value['items']['properties']
         nested = extract_attributes(schema, value['items']['properties'])
         nested.each do |attribute|
           attribute[0] = "#{key}/#{attribute[0]}"
