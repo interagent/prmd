@@ -50,7 +50,7 @@ HTTP/1.1 <%= case link['rel']
   end %>
 ```
 ```json
-<%- if link['rel'] == 'empty' %>
+  <%- if link['rel'] == 'empty' %>
   <%- elsif link.has_key?('targetSchema') && link['targetSchema'].has_key?('properties') %>
 <%= JSON.pretty_generate(schema.schema_example(link['targetSchema'])) %>
   <%- elsif link['rel'] == 'instances' %>
