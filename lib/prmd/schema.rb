@@ -58,15 +58,18 @@ module Prmd
 
     def schema_value_example(value)
       if value.has_key?('example')
-        return value['example']
+        value['example']
+      elsif value.has_key?('anyOf')
+        ref = value['anyOf'].detect {|ref| ref['$ref'].split('/').last == 'id'} || value['anyOf'].first
+        schema_example(ref)
       elsif value.has_key?('properties') # nested properties
-        return schema_example(value)
+        schema_example(value)
       elsif value.has_key?('items') # array of objects
         _, items = dereference(value['items'])
         if value['items'].has_key?('example')
-          return [items['example']]
+          [items['example']]
         else
-          return [schema_example(items)]
+          [schema_example(items)]
         end
       end
     end
