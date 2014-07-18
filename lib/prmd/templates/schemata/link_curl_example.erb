@@ -13,7 +13,7 @@
     end
   %>
 $ curl -n -X <%= link['method'] %> <%= schema.href %><%= path -%>
-<%- if !data.empty? && link['method'].upcase == 'GET' %> \
+<%- if !data.empty? && link['method'].upcase != 'GET' %> \
   -H "Content-Type: <%= options[:content_type] %>" \
   -d '<%= JSON.pretty_generate(data) %>'
 <%- elsif !get_params.empty? && link['method'].upcase == 'GET' %> -G \
