@@ -53,7 +53,7 @@
         attributes.concat(nested)
       # just a regular attribute
       else
-        description = value['description']
+        description = value['description'] || ""
         if value['default']
           description += "<br/><b>default:</b> <code>#{value['default'].to_json}</code>"
         end
