@@ -1,7 +1,7 @@
 <%-
   def extract_attributes(schema, properties, doc_options = nil)
     doc_options = ({
-      disableMinMax: false
+      disable_min_max: false
     }).merge(doc_options || {})
 
     attributes = []
@@ -58,7 +58,7 @@
           description += "<br/><b>default:</b> <code>#{value['default'].to_json}</code>"
         end
 
-        unless doc_options[:disableMinMax]
+        unless doc_options[:disable_min_max]
           if value['minimum'] && value['maximum']
             description += "<br/><b>Between:</b> <code>#{value['minimum'].to_json}</code> and  <code>#{value['maximum'].to_json}</code>"
           elsif value['minimum']
