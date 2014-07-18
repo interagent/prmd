@@ -13,11 +13,12 @@ commands = {
   end,
   doc: OptionParser.new do |opts|
     opts.banner = "prmd doc [options] <combined schema>"
+    opts.on("-s", "--settings prmd-config.json", String, "Config file to use") do |s|
+      settings = YAML.load_file(s) || {}
+      options = settings.deep_symbolize_keys.merge(options)
+    end
     opts.on("-p", "--prepend header,overview", Array, "Prepend files to output") do |p|
       options[:prepend] = p
-    end
-    opts.on("-u", "--url-style json", String, "URL style to output (default/json)") do |s|
-      options[:style] = s
     end
     opts.on("-c", "--content-type application/json", String, "Content-Type header") do |c|
       options[:content_type] = c

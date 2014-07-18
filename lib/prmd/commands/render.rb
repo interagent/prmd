@@ -1,9 +1,9 @@
 module Prmd
   def self.render(schema, options={})
     doc = ''
-
     options[:content_type] ||= 'application/json'
-    options[:style] ||= 'default'
+    options[:doc] ||= {}
+    options[:doc][:url_style] ||= 'default'
 
     if options[:prepend]
       doc << options[:prepend].map {|path| File.read(path)}.join("\n") << "\n"

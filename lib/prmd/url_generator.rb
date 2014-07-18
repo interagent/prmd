@@ -8,7 +8,7 @@ module Prmd
     end
 
     def url_params
-      if @options[:style].downcase == 'json'
+      if @options[:doc][:url_style].downcase == 'json'
         klass = Generators::JSON
       else
         klass = Generators::Default

@@ -1,5 +1,9 @@
 <%-
-  def extract_attributes(schema, properties)
+  def extract_attributes(schema, properties, doc_options = nil)
+    doc_options = ({
+      disableMinMax: false
+    }).merge(doc_options || {})
+
     attributes = []
     properties = properties.sort_by {|k,v| k} # ensure consistent ordering
 
@@ -35,14 +39,14 @@
 
       # found a nested object
       elsif value['properties']
-        nested = extract_attributes(schema, value['properties'])
+        nested = extract_attributes(schema, value['properties'], doc_options)
         nested.each do |attribute|
           attribute[0] = "#{key}:#{attribute[0]}"
         end
         attributes.concat(nested)
       # found an array with nested objects
       elsif value['items'] && value['items']['properties']
-        nested = extract_attributes(schema, value['items']['properties'])
+        nested = extract_attributes(schema, value['items']['properties'], doc_options)
         nested.each do |attribute|
           attribute[0] = "#{key}/#{attribute[0]}"
         end
@@ -52,6 +56,16 @@
         description = value['description']
         if value['default']
           description += "<br/><b>default:</b> <code>#{value['default'].to_json}</code>"
+        end
+
+        unless doc_options[:disableMinMax]
+          if value['minimum'] && value['maximum']
+            description += "<br/><b>Between:</b> <code>#{value['minimum'].to_json}</code> and  <code>#{value['maximum'].to_json}</code>"
+          elsif value['minimum']
+            description += "<br/><b>Minimum:</b> <code>#{value['minimum'].to_json}</code>"
+          elsif value['maximum']
+            description += "<br/><b>Maximum:</b> <code>#{value['maximum'].to_json}</code>"
+          end
         end
 
         if value['enum']
