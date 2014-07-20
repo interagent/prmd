@@ -16,7 +16,7 @@ module Prmd
       if resource.include?('/')
         parent, resource = resource.split('/')
       end
-      schema['id']    = "schemata/#{resource}"
+      schema['id']    = "schema/#{resource}"
       schema['title'] = "FIXME - #{resource[0...1].upcase}#{resource[1..-1]}"
       schema['definitions'] = {
         "created_at" => {
