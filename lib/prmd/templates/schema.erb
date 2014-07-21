@@ -10,9 +10,9 @@
         schema:          schema,
         schemata:        schemata
       })
-    rescue => e 
+    rescue => e
       $stdout.puts("Error in resource: #{resource}")
       raise e
     end
-  end.join("\n") << "\n"
+  end.join("\n")
 %>

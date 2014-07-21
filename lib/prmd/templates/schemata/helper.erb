@@ -10,6 +10,12 @@
     properties.each do |key, value|
       # found a reference to another element:
       _, value = schema.dereference(value)
+
+      # include top level reference to nested things, when top level is nullable
+      if value.has_key?('type') && value['type'].include?('null') && (value.has_key?('items') || value.has_key?('properties'))
+        attributes << build_attribute(schema, key, value, doc_options)
+      end
+
       if value.has_key?('anyOf')
         descriptions = []
         examples = []
@@ -53,46 +59,53 @@
         attributes.concat(nested)
       # just a regular attribute
       else
-        description = value['description'] || ""
-        if value['default']
-          description += "<br/><b>default:</b> <code>#{value['default'].to_json}</code>"
-        end
-
-        unless doc_options[:disable_min_max]
-          if value['minimum'] && value['maximum']
-            description += "<br/><b>Between:</b> <code>#{value['minimum'].to_json}</code> and  <code>#{value['maximum'].to_json}</code>"
-          elsif value['minimum']
-            description += "<br/><b>Minimum:</b> <code>#{value['minimum'].to_json}</code>"
-          elsif value['maximum']
-            description += "<br/><b>Maximum:</b> <code>#{value['maximum'].to_json}</code>"
-          end
-        end
-
-        if value['enum']
-          description += '<br/><b>one of:</b>' + [*value['enum']].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
-        end
-
-        if value.has_key?('example')
-          example = if value['example'].is_a?(Hash) && value['example'].has_key?('oneOf')
-            value['example']['oneOf'].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
-          else
-            "<code>#{value['example'].to_json}</code>"
-          end
-        elsif value['type'] == ['array'] && value.has_key?('items')
-          example = "<code>#{schema.schema_value_example(value)}</code>"
-        end
-
-        type = if value['type'].include?('null')
-          'nullable '
-        else
-          ''
-        end
-        type += (value['format'] || (value['type'] - ['null']).first)
-        attributes << [key, type, description, example]
+        attributes << build_attribute(schema, key, value, doc_options)
       end
     end
     return attributes
   end
+
+  def build_attribute(schema, key, value, doc_options)
+    description = value['description'] || ""
+    if value['default']
+      description += "<br/><b>default:</b> <code>#{value['default'].to_json}</code>"
+    end
+
+    unless doc_options[:disable_min_max]
+      if value['minimum'] && value['maximum']
+        description += "<br/><b>Between:</b> <code>#{value['minimum'].to_json}</code> and  <code>#{value['maximum'].to_json}</code>"
+      elsif value['minimum']
+        description += "<br/><b>Minimum:</b> <code>#{value['minimum'].to_json}</code>"
+      elsif value['maximum']
+        description += "<br/><b>Maximum:</b> <code>#{value['maximum'].to_json}</code>"
+      end
+    end
+
+    if value['enum']
+      description += '<br/><b>one of:</b>' + [*value['enum']].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
+    end
+
+    if value.has_key?('example')
+      example = if value['example'].is_a?(Hash) && value['example'].has_key?('oneOf')
+        value['example']['oneOf'].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
+      else
+        "<code>#{value['example'].to_json}</code>"
+      end
+    elsif value['type'] == ['array'] && value.has_key?('items')
+      example = "<code>#{schema.schema_value_example(value)}</code>"
+    elsif value['type'].include?('null')
+      example = "<code>null</code>"
+    end
+
+    type = if value['type'].include?('null')
+      'nullable '
+    else
+      ''
+    end
+    type += (value['format'] || (value['type'] - ['null']).first)
+    [key, type, description, example]
+  end
+
 
   def build_link_path(schema, link)
     link['href'].gsub(%r|(\{\([^\)]+\)\})|) do |ref|
