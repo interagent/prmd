@@ -15,7 +15,7 @@ commands = {
     opts.banner = "prmd doc [options] <combined schema>"
     opts.on("-s", "--settings prmd-config.json", String, "Config file to use") do |s|
       settings = YAML.load_file(s) || {}
-      options = settings.deep_symbolize_keys.merge(options)
+      options = HashHelpers.deep_symbolize_keys(settings).merge(options)
     end
     opts.on("-p", "--prepend header,overview", Array, "Prepend files to output") do |p|
       options[:prepend] = p
