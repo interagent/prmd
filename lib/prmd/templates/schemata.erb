@@ -22,7 +22,7 @@
     <th>Description</th>
     <th>Example</th>
   </tr>
-  <%- extract_attributes(schema, schemata['properties'], options[:docs]).each do |(key, type, description, example)| %>
+  <%- extract_attributes(schema, schemata['properties']).each do |(key, type, description, example)| %>
   <tr>
     <td><strong><%= key %></strong></td>
     <td><em><%= type %></em></td>
