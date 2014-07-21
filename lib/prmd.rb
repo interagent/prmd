@@ -13,7 +13,7 @@ require File.join(dir, 'prmd', 'schema')
 require File.join(dir, 'prmd', 'version')
 require File.join(dir, 'prmd', 'template')
 require File.join(dir, 'prmd', 'url_generator')
-require File.join(dir, 'prmd', 'hash_extensions')
+require File.join(dir, 'prmd', 'hash_helpers')
 
 module Prmd
 end
