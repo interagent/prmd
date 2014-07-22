@@ -17,12 +17,12 @@
   %>
   <%- unless required.empty? %>
 #### Required Parameters
-<%= Erubis::Eruby.new(link_schema_properties_template).result(params: required, schema: schema) %>
+<%= Erubis::Eruby.new(link_schema_properties_template).result(params: required, schema: schema, options: options) %>
 
   <%- end %>
   <%- unless optional.empty? %>
 #### Optional Parameters
-<%= Erubis::Eruby.new(link_schema_properties_template).result(params: optional, schema: schema) %>
+<%= Erubis::Eruby.new(link_schema_properties_template).result(params: optional, schema: schema, options: options) %>
   <%- end %>
 <%- end %>
 

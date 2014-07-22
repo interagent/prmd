@@ -62,9 +62,23 @@
   end
 
   def build_attribute(schema, key, value)
-    description = value['description']
+    description = value['description'] || ""
     if value['default']
       description += "<br/><b>default:</b> <code>#{value['default'].to_json}</code>"
+    end
+
+    if value['minimum'] || value['maximum']
+      description += "<br/><b>Range:</b> <code>"
+      if value['minimum']
+        comparator = value['exclusiveMinimum'] ? "<" : "<="
+        description += "#{value['minimum'].to_json} #{comparator} "
+      end
+      description += "value"
+      if value['maximum']
+        comparator = value['exclusiveMaximum'] ? "<" : "<="
+        description += " #{comparator} #{value['maximum'].to_json}"
+      end
+      description += "</code>"
     end
 
     if value['enum']
