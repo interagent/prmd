@@ -67,14 +67,18 @@
       description += "<br/><b>default:</b> <code>#{value['default'].to_json}</code>"
     end
 
-    if value['minimum']
-      comparator = value['exclusiveMinimum'] ? ">" : ">="
-      description += "<br/><b>minimum:</b> #{comparator} <code>#{value['minimum'].to_json}</code>"
-    end
-
-    if value['maximum']
-      comparator = value['exclusiveMaximum'] ? "<" : "<="
-      description += "<br/><b>maximum:</b> #{comparator} <code>#{value['maximum'].to_json}</code>"
+    if value['minimum'] || value['maximum']
+      description += "<br/><b>Range:</b> <code>"
+      if value['minimum']
+        comparator = value['exclusiveMinimum'] ? "<" : "<="
+        description += "#{value['minimum'].to_json} #{comparator} "
+      end
+      description += "value"
+      if value['maximum']
+        comparator = value['exclusiveMaximum'] ? "<" : "<="
+        description += " #{comparator} #{value['maximum'].to_json}"
+      end
+      description += "</code>"
     end
 
     if value['enum']
