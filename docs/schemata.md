@@ -74,7 +74,7 @@ The links array MUST include an object defining each action available. Each acti
 
 * `description` - a description of the action to perform
 * `href` - the path associated with this action, use [URI templates](http://tools.ietf.org/html/rfc6570) as needed, CGI escaping any JSON pointer values used for identity
-* `method` - the http method to be used with this actio
+* `method` - the http method to be used with this action
 * `rel` - describes relation of link to resource, SHOULD be one of `["create", "destroy", "self", "instances", "update"]`
 * `title` - title for the link
 
