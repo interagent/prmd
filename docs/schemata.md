@@ -18,7 +18,7 @@ We have opted to split apart the schema into individual resource schema and a ro
 Each schema MUST include some meta-data, which we cluster at the top of the file, including:
 
 * `description` - a description of the resource described by the schema
-* `id` - an id for this schema, it MUST be in the form `"schema/#{lower_case_singular_resource}"`
+* `id` - an id for this schema, it MUST be in the form `"schemata/#{lower_case_singular_resource}"`
 * `$schema` - defines what meta-schema is in use, it MUST be `http://json-schema.org/draft-04/hyper-schema`
 * `title` - title for this resource, it MUST be in the form `"#{title_case_API_name} - #{title_case_plural_resource}"`
 * `type` - the type(s) of this schema, it MUST be `["object"]`
@@ -94,8 +94,8 @@ If this field is not present, all attributes in this link are considered as opti
       "rel":          "create",
       "schema":       {
         "properties": {
-          "owner":  { "$ref": "/schema/user#/definitions/identity" },
-          "url":    { "$ref": "/schema/resource/definitions/url" }
+          "owner":  { "$ref": "/schemata/user#/definitions/identity" },
+          "url":    { "$ref": "/schemata/resource/definitions/url" }
         },
         "required": [ "owner", "url" ]
       },
@@ -103,14 +103,14 @@ If this field is not present, all attributes in this link are considered as opti
     },
     {
       "description":  "Delete an existing resource.",
-      "href":         "/resources/{(%2Fschema%2Fresources%23%2Fdefinitions%2Fidentity)}",
+      "href":         "/resources/{(%2Fschemata%2Fresources%23%2Fdefinitions%2Fidentity)}",
       "method":       "DELETE",
       "rel":          "destroy",
       "title":        "Delete"
     },
     {
       "description":  "Info for existing resource.",
-      "href":         "/resources/{(%2Fschema%2Fresources%23%2Fdefinitions%2Fidentity)}",
+      "href":         "/resources/{(%2Fschemata%2Fresources%23%2Fdefinitions%2Fidentity)}",
       "method":       "GET",
       "rel":          "self",
       "title":        "Info"
@@ -124,12 +124,12 @@ If this field is not present, all attributes in this link are considered as opti
     },
     {
       "description":  "Update an existing resource.",
-      "href":         "/resources/{(%2Fschema%2Fresource%23%2Fdefinitions%2Fidentity)}",
+      "href":         "/resources/{(%2Fschemata%2Fresource%23%2Fdefinitions%2Fidentity)}",
       "method":       "PATCH",
       "rel":          "update",
       "schema":       {
         "properties": {
-          "url":    { "$ref": "/schema/resource/definitions/url" }
+          "url":    { "$ref": "/schemata/resource/definitions/url" }
         }
       },
       "title":        "Update"
@@ -146,15 +146,15 @@ The properties object MUST contain all the serialized attributes for the object.
 ```javascript
 {
   "properties": {
-    "id":       { "$ref": "/schema/resource#/definitions/id" },
+    "id":       { "$ref": "/schemata/resource#/definitions/id" },
     "owner": {
       "description": "unique identifier of the user who owns this resource",
       "properties": {
-        "id": { "$ref": "/schema/user#/definitions/id" }
+        "id": { "$ref": "/schemata/user#/definitions/id" }
       },
       "type": ["object"]
     },
-    "url":      { "$ref": "/schema/resource#/definitions/url" }
+    "url":      { "$ref": "/schemata/resource#/definitions/url" }
   }
 }
 ```
