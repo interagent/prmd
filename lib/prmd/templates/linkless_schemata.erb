@@ -1,0 +1,72 @@
+<%-
+  return unless !schemata.has_key?('links') || schemata['links'].empty?
+
+  Prmd::Template::render(File.join('schemata', 'helper.erb'), options[:template], {
+    options:         options,
+    resource:        resource,
+    schema:          schema,
+    schemata:        schemata
+  })
+
+  title = schemata['title'].split(' - ', 2).last
+  inheritance = ""
+  if schemata['allOf']
+    separator = " < "
+    schemata['allOf'].each do |object|
+      if object.has_key?('$ref')
+        nested_title = schema.dereference(object)[1]['title'].split(' - ', 2).last
+        inheritance += separator + "<a href='\##{nested_title}'>#{nested_title}</a>"
+        separator = ", "
+      end
+    end
+  end
+%>
+## <a name="<%= title %>"><%= title %></a><%= inheritance %>
+<%= schemata['description'] %>
+
+<%- if schemata['properties'] && !schemata['properties'].empty? %>
+### Attributes
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Description</th>
+    <th>Example</th>
+  </tr>
+  <%- extract_attributes(schema, schemata['properties']).each do |(key, type, description, example)| %>
+  <tr>
+    <td style="white-space:nowrap"><strong><%= key %></strong></td>
+    <td style="white-space:nowrap"><em><%= type %></em></td>
+    <td><%= description %></td>
+    <td><%= example %></td>
+  </tr>
+  <%- end %>
+</table>
+<%- end %>
+<%- if schemata['allOf'] %>
+### Attributes
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Description</th>
+    <th>Example</th>
+  </tr>
+  <%- extract_allOf_attributes(schema, schemata['allOf']).each do |(key, type, description, example)| %>
+  <tr>
+    <td style="white-space:nowrap"><strong><%= key %></strong></td>
+    <td style="white-space:nowrap"><em><%= type %></em></td>
+    <td><%= description %></td>
+    <td><%= example %></td>
+  </tr>
+  <%- end %>
+</table>
+<%- end %>
+
+<%- if schema.schemata_example(resource) %>
+### Example
+```json
+<%= JSON.pretty_generate(schema.schemata_example(resource)) %>
+```
+
+<%- end %>
