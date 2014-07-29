@@ -44,7 +44,7 @@
         attributes << build_attribute(schema, key, value)
         nested = extract_attributes(schema, value['properties'])
         nested.each do |attribute|
-          attribute[0] = "&rdsh; #{attribute[0]}"
+          attribute[0] = "&#8627; #{attribute[0]}"
         end
         attributes.concat(nested)
       # found an array with nested objects
