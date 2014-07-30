@@ -10,7 +10,7 @@
 
   title = schemata['title'].split(' - ', 2).last
 %>
-## <%= title %>
+## <a name="<%= title %>"><%= title %></a>
 <%= schemata['description'] %>
 
 <%- if schemata['properties'] && !schemata['properties'].empty? %>
@@ -24,8 +24,8 @@
   </tr>
   <%- extract_attributes(schema, schemata['properties']).each do |(key, type, description, example)| %>
   <tr>
-    <td><strong><%= key %></strong></td>
-    <td><em><%= type %></em></td>
+    <td style="white-space:nowrap"><strong><%= key %></strong></td>
+    <td style="white-space:nowrap"><em><%= type %></em></td>
     <td><%= description %></td>
     <td><%= example %></td>
   </tr>

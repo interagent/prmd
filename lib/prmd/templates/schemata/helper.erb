@@ -41,9 +41,10 @@
 
       # found a nested object
       elsif value['properties']
+        attributes << build_attribute(schema, key, value)
         nested = extract_attributes(schema, value['properties'])
         nested.each do |attribute|
-          attribute[0] = "#{key}:#{attribute[0]}"
+          attribute[0] = "&#8627; #{attribute[0]}"
         end
         attributes.concat(nested)
       # found an array with nested objects
@@ -53,6 +54,17 @@
           attribute[0] = "#{key}/#{attribute[0]}"
         end
         attributes.concat(nested)
+      # found an array with a nested ref
+      elsif value['items'] && value['items']['$ref']
+        _, innervalue = schema.dereference(value['items']['$ref'])
+        attribute = build_attribute(schema, key, value)
+        line_break = ""
+        if attribute[2]
+          line_break = "<br/>"
+        end
+        
+        attribute[2] = "<b>type:</b> <a href='\##{innervalue['title'].split(' - ', 2).last}'>#{innervalue['title'].split(' - ', 2).last}</a>#{line_break}" + attribute[2] 
+        attributes << attribute
       # just a regular attribute
       else
         attributes << build_attribute(schema, key, value)
@@ -60,6 +72,27 @@
     end
     return attributes
   end
+
+  def extract_allOf_attributes(schema, allOf)
+    attributes = {}
+    # allOf, start with first item and override with subsequent (this assumes subsequent are more strict)  
+    allOf.each do |object|
+      new_attributes = []
+      if object.has_key?('$ref')
+        _, value = schema.dereference(object)
+        if value.has_key?('properties')
+          new_attributes = extract_attributes(schema, value['properties'])
+        end
+      elsif object.has_key?('properties')
+        new_attributes = extract_attributes(schema, object['properties'])
+      end
+      new_attributes.each do |attribute|
+        attributes[attribute[0]] = attribute
+      end
+    end
+    return attributes.values
+  end    
+
 
   def build_attribute(schema, key, value)
     description = value['description'] || ""
@@ -83,6 +116,14 @@
 
     if value['enum']
       description += '<br/><b>one of:</b>' + [*value['enum']].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
+    end
+
+    if value['pattern']
+      line_break = ""
+      if description
+        line_break = "<br/>"
+      end
+      description = "<b>pattern: </b>" + "<code>#{value['pattern']}</code>#{line_break}" + description
     end
 
     if value.has_key?('example')

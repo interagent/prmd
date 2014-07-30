@@ -79,6 +79,20 @@ module Prmd
 
       if _schema.has_key?('example')
         _schema['example']
+      elsif _schema.has_key?('allOf')
+        example = {}
+        _schema['allOf'].each do |object|
+          temp_example = {}
+          if object.has_key?("$ref")
+            temp_example = schemata_example(object['$ref'].split('/').last)
+          else            
+            temp_example = schema_example(object)
+          end
+          temp_example.each do |key, value|
+            example[key] = value
+          end
+        end
+        example
       elsif _schema.has_key?('properties')
         example = {}
         _schema['properties'].each do |key, value|
