@@ -63,7 +63,7 @@
 
   def build_attribute(schema, key, value)
     description = value['description'] || ""
-    line_break = if description ? "<br/>" : ""
+    line_break = description ? "<br/>" : ""
     if value['default']
       description += "#{line_break}<b>default:</b> <code>#{value['default'].to_json}</code>"
     end
