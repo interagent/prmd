@@ -13,7 +13,7 @@
 ## <%= title %>
 <%= schemata['description'] %>
 
-<%- if schemata['properties'] %>
+<%- if schemata['properties'] && !schemata['properties'].empty? %>
 ### Attributes
 <table>
   <tr>
