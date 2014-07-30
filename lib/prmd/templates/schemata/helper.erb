@@ -63,13 +63,12 @@
 
   def build_attribute(schema, key, value)
     description = value['description'] || ""
-    line_break = description ? "<br/>" : ""
     if value['default']
-      description += "#{line_break}<b>default:</b> <code>#{value['default'].to_json}</code>"
+      description += "<br/><b>default:</b> <code>#{value['default'].to_json}</code>"
     end
 
     if value['minimum'] || value['maximum']
-      description += "#{line_break}<b>Range:</b> <code>"
+      description += "<br/><b>Range:</b> <code>"
       if value['minimum']
         comparator = value['exclusiveMinimum'] ? "<" : "<="
         description += "#{value['minimum'].to_json} #{comparator} "
@@ -83,11 +82,11 @@
     end
 
     if value['enum']
-      description += '#{line_break}<b>one of:</b>' + [*value['enum']].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
+      description += '<br/><b>one of:</b>' + [*value['enum']].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
     end
 
     if value['pattern']
-      description += "#{line_break}<b>pattern: </b><code>#{value['pattern']}</code>"
+      description += "<br/><b>pattern: </b><code>#{value['pattern']}</code>"
     end
 
     if value.has_key?('example')
