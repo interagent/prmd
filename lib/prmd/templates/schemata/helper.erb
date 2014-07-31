@@ -85,6 +85,10 @@
       description += '<br/><b>one of:</b>' + [*value['enum']].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
     end
 
+    if value['pattern']
+      description += "<br/><b>pattern: </b><code>#{value['pattern']}</code>"
+    end
+
     if value.has_key?('example')
       example = if value['example'].is_a?(Hash) && value['example'].has_key?('oneOf')
         value['example']['oneOf'].map { |e| "<code>#{e.to_json}</code>" }.join(" or ")
