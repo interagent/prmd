@@ -1,7 +1,7 @@
 module Prmd
   def self.combine(paths, options={})
     files = []
-    paths.each do |path|
+    [*paths].each do |path|
       files << if File.directory?(path)
         Dir.glob(File.join(path, '**', '*.json')) +
           Dir.glob(File.join(path, '**', '*.yaml')) -
