@@ -15,23 +15,11 @@
 
 <%- if schemata['properties'] && !schemata['properties'].empty? %>
 ### Attributes
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Example</th>
-  </tr>
-  <%- extract_attributes(schema, schemata['properties']).each do |(key, type, description, example)| %>
-  <tr>
-    <td><strong><%= key %></strong></td>
-    <td><em><%= type %></em></td>
-    <td><%= description %></td>
-    <td><%= example %></td>
-  </tr>
-  <%- end %>
-</table>
-
+| Name | Type | Description | Example |
+| ------- | ------- | ------- | ------- |
+<%- extract_attributes(schema, schemata['properties']).each do |(key, type, description, example)| %>
+| **<%= key %>** | *<%= type %>* | <%= description %> | <%= example %> |
+<%- end %>
 <%- end %>
 <%- schemata['links'].each do |link, datum| %>
 <%=

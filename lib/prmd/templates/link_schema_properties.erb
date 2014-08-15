@@ -1,16 +1,5 @@
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Example</th>
-  </tr>
+  | Name | Type | Description | Example |
+  | ------- | ------- | ------- | ------- |
   <%- extract_attributes(schema, params).each do |(key, type, description, example)| %>
-  <tr>
-    <td><strong><%= key %></strong></td>
-    <td><em><%= type %></em></td>
-    <td><%= description %></td>
-    <td><%= example %></td>
-  </tr>
+  | **<%= key %>** | *<%= type %>* | <%= description %> | <%= example %> |
   <%- end %>
-</table>
