@@ -80,7 +80,7 @@ option.order!
 
 case command
   when :combine
-    puts Prmd.combine(ARGV[0], options).to_s
+    puts Prmd.combine(ARGV, options).to_s
   when :doc
     data = unless $stdin.tty?
       $stdin.read

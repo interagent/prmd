@@ -1,12 +1,17 @@
 module Prmd
-  def self.combine(path, options={})
-    files = if File.directory?(path)
-      Dir.glob(File.join(path, '**', '*.json')) +
-        Dir.glob(File.join(path, '**', '*.yaml')) -
-        [options[:meta]]
-    else
-      [path]
+  def self.combine(paths, options={})
+    files = []
+    [*paths].each do |path|
+      files << if File.directory?(path)
+        Dir.glob(File.join(path, '**', '*.json')) +
+          Dir.glob(File.join(path, '**', '*.yaml')) -
+          [options[:meta]]
+      else
+        path
+      end
     end
+    files.flatten!
+
     # sort for stable loading on any platform
     schemata = []
     files.sort.each do |file|
