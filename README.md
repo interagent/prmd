@@ -88,7 +88,7 @@ Typically you'll want to prepend header and overview information to
 your API documentation. You can do this with the `--prepend` flag:
 
 ```console
-$ prmd doc schema.json --prepend overview.md > schema.md
+$ prmd doc --prepend overview.md schema.json > schema.md
 ```
 
 You can also chain commands together as needed, e.g.:
