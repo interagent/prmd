@@ -86,7 +86,7 @@
     end
 
     if value['pattern']
-      description += "<br/><b>pattern: </b><code>#{value['pattern']}</code>"
+      description += "<br/> **pattern:** <code>#{value['pattern'].gsub /\|/, '&#124;'}</code>"
     end
 
     if value.has_key?('example')
