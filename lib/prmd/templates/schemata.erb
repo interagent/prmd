@@ -9,9 +9,11 @@
   })
 
   title = schemata['title'].split(' - ', 2).last
-%>
+-%>
+<%- unless options[:doc][:disable_headers] %>
 ## <%= title %>
 <%= schemata['description'] %>
+<%- end -%>
 
 <%- if schemata['properties'] && !schemata['properties'].empty? %>
 ### Attributes
