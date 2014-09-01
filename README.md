@@ -21,7 +21,7 @@ described in [/docs/schemata.md](/docs/schemata.md).
 
 Install the command-line tool with:
 
-```console
+```bash
 $ gem install prmd
 ```
 
@@ -32,7 +32,7 @@ to the application's Gemfile:
 gem 'prmd'
 ```
 
-```console
+```bash
 $ bundle install
 ```
 
@@ -48,7 +48,7 @@ Prmd provides four main commands:
 
 Here's an example of using these commands in a typical workflow:
 
-```console
+```bash
 # Fill out the resource schemata
 $ mkdir -p schemata
 $ prmd init app  > schemata/app.json
@@ -80,24 +80,42 @@ $ prmd doc schema.json > schema.md
 
 # Render from schema
 
-```console
+```bash
 $ prmd render --template schemata.erb schema.json > schema.md
 ```
 
 Typically you'll want to prepend header and overview information to
 your API documentation. You can do this with the `--prepend` flag:
 
-```console
+```bash
 $ prmd doc --prepend overview.md schema.json > schema.md
 ```
 
 You can also chain commands together as needed, e.g.:
 
-```console
+```bash
 $ prmd combine --meta meta.json schemata/ | prmd verify | prmd doc --prepend overview.md > schema.md
 ```
 
 See `prmd <command> --help` for additional usage details.
+
+## Documentation rendering settings
+
+Out of the box you can supply a settings file (in either `JSON` or `YAML`) that will tweak the layout of your documentation.
+
+```bash
+$ prmd doc --settings config.json schema.json > schema.md
+```
+
+Available options (and their defaults)
+```json
+{
+  "doc": {
+    "url_style": "default", // can also be "json"
+    "disable_headers": false // remove the header and the description, useful when using your own custom header
+  }
+}
+```
 
 ## File Layout
 
