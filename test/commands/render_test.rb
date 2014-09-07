@@ -10,6 +10,22 @@ class InteragentRenderTest < Minitest::Test
     assert_match /An app in our PaaS ecosystem./, markdown
   end
 
+  def test_render_for_schema_with_property_defined_with_anyOf
+    pointer("#/definitions/app").merge!({
+      "properties" => {
+        "version" => {
+          "anyOf" => [
+            { "type" => "string", "example" => "v10.9.rc1", "minLength" => 1 },
+            { "type" => "number", "minimum" => 0 }
+          ]
+        }
+      }
+    })
+
+    markdown = render
+    assert_match /version.*v10\.9\.rc1/, markdown
+  end
+
   private
 
   def data

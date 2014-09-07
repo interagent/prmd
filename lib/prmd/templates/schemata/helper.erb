@@ -16,15 +16,12 @@
         descriptions = []
         examples = []
 
-        # sort anyOf! always show unique identifier first
-        anyof = value['anyOf'].sort_by do |property|
-          property['$ref'].split('/').last.gsub('id', 'a')
-        end
+        anyof = value['anyOf']
 
         anyof.each do |ref|
           _, nested_field = schema.dereference(ref)
-          descriptions << nested_field['description']
-          examples << nested_field['example']
+          descriptions << nested_field['description'] if nested_field['description']
+          examples << nested_field['example'] if nested_field['example']
         end
 
         # avoid repetition :}
