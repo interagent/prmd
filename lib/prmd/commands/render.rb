@@ -4,7 +4,7 @@ module Prmd
     options[:content_type] ||= 'application/json'
     options[:doc] ||= {}
     options[:doc][:url_style] ||= 'default'
-    options[:doc][:disable_headers] ||= false
+    options[:doc][:disable_title_and_description] ||= false
 
     if options[:prepend]
       doc << options[:prepend].map {|path| File.read(path)}.join("\n") << "\n"

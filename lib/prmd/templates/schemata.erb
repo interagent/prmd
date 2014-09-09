@@ -10,7 +10,7 @@
 
   title = schemata['title'].split(' - ', 2).last
 -%>
-<%- unless options[:doc][:disable_headers] %>
+<%- unless options[:doc][:disable_title_and_description] %>
 ## <%= title %>
 <%= schemata['description'] %>
 <%- end -%>

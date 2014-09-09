@@ -112,7 +112,7 @@ Available options (and their defaults)
 {
   "doc": {
     "url_style": "default", // can also be "json"
-    "disable_headers": false // remove the header and the description, useful when using your own custom header
+    "disable_title_and_description": false // remove the title and the description, useful when using your own custom header
   }
 }
 ```
