@@ -18,6 +18,7 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
+  spec.add_dependency "deep_merge", "~> 1.0"
   spec.add_dependency "erubis", "~> 2.7"
   spec.add_dependency "json_schema", "~> 0.1", ">= 0.1.8"
 
