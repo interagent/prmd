@@ -1,3 +1,5 @@
+require "prmd/core_ext/optparse"
+
 module Prmd
   module CLI
     def self.parse_options(argv, opts={})
@@ -7,13 +9,13 @@ module Prmd
       commands = {
         combine: OptionParser.new do |opts|
           opts.banner = "#{binname} combine [options] <file or directory>"
-          opts.on("-m", "--meta META", String, "Set defaults for schemata") do |m|
+          opts.on("-m", "--meta FILENAME", String, "Set defaults for schemata") do |m|
             options[:meta] = m
           end
         end,
         doc: OptionParser.new do |opts|
           opts.banner = "#{binname} doc [options] <combined schema>"
-          opts.on("-s", "--settings CONFIG", String, "Config file to use") do |s|
+          opts.on("-s", "--settings FILENAME", String, "Config file to use") do |s|
             settings = YAML.load_file(s) || {}
             options = HashHelpers.deep_symbolize_keys(settings).merge(options)
           end
@@ -44,6 +46,12 @@ module Prmd
         end
       }
 
+      commands.each_value do |opts|
+        opts.on("-o", "--output-file FILENAME", String, "File to write result to") do |n|
+          options[:output_file] = n
+        end
+      end
+
       help_text = commands.values.map do |command|
         "   #{command.banner}"
       end.join("\n")
@@ -55,9 +63,6 @@ module Prmd
           puts "prmd #{Prmd::VERSION}"
           exit(0)
         end
-        opts.on("-o", "--output-file FILENAME", String, "file to write result to") do |n|
-          options[:output_file] = n
-        end
         opts.separator "\nAvailable commands:"
         opts.separator help_text
       end
@@ -65,14 +70,17 @@ module Prmd
       begin
         abort global if argv.empty?
 
-        com_argv = global.order!(argv)
+        com_argv = global.order(argv)
+
+        abort global if com_argv.empty?
+
         command = com_argv.shift.to_sym
         option = commands[command]
 
         abort global if option.nil?
         abort option if argv.empty? && $stdin.tty?
 
-        rem_argv = option.order!(com_argv)
+        rem_argv = option.parse(com_argv)
 
         options[:argv] = rem_argv
         options[:command] = command
