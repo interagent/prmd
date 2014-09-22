@@ -1,7 +1,10 @@
 module Prmd
   def self.render(schema, options={})
     doc = ''
-    options[:content_type] ||= 'application/json'
+    options[:http_header] ||= {}
+    options[:http_header] = {
+      "Content-Type" => 'application/json'
+    }.merge(options[:http_header])
     options[:doc] ||= {}
     options[:doc][:url_style] ||= 'default'
     options[:doc][:disable_title_and_description] ||= false
