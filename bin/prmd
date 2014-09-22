@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 require 'optparse'
-rootpath = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
-require File.expand_path('prmd', rootpath)
-require File.expand_path(File.join('prmd', 'cli'), rootpath)
+require 'prmd'
+require 'prmd/cli'
 
-Prmd::CLI.run(ARGV.dup)
+Prmd::CLI.run(ARGV.dup, bin: File.basename(__FILE__))
