@@ -4,6 +4,7 @@ require "json"
 require "yaml"
 
 require 'prmd/version'
+require 'prmd/load_schema_file'
 require 'prmd/commands'
 require 'prmd/schema'
 require 'prmd/template'
