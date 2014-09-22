@@ -1,15 +1,26 @@
+require 'forwardable'
+
 module Prmd
-  class SchemaHash < Hash
+  class SchemaHash
+    extend Forwardable
+
     attr_reader :filename
+    def_delegator :@data, :[]
+    def_delegator :@data, :[]=
+    def_delegator :@data, :delete
+    def_delegator :@data, :each
 
     def initialize(filename, data)
-      super()
-      merge!(data)
+      @data = data
       @filename = filename
     end
 
     def fetch(key)
-      super(key) { abort "Missing key #{key} in #{filename}" }
+      @data.fetch(key) { abort "Missing key #{key} in #{filename}" }
+    end
+
+    def to_h
+      @data.dup
     end
   end
 
@@ -80,7 +91,7 @@ module Prmd
       # schemas are now in a single scope by combine
       schema.delete('id')
 
-      data['definitions'][id_ary] = schema
+      data['definitions'][id_ary] = schema.to_h
 
       reference_localizer.call(data['definitions'][id_ary])
 
