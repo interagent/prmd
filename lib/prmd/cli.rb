@@ -131,23 +131,14 @@ module Prmd
     end
 
     def self.verify(filename, options)
-      data, errors = '', []
-      unless $stdin.tty?
-        data = $stdin.read
-        errors.concat(Prmd.verify(JSON.parse(data)))
-      else
-        data = JSON.parse(File.read(filename))
-        Prmd.verify(data).each do |error|
-          errors << "#{filename}: #{error}"
-        end
-      end
+      _, data = try_read(filename)
+      errors = Prmd.verify(data)
+      errors.map! { |error| "#{filename}: #{error}" } if filename
       unless errors.empty?
-        errors.each do |error|
-          $stderr.puts(error)
-        end
+        errors.each { |error| $stderr.puts(error) }
         exit(1)
       end
-      $stdout.puts data unless $stdout.tty?
+      write_result data, options
     end
 
     def self.run(uargv, opts={})
