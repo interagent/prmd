@@ -1,4 +1,5 @@
 # Prmd
+[![Gem Version](https://badge.fury.io/rb/prmd.svg)](http://badge.fury.io/rb/prmd)
 
 JSON Schema tooling: scaffold, verify, and generate documentation
 from JSON Schema documents.
