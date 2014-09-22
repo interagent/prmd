@@ -99,21 +99,18 @@ module Prmd
       end
     end
 
-    def self.combine(paths, options={})
-      write_result Prmd.combine(paths, options).to_s, options
+    def self.try_read(filename)
+      if filename && !filename.empty?
+        return :file, Prmd.load_schema_file(filename)
+      elsif !$stdin.tty?
+        return :io, JSON.load($stdin.read)
+      else
+        abort "Nothing to read"
+      end
     end
 
-    def self.doc(filename, options)
-      data = unless $stdin.tty?
-        $stdin.read
-      else
-        File.read(filename)
-      end
-      schema = Prmd::Schema.new(JSON.parse(data))
-
-      options[:template] = File.expand_path(File.join(File.dirname(__FILE__), 'templates'))
-
-      write_result Prmd.render(schema, options), options
+    def self.combine(paths, options={})
+      write_result Prmd.combine(paths, options).to_s, options
     end
 
     def self.init(name, options)
@@ -121,13 +118,14 @@ module Prmd
     end
 
     def self.render(filename, options)
-      data = unless $stdin.tty?
-        $stdin.read
-      else
-        File.read(filename)
-      end
-      schema = Prmd::Schema.new(JSON.parse(data))
+      _, data = try_read(filename)
+      schema = Prmd::Schema.new(data)
       write_result Prmd.render(schema, options), options
+    end
+
+    def self.doc(filename, options)
+      template = File.expand_path(File.join(File.dirname(__FILE__), 'templates'))
+      render filename, options.merge(template: template)
     end
 
     def self.verify(filename, options)
