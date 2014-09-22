@@ -1,5 +1,6 @@
 <%-
   path = build_link_path(schema, link)
+  response_example = link['response_example']
   link_schema_properties_template = Prmd::Template.load_template('link_schema_properties.erb', options[:template])
 -%>
 ### <%= title %> <%= link['title'] %>
@@ -40,6 +41,9 @@
 
 #### Response Example
 ```
+<%- if response_example %>
+<%=   response_example['head'] %>
+<%- else %>
 HTTP/1.1 <%=
   case link['rel']
   when 'create'
@@ -49,14 +53,19 @@ HTTP/1.1 <%=
   else
     '200 OK'
   end %>
+<%- end %>
 ```
 ```json
-<%- if link['rel'] == 'empty' %>
-<%- elsif link.has_key?('targetSchema') && link['targetSchema'].has_key?('properties') %>
-<%=   JSON.pretty_generate(schema.schema_example(link['targetSchema'])) %>
-<%- elsif link['rel'] == 'instances' %>
-<%=   JSON.pretty_generate([schema.schemata_example(resource)]) %>
+<%- if response_example %>
+<%=   response_example['body'] %>
 <%- else %>
-<%=   JSON.pretty_generate(schema.schemata_example(resource)) %>
+<%-   if link['rel'] == 'empty' %>
+<%-   elsif link.has_key?('targetSchema') && link['targetSchema'].has_key?('properties') %>
+<%=     JSON.pretty_generate(schema.schema_example(link['targetSchema'])) %>
+<%-   elsif link['rel'] == 'instances' %>
+<%=     JSON.pretty_generate([schema.schemata_example(resource)]) %>
+<%-   else %>
+<%=     JSON.pretty_generate(schema.schemata_example(resource)) %>
+<%-   end %>
 <%- end %>
 ```
