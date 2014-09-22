@@ -15,5 +15,9 @@ module Prmd
       template = self.load(path, base)
       Erubis::Eruby.new(template).result(*args)
     end
+
+    def self.load_template(path, base)
+      Erubis::Eruby.new(load(path, base))
+    end
   end
 end
