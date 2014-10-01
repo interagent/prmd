@@ -1,6 +1,7 @@
 <%-
   path = build_link_path(schema, link)
-  link_schema_properties_template = Prmd::Template::load('link_schema_properties.erb', options[:template])
+  response_example = link['response_example']
+  link_schema_properties_template = Prmd::Template.load_template('link_schema_properties.erb', options[:template])
 -%>
 ### <%= title %> <%= link['title'] %>
 <%= link['description'] %>
@@ -17,19 +18,22 @@
   %>
   <%- unless required.empty? %>
 #### Required Parameters
-<%= Erubis::Eruby.new(link_schema_properties_template).result(params: required, schema: schema, options: options) %>
+<%= link_schema_properties_template.result(params: required, schema: schema, options: options) %>
 
   <%- end %>
   <%- unless optional.empty? %>
 #### Optional Parameters
-<%= Erubis::Eruby.new(link_schema_properties_template).result(params: optional, schema: schema, options: options) %>
+<%= link_schema_properties_template.result(params: optional, schema: schema, options: options) %>
   <%- end %>
 <%- end %>
 
 #### Curl Example
 <%=
-  Prmd::Template::render(File.join('schemata', 'link_curl_example.erb'), File.dirname(options[:template]), {
-    options:         options,
+  curl_options = options.dup
+  http_header = link['http_header'] || {}
+  curl_options[:http_header] = curl_options[:http_header].merge(http_header)
+  Prmd::Template.render('schemata/link_curl_example.erb', File.dirname(options[:template]), {
+    options:         curl_options,
     resource:        resource,
     schema:          schema,
     schemata:        schemata,
@@ -40,7 +44,11 @@
 
 #### Response Example
 ```
-HTTP/1.1 <%= case link['rel']
+<%- if response_example %>
+<%=   response_example['head'] %>
+<%- else %>
+HTTP/1.1 <%=
+  case link['rel']
   when 'create'
     '201 Created'
   when 'empty'
@@ -48,14 +56,19 @@ HTTP/1.1 <%= case link['rel']
   else
     '200 OK'
   end %>
+<%- end %>
 ```
 ```json
-  <%- if link['rel'] == 'empty' %>
-  <%- elsif link.has_key?('targetSchema') && link['targetSchema'].has_key?('properties') %>
-<%= JSON.pretty_generate(schema.schema_example(link['targetSchema'])) %>
-  <%- elsif link['rel'] == 'instances' %>
-<%= JSON.pretty_generate([schema.schemata_example(resource)]) %>
-  <%- else %>
-<%= JSON.pretty_generate(schema.schemata_example(resource)) %>
-  <%- end %>
+<%- if response_example %>
+<%=   response_example['body'] %>
+<%- else %>
+<%-   if link['rel'] == 'empty' %>
+<%-   elsif link.has_key?('targetSchema') && link['targetSchema'].has_key?('properties') %>
+<%=     JSON.pretty_generate(schema.schema_example(link['targetSchema'])) %>
+<%-   elsif link['rel'] == 'instances' %>
+<%=     JSON.pretty_generate([schema.schemata_example(resource)]) %>
+<%-   else %>
+<%=     JSON.pretty_generate(schema.schemata_example(resource)) %>
+<%-   end %>
+<%- end %>
 ```

@@ -3,17 +3,10 @@ require "erubis"
 require "json"
 require "yaml"
 
-dir = File.dirname(__FILE__)
-require File.join(dir, 'prmd', 'commands', 'combine')
-require File.join(dir, 'prmd', 'commands', 'expand')
-require File.join(dir, 'prmd', 'commands', 'init')
-require File.join(dir, 'prmd', 'commands', 'render')
-require File.join(dir, 'prmd', 'commands', 'verify')
-require File.join(dir, 'prmd', 'schema')
-require File.join(dir, 'prmd', 'version')
-require File.join(dir, 'prmd', 'template')
-require File.join(dir, 'prmd', 'url_generator')
-require File.join(dir, 'prmd', 'hash_helpers')
-
-module Prmd
-end
+require 'prmd/version'
+require 'prmd/load_schema_file'
+require 'prmd/commands'
+require 'prmd/schema'
+require 'prmd/template'
+require 'prmd/url_generator'
+require 'prmd/hash_helpers'
