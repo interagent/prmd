@@ -6,9 +6,11 @@ module Prmd
   class UrlGenerator
     # :nodoc:
     module Generators
+      # JSON URL Generator
       #
-      #
+      # @api private
       class JSON
+        # @param [Hash<Symbol, Object>] params
         def self.generate(params)
           data = {}
           data.merge!(params[:schema].schema_example(params[:link]['schema']))

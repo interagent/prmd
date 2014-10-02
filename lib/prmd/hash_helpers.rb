@@ -1,6 +1,14 @@
 # :nodoc:
 module Prmd
+  # Hash helper methods
+  #
+  # @api private
   module HashHelpers
+    # Attempts to convert all keys in the hash to a Symbol.
+    # This operation is recursive with subhashes
+    #
+    # @param [Hash] hash
+    # @return [Hash]
     def self.deep_symbolize_keys(hash)
       deep_transform_keys(hash) do |key|
         if key.respond_to?(:to_sym)
@@ -11,6 +19,11 @@ module Prmd
       end
     end
 
+    # Think of this as hash.keys.map! { |key| }, that actually maps recursively.
+    #
+    # @param [Hash] hash
+    # @return [Hash]
+    # @yield [Object] key
     def self.deep_transform_keys(hash, &block)
       result = {}
       hash.each do |key, value|

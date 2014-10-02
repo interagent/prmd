@@ -3,6 +3,7 @@ require 'json_schema'
 
 # :nodoc:
 module Prmd
+  # Schema Verification
   module Verification
     # These schemas are listed manually and in order because they reference each
     # other.
@@ -12,6 +13,7 @@ module Prmd
       'interagent-hyper-schema.json'
     ]
 
+    # @return [JsonSchema::DocumentStore]
     def self.init_document_store
       store = JsonSchema::DocumentStore.new
       SCHEMAS.each do |file|
@@ -24,10 +26,13 @@ module Prmd
       store
     end
 
+    # @return [JsonSchema::DocumentStore]
     def self.document_store
       @document_store ||= init_document_store
     end
 
+    # @param [Hash] schema_data
+    # @return [Array<String>] errors from failed verfication
     def self.verify_parsable(schema_data)
       # for good measure, make sure that the schema parses and that its
       # references can be expanded
@@ -40,13 +45,17 @@ module Prmd
       []
     end
 
-    def self.validate_meta_schema(meta_schema, schema_data)
+    # @param [Hash] schema_data
+    # @return [Array<String>] errors from failed verfication
+    def self.verify_meta_schema(meta_schema, schema_data)
       valid, errors = meta_schema.validate(schema_data)
       return JsonSchema::SchemaError.aggregate(errors) unless valid
 
       []
     end
 
+    # @param [Hash] schema_data
+    # @return [Array<String>] errors from failed verfication
     def self.verify_schema(schema_data)
       schema_uri = schema_data['$schema']
       return ['Missing $schema key.'] unless schema_uri
@@ -54,9 +63,13 @@ module Prmd
       meta_schema = document_store.lookup_schema(schema_uri)
       return ["Unknown $schema: #{schema_uri}."] unless meta_schema
 
-      validate_meta_schema(meta_schema, schema_data)
+      verify_meta_schema(meta_schema, schema_data)
     end
 
+    # Verfies that a given schema is valid
+    #
+    # @param [Hash] schema_data
+    # @return [Array<String>] errors from failed verification
     def self.verify(schema_data)
       a = verify_schema(schema_data)
       return a unless a.empty?
@@ -68,9 +81,13 @@ module Prmd
     class << self
       private :init_document_store
       private :document_store
+      private :verify_parsable
+      private :verify_schema
+      private :verify_meta_schema
     end
   end
 
+  # (see Prmd::Verification.verify)
   def self.verify(schema_data)
     Verification.verify(schema_data)
   end

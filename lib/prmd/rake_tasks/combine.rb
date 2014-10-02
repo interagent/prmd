@@ -1,8 +1,18 @@
 require 'prmd/commands/combine'
 require 'prmd/rake_tasks/base'
 
+# :nodoc:
 module Prmd
+  # :nodoc:
   module RakeTasks
+    # Schema combine rake task
+    #
+    # @example
+    #   Prmd::RakeTasks::Combine.new do |t|
+    #     t.options[:meta] = 'schema/meta.json'
+    #     t.paths << 'schema/schemata/api'
+    #     t.output_file = 'schema/api.json'
+    #   end
     class Combine < Base
       #
       # @return [Array<String>] list of paths

@@ -3,9 +3,14 @@ require 'prmd/commands/verify'
 
 module Prmd
   module CLI
+    # 'verify' command module.
     module Verify
       extend CLI::Base
 
+      # Returns a OptionParser for parsing 'verify' command options.
+      #
+      # @param (see Prmd::CLI::Base#make_parser)
+      # @return (see Prmd::CLI::Base#make_parser)
       def self.make_parser(options = {})
         binname = options.fetch(:bin, 'prmd')
 
@@ -18,6 +23,13 @@ module Prmd
         end
       end
 
+      # Executes the 'verify' command.
+      #
+      # @example Usage
+      #   Prmd::CLI::Verify.execute(argv: ['schema/api.json'])
+      #
+      # @param (see Prmd::CLI::Base#execute)
+      # @return (see Prmd::CLI::Base#execute)
       def self.execute(options = {})
         filename = options.fetch(:argv).first
         _, data = try_read(filename)

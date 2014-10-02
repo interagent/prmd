@@ -1,12 +1,18 @@
 require 'prmd/template'
 
+# :nodoc:
 module Prmd
+  # Schema Generator
   class Renderer
+    #
+    # @param [Hash<Symbol, Object>] properties
     def initialize(properties = {})
       @properties = properties
       @template = @properties.fetch(:template)
     end
 
+    #
+    # @return [Hash<Symbol, Object>]
     def default_options
       {
         http_header: {},
@@ -16,6 +22,9 @@ module Prmd
       }
     end
 
+    #
+    # @param [Hash<Symbol, Object>] options
+    # @return [void]
     def append_default_options(options)
       options[:doc] = {
         url_style: 'default',
@@ -23,6 +32,9 @@ module Prmd
       }.merge(options[:doc])
     end
 
+    #
+    # @param [Hash<Symbol, Object>] options
+    # @return [Hash<Symbol, Object>]
     def setup_options(options)
       opts = default_options
       opts.merge!(options)
@@ -30,6 +42,9 @@ module Prmd
       opts
     end
 
+    #
+    # @param [Prmd::Schema] schema
+    # @param [Hash<Symbol, Object>] options
     def render(schema, options = {})
       @template.result(schema: schema, options: setup_options(options))
     end

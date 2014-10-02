@@ -3,9 +3,16 @@ require 'prmd/commands/init'
 
 module Prmd
   module CLI
+    # 'init' command module.
+    # Though this is called, Generate, it is used by the init method for
+    # creating new Schema files
     module Generate
       extend CLI::Base
 
+      # Returns a OptionParser for parsing 'init' command options.
+      #
+      # @param (see Prmd::CLI::Base#make_parser)
+      # @return (see Prmd::CLI::Base#make_parser)
       def self.make_parser(options = {})
         binname = options.fetch(:bin, 'prmd')
 
@@ -20,6 +27,14 @@ module Prmd
         end
       end
 
+      # Executes the 'init' command.
+      #
+      # @example Usage
+      #   Prmd::CLI::Generate.execute(argv: ['bread'],
+      #                               output_file: 'schema/schemata/bread.json')
+      #
+      # @param (see Prmd::CLI::Base#execute)
+      # @return (see Prmd::CLI::Base#execute)
       def self.execute(options = {})
         name = options.fetch(:argv).first
         write_result Prmd.init(name, options), options

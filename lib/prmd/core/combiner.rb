@@ -3,9 +3,10 @@ require 'prmd/core/schema_hash'
 
 # :nodoc:
 module Prmd
-  ##
-  #
+  # Schema combiner
   class Combiner
+    #
+    # @param [Hash<Symbol, Object>] properties
     def initialize(properties = {})
       @properties = properties
       @schema = properties.fetch(:schema)
@@ -13,10 +14,14 @@ module Prmd
       @meta = properties.fetch(:meta, {})
     end
 
+    # @param [Array] array
+    # @return [Array]
     def reference_localizer_array(array)
       array.map { |element| reference_localizer(element) }
     end
 
+    # @param [Hash] hash
+    # @return [Hash]
     def reference_localizer_hash(hash)
       if hash.key?('$ref')
         hash['$ref'] = '#/definitions' + hash['$ref'].gsub('#', '')
@@ -30,6 +35,9 @@ module Prmd
       hash.each_with_object({}) { |(k, v), r| r[k] = reference_localizer(v) }
     end
 
+    #
+    # @param [Object] datum
+    # @return [Object]
     def reference_localizer(datum)
       case datum
       when Array
@@ -41,8 +49,8 @@ module Prmd
       end
     end
 
-    ##
-    # @param [Prmd::SchemaHash] args
+    #
+    # @param [Prmd::SchemaHash] schemata
     # @return [Prmd::Schema]
     def combine(*schemata)
       # tracks which entities where defined in which file
@@ -73,7 +81,7 @@ module Prmd
         reference_localizer(data['definitions'][id_ary])
       end
 
-      Schema.new(data)
+      Prmd::Schema.new(data)
     end
 
     private :reference_localizer_array

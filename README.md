@@ -118,8 +118,10 @@ Available options (and their defaults)
 }
 ```
 
+## Use as rake task
 
 In addition, prmd can be used via rake tasks
+
 ```ruby
 # Rakefile
 require 'prmd/rake_tasks/combine'

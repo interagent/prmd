@@ -3,9 +3,14 @@ require 'prmd/commands/combine'
 
 module Prmd
   module CLI
+    # 'combine' command module.
     module Combine
       extend CLI::Base
 
+      # Returns a OptionParser for parsing 'combine' command options.
+      #
+      # @param (see Prmd::CLI::Base#make_parser)
+      # @return (see Prmd::CLI::Base#make_parser)
       def self.make_parser(options = {})
         binname = options.fetch(:bin, 'prmd')
 
@@ -20,6 +25,15 @@ module Prmd
         end
       end
 
+      # Executes the 'combine' command.
+      #
+      # @example Usage
+      #   Prmd::CLI::Combine.execute(argv: ['schema/schemata/api'],
+      #                              meta: 'schema/meta.json',
+      #                              output_file: 'schema/api.json')
+      #
+      # @param (see Prmd::CLI::Base#execute)
+      # @return (see Prmd::CLI::Base#execute)
       def self.execute(options = {})
         write_result Prmd.combine(options[:argv], options).to_s, options
       end

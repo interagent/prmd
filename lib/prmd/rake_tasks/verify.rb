@@ -2,8 +2,16 @@ require 'prmd/commands/verify'
 require 'prmd/rake_tasks/base'
 require 'prmd/load_schema_file'
 
+# :nodoc:
 module Prmd
+  # :nodoc:
   module RakeTasks
+    # Schema Verify rake task
+    #
+    # @example
+    #   Prmd::RakeTasks::Verify.new do |t|
+    #     t.files << 'schema/api.json'
+    #   end
     class Verify < Base
       # Schema files that should be verified
       # @return [Array<String>] list of files
@@ -20,6 +28,7 @@ module Prmd
       private
 
       # Defines the rake task
+      #
       # @param [String] filename
       # @return [Array<String>] list of errors produced
       def verify_file(filename)

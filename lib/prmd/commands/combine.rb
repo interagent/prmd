@@ -2,8 +2,14 @@ require 'prmd/load_schema_file'
 require 'prmd/core/schema_hash'
 require 'prmd/core/combiner'
 
+# :nodoc:
 module Prmd
+  # Schema combine
   module Combine
+    # @api private
+    # @param [#size] given
+    # @param [#size] expected
+    # @return [void]
     def self.handle_faulty_load(given, expected)
       unless given.size == expected.size
         abort 'Somes files have failed to parse. ' \
@@ -12,6 +18,10 @@ module Prmd
       end
     end
 
+    # @api private
+    # @param [Array<String>] paths
+    # @param [Hash<Symbol, Object>] options
+    # @return [Array<String>] list of filenames from paths
     def self.crawl_map(paths, options = {})
       files = [*paths].map do |path|
         if File.directory?(path)
@@ -25,11 +35,18 @@ module Prmd
       files
     end
 
+    # @api private
+    # @param [String] filename
+    # @return [SchemaHash]
     def self.load_schema_hash(filename)
       data = Prmd.load_schema_file(filename)
       SchemaHash.new(data, filename: filename)
     end
 
+    # @api private
+    # @param [Array<String>] files
+    # @param [Hash<Symbol, Object>] options
+    # @return [Array<SchemaHash>] schema hashes
     def self.load_files(files, options = {})
       files.each_with_object([]) do |filename, result|
         begin
@@ -40,6 +57,10 @@ module Prmd
       end
     end
 
+    # @api private
+    # @param [Array<String>] paths
+    # @param [Hash<Symbol, Object>] options
+    # @return (see .load_files)
     def self.load_schemas(paths, options = {})
       files = crawl_map(paths, options)
       # sort for stable loading on any platform
@@ -48,6 +69,11 @@ module Prmd
       schemata
     end
 
+    # Merges all found schema files in the given paths into a single Schema
+    #
+    # @param [Array<String>] paths
+    # @param [Hash<Symbol, Object>] options
+    # @return (see Prmd::Combiner#combine)
     def self.combine(paths, options = {})
       schemata = load_schemas(paths)
       base = Prmd::Template.load_json('combine_head.json')
@@ -67,6 +93,7 @@ module Prmd
     end
   end
 
+  # (see Prmd::Combine.combine)
   def self.combine(paths, options = {})
     Combine.combine(paths, { faulty_load: false }.merge(options))
   end

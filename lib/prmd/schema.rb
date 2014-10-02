@@ -1,12 +1,22 @@
+require 'json'
+require 'yaml'
+
+# :nodoc:
 module Prmd
+  # Schema object
   class Schema
+    # @return [Hash] data
     attr_reader :data
 
+    # @param [Hash<String, Object>] new_data
     def initialize(new_data = {})
       @data = convert_type_to_array(new_data)
       @schemata_examples = {}
     end
 
+    #
+    # @param [Object] datum
+    # @return [Object] same type as the input object
     def convert_type_to_array(datum)
       case datum
       when Array
@@ -23,14 +33,22 @@ module Prmd
       end
     end
 
+    # @param [String] key
+    # @return [Object]
     def [](key)
       @data[key]
     end
 
+    # @param [String] key
+    # @param [Object] value
     def []=(key, value)
       @data[key] = value
     end
 
+    # Merge schema data with provided schema
+    #
+    # @param [Hash, Prmd::Schema] schema
+    # @return [void]
     def merge!(schema)
       if schema.is_a?(Schema)
         @data.merge!(schema.data)
@@ -39,6 +57,8 @@ module Prmd
       end
     end
 
+    #
+    # @param [Hash, String] reference
     def dereference(reference)
       if reference.is_a?(Hash)
         if reference.key?('$ref')
@@ -64,10 +84,11 @@ module Prmd
         ]
       rescue => error
         $stderr.puts("Failed to dereference `#{key}`")
-        raise(error)
+        raise error
       end
     end
 
+    # @param [Hash] value
     def schema_value_example(value)
       if value.key?('example')
         value['example']
@@ -89,6 +110,7 @@ module Prmd
       end
     end
 
+    # @param [Hash, String] schema
     def schema_example(schema)
       _, dff_schema = dereference(schema)
 
@@ -106,6 +128,7 @@ module Prmd
       end
     end
 
+    # @param [String] schemata_id
     def schemata_example(schemata_id)
       _, schema = dereference("#/definitions/#{schemata_id}")
       @schemata_examples[schemata_id] ||= begin
@@ -113,10 +136,16 @@ module Prmd
       end
     end
 
+    # Retrieve this schema's href
+    #
+    # @return [String, nil]
     def href
       (@data['links'] && @data['links'].find { |link| link['rel'] == 'self' } || {})['href']
     end
 
+    # Convert Schema to JSON
+    #
+    # @return [String]
     def to_json
       new_json = JSON.pretty_generate(@data)
       # nuke empty lines
@@ -124,10 +153,16 @@ module Prmd
       new_json
     end
 
+    # Convert Schema to YAML
+    #
+    # @return [String]
     def to_yaml
       YAML.dump(@data)
     end
 
+    # Convert Schema to String
+    #
+    # @return [String]
     def to_s
       to_json
     end

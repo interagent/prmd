@@ -1,20 +1,25 @@
 require 'cgi'
 
-# :nodoc
+# :nodoc:
 module Prmd
-  # :nodoc
+  # :nodoc:
   class UrlGenerator
-    # :nodoc
+    # :nodoc:
     module Generators
+      # Default URL Generator
       #
-      #
+      # @api private
       class Default
+        # @param [Hash<Symbol, Object>] params
         def self.generate(params)
           data = {}
           data.merge!(params[:schema].schema_example(params[:link]['schema']))
           generate_params(data)
         end
 
+        # @param [String] key
+        # @param [String] prefix
+        # @return [String]
         def self.param_name(key, prefix, array = false)
           result = if prefix
             "#{prefix}[#{key}]"
@@ -26,6 +31,9 @@ module Prmd
           result
         end
 
+        # @param [Hash] obj
+        # @param [String] prefix
+        # @return [String]
         def self.generate_params(obj, prefix = nil)
           result = []
           obj.each do |key,value|

@@ -1,8 +1,12 @@
 require 'rake'
 require 'rake/tasklib'
 
+# :nodoc:
 module Prmd
+  # :nodoc:
   module RakeTasks
+    # Common class for Prmd rake tasks
+    #
     # @api private
     class Base < Rake::TaskLib
       # The name of the task

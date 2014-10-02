@@ -4,8 +4,16 @@ require 'prmd/load_schema_file'
 require 'prmd/template'
 require 'prmd/schema'
 
+# :nodoc:
 module Prmd
+  # :nodoc:
   module RakeTasks
+    # Documentation rake task
+    #
+    # @example
+    #   Prmd::RakeTasks::Doc.new do |t|
+    #     t.files = { 'schema/api.json' => 'schema/api.md' }
+    #   end
     class Doc < Base
       # Schema files that should be verified
       # @return [Array<String>, Hash<String, String>] list of files
@@ -22,12 +30,19 @@ module Prmd
 
       private
 
+      # Render file to markdown
+      #
+      # @param [String] filename
+      # @return (see Prmd.render)
       def render_file(filename)
         data = Prmd.load_schema_file(filename)
         schema = Prmd::Schema.new(data)
         Prmd.render(schema, options)
       end
 
+      # @param [String] infile
+      # @param [String] outfile
+      # @return [void]
       def render_to_file(infile, outfile)
         result = render_file(infile)
         File.open(outfile, 'w') do |file|

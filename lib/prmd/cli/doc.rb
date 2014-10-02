@@ -4,9 +4,14 @@ require 'prmd/hash_helpers'
 
 module Prmd
   module CLI
+    # 'doc' command module.
     module Doc
       extend CLI::Base
 
+      # Returns a OptionParser for parsing 'doc' command options.
+      #
+      # @param (see Prmd::CLI::Base#make_parser)
+      # @return (see Prmd::CLI::Base#make_parser)
       def self.make_parser(options = {})
         binname = options.fetch(:bin, 'prmd')
 
@@ -29,6 +34,12 @@ module Prmd
         end
       end
 
+      # Overwritten to support :settings merging.
+      #
+      # @see Prmd::CLI::Base#set_option
+      #
+      # @param (see Prmd::CLI::Base#set_option)
+      # @return (see Prmd::CLI::Base#set_option)
       def self.set_option(options, key, value)
         if key == :settings
           options.replace(value.merge(options))
@@ -37,6 +48,14 @@ module Prmd
         end
       end
 
+      # Executes the 'doc' command.
+      #
+      # @example Usage
+      #   Prmd::CLI::Doc.execute(argv: ['schema/api.json'],
+      #                          output_file: 'schema/api.md')
+      #
+      # @param (see Prmd::CLI::Base#execute)
+      # @return (see Prmd::CLI::Base#execute)
       def self.execute(options = {})
         filename = options.fetch(:argv).first
         template = File.expand_path('templates', File.dirname(__FILE__))

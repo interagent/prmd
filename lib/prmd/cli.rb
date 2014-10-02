@@ -7,9 +7,10 @@ require 'prmd/cli/verify'
 
 # :nodoc:
 module Prmd
-  ##
-  #
+  # Main CLI module
   module CLI
+    # @param [Hash<Symbol, Object>] props
+    # @return [Hash<Symbol, OptionParser>] all dem parsers
     def self.make_command_parsers(props = {})
       {
         combine: CLI::Combine.make_parser(props),
@@ -20,6 +21,17 @@ module Prmd
       }
     end
 
+    # List of all available commands
+    #
+    # @return [Array] available commands
+    def self.commands
+      @commands ||= make_command_parsers.keys
+    end
+
+    # Creates the CLI main parser
+    #
+    # @param [Hash<Symbol, Object>] options
+    # @param [Hash<Symbol, Object>] props
     def self.make_parser(options, props = {})
       binname = props.fetch(:bin, 'prmd')
 
@@ -46,6 +58,11 @@ module Prmd
       global
     end
 
+    # Parse top level CLI options from argv
+    #
+    # @param [Array<String>] argv
+    # @param [Hash<Symbol, Object>] opts
+    # @return [Hash<Symbol, Object>] parsed options
     def self.parse_options(argv, opts = {})
       options = {}
       parser = make_parser(options, opts)
@@ -53,11 +70,17 @@ module Prmd
       com_argv = parser.order(argv)
       abort parser if com_argv.empty?
       command = com_argv.shift.to_sym
+      abort parser unless commands.include?(command)
       options[:argv] = com_argv
       options[:command] = command
       options
     end
 
+    # Execute the Prmd CLI, or its subcommands
+    #
+    # @param [Array<String>] uargv
+    # @param [Hash<Symbol, Object>] opts
+    # @return [void]
     def self.run(uargv, opts = {})
       options = parse_options(uargv, opts)
       argv = options.delete(:argv)
@@ -75,6 +98,11 @@ module Prmd
       when :verify
         CLI::Verify.run(argv, options)
       end
+    end
+
+    class << self
+      private :make_command_parsers
+      private :commands
     end
   end
 end
