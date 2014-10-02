@@ -1,109 +1,75 @@
-require 'forwardable'
 require 'prmd/load_schema_file'
+require 'prmd/core/schema_hash'
+require 'prmd/core/combiner'
 
 module Prmd
-  class SchemaHash
-    extend Forwardable
-
-    attr_reader :filename
-    def_delegator :@data, :[]
-    def_delegator :@data, :[]=
-    def_delegator :@data, :delete
-    def_delegator :@data, :each
-
-    def initialize(filename, data)
-      @data = data
-      @filename = filename
+  module Combine
+    def self.handle_faulty_load(given, expected)
+      unless given.size == expected.size
+        abort 'Somes files have failed to parse. ' \
+              'If you wish to continue without them,' \
+              'please enable faulty_load using --faulty-load'
+      end
     end
 
-    def fetch(key)
-      @data.fetch(key) { abort "Missing key #{key} in #{filename}" }
+    def self.crawl_map(paths, options = {})
+      files = [*paths].map do |path|
+        if File.directory?(path)
+          Dir.glob(File.join(path, '**', '*.{json,yml,yaml}'))
+        else
+          path
+        end
+      end
+      files.flatten!
+      files.delete(options[:meta])
+      files
     end
 
-    def to_h
-      @data.dup
+    def self.load_schema_hash(filename)
+      data = Prmd.load_schema_file(filename)
+      SchemaHash.new(data, filename: filename)
+    end
+
+    def self.load_files(files, options = {})
+      files.each_with_object([]) do |filename, result|
+        begin
+          result << load_schema_hash(filename)
+        rescue JSON::ParserError, Psych::SyntaxError => ex
+          $stderr.puts "unable to parse #{filename} (#{ex.inspect})"
+        end
+      end
+    end
+
+    def self.load_schemas(paths, options = {})
+      files = crawl_map(paths, options)
+      # sort for stable loading on any platform
+      schemata = load_files(files.sort, options)
+      handle_faulty_load(schemata, files) unless options[:faulty_load]
+      schemata
+    end
+
+    def self.combine(paths, options = {})
+      schemata = load_schemas(paths)
+      base = Prmd::Template.load_json('combine_head.json')
+      schema = base['$schema']
+      meta = {}
+      if options[:meta]
+        meta = Prmd.load_schema_file(options[:meta])
+      end
+      combiner = Prmd::Combiner.new(meta: meta, base: base, schema: schema)
+      combiner.combine(*schemata)
+    end
+
+    class << self
+      private :handle_faulty_load
+      private :crawl_map
+      private :load_schema_hash
+      private :load_files
+      private :load_schemas
     end
   end
 
   def self.combine(paths, options = {})
-    files = [*paths].map do |path|
-      if File.directory?(path)
-        Dir.glob(File.join(path, '**', '*.{json,yml,yaml}'))
-      else
-        path
-      end
-    end
-    files.flatten!
-    files.delete(options[:meta])
-
-    # sort for stable loading on any platform
-    schemata = []
-    files.sort.each do |filename|
-      begin
-        schemata << SchemaHash.new(filename, load_schema_file(filename))
-      rescue
-        $stderr.puts "unable to parse #{filename}"
-      end
-    end
-    unless schemata.length == files.length
-      exit(1) # one or more files failed to parse
-    end
-
-    data = {
-      '$schema'     => 'http://json-schema.org/draft-04/hyper-schema',
-      'definitions' => {},
-      'properties'  => {},
-      'type'        => ['object']
-    }
-
-    # tracks which entities where defined in which file
-    schemata_map = {}
-
-    if options[:meta] && File.exist?(options[:meta])
-      data.merge!(load_schema_file(options[:meta]))
-    end
-
-    reference_localizer = lambda do |datum|
-      case datum
-      when Array
-        datum.map {|element| reference_localizer.call(element)}
-      when Hash
-        if datum.key?('$ref')
-          datum['$ref'] = '#/definitions' + datum['$ref'].gsub('#', '')
-                                                         .gsub('/schemata', '')
-        end
-        if datum.key?('href') && datum['href'].is_a?(String)
-          datum['href'] = datum['href'].gsub('%23', '')
-                                       .gsub(/%2Fschemata(%2F[^%]*%2F)/,
-                                             '%23%2Fdefinitions\1')
-        end
-        datum.each { |k,v| datum[k] = reference_localizer.call(v) }
-      else
-        datum
-      end
-    end
-
-    schemata.each do |schema|
-      id = schema.fetch('id')
-      id_ary = id.split('/').last
-
-      if s = schemata_map[id]
-        $stderr.puts "`#{id}` (from #{schema.filename}) was already defined" \
-                     "in `#{s.filename}` and will overwrite the first" \
-                     "definition"
-      end
-      schemata_map[id] = schema
-
-      # schemas are now in a single scope by combine
-      schema.delete('id')
-
-      data['definitions'][id_ary] = schema.to_h
-
-      reference_localizer.call(data['definitions'][id_ary])
-
-      data['properties'][id_ary] = { '$ref' => "#/definitions/#{id_ary}" }
-    end
-
-    Prmd::Schema.new(data)
+    Combine.combine(paths, { faulty_load: false }.merge(options))
   end
 end
