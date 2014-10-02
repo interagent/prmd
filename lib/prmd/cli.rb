@@ -2,9 +2,8 @@ require 'prmd/core_ext/optparse'
 
 module Prmd
   module CLI
-    def self.parse_options(argv, opts = {})
+    def self.make_parsers(options, opts = {})
       binname = opts.fetch(:bin, 'prmd')
-      options = {}
 
       commands = {
         combine: OptionParser.new do |opts|
@@ -66,6 +65,19 @@ module Prmd
         opts.separator "\nAvailable commands:"
         opts.separator help_text
       end
+
+      return {
+        global: global,
+        commands: commands
+      }
+    end
+
+    def self.parse_options(argv, opts = {})
+      options = {}
+
+      parsers = make_parsers(options, opts)
+      global = parsers.fetch(:global)
+      commands = parsers.fetch(:commands)
 
       begin
         abort global if argv.empty?
