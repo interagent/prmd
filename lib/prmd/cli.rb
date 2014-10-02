@@ -1,4 +1,7 @@
+require 'prmd/commands'
 require 'prmd/core_ext/optparse'
+require 'prmd/hash_helpers'
+require 'prmd/load_schema_file'
 
 module Prmd
   module CLI
