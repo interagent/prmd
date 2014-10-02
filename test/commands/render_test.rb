@@ -3,7 +3,6 @@ require File.expand_path(File.join(File.dirname(__FILE__), '..', 'helpers'))
 require 'json_pointer'
 
 class InteragentRenderTest < Minitest::Test
-
   def test_render_for_valid_schema
     markdown = render
 
@@ -91,5 +90,4 @@ class InteragentRenderTest < Minitest::Test
 
     Prmd.render(schema, template: template)
   end
-end
 end

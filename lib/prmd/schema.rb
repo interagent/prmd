@@ -1,5 +1,26 @@
 module Prmd
   class Schema
+    attr_reader :data
+
+    def initialize(new_data = {})
+      @data = convert_type_to_array(new_data)
+      @schemata_examples = {}
+    end
+
+    def convert_type_to_array(datum)
+      case datum
+      when Array
+        datum.map { |element| convert_type_to_array(element) }
+      when Hash
+        if datum.key?('type') && datum['type'].is_a?(String)
+          datum['type'] = [*datum['type']]
+        end
+        datum.each { |k, v| datum[k] = convert_type_to_array(v) }
+      else
+        datum
+      end
+    end
+
     def [](key)
       @data[key]
     end
@@ -8,22 +29,12 @@ module Prmd
       @data[key] = value
     end
 
-    def initialize(new_data = {})
-      convert_type_to_array = lambda do |datum|
-        case datum
-        when Array
-          datum.map { |element| convert_type_to_array.call(element) }
-        when Hash
-          if datum.key?('type') && datum['type'].is_a?(String)
-            datum['type'] = [*datum['type']]
-          end
-          datum.each { |k,v| datum[k] = convert_type_to_array.call(v) }
-        else
-          datum
-        end
+    def merge!(schema)
+      if schema.is_a?(Schema)
+        @data.merge!(schema.data)
+      else
+        @data.merge!(schema)
       end
-      @data = convert_type_to_array.call(new_data)
-      @schemata_examples = {}
     end
 
     def dereference(reference)
@@ -47,7 +58,7 @@ module Prmd
         dereferenced_key, dereferenced_value = dereference(datum)
         [
           [key, dereferenced_key].compact.last,
-          [dereferenced_value, value].inject({}) { |composite, element| composite.merge(element) }
+          [dereferenced_value, value].inject({}, &:merge)
         ]
       rescue => error
         $stderr.puts("Failed to dereference `#{key}`")
@@ -107,7 +118,7 @@ module Prmd
     def to_json
       new_json = JSON.pretty_generate(@data)
       # nuke empty lines
-      new_json = new_json.split("\n").delete_if {|line| line.empty?}.join("\n") + "\n"
+      new_json = new_json.split("\n").reject(&:empty?).join("\n") + "\n"
       new_json
     end
 
@@ -118,5 +129,8 @@ module Prmd
     def to_s
       to_json
     end
+
+    private :convert_type_to_array
+    protected :data
   end
 end

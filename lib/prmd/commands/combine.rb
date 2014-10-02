@@ -25,7 +25,7 @@ module Prmd
     end
   end
 
-  def self.combine(paths, options={})
+  def self.combine(paths, options = {})
     files = [*paths].map do |path|
       if File.directory?(path)
         Dir.glob(File.join(path, '**', '*.{json,yml,yaml}'))
@@ -69,10 +69,13 @@ module Prmd
         datum.map {|element| reference_localizer.call(element)}
       when Hash
         if datum.key?('$ref')
-          datum['$ref'] = '#/definitions' + datum['$ref'].gsub('#', '').gsub('/schemata', '')
+          datum['$ref'] = '#/definitions' + datum['$ref'].gsub('#', '')
+                                                         .gsub('/schemata', '')
         end
         if datum.key?('href') && datum['href'].is_a?(String)
-          datum['href'] = datum['href'].gsub('%23', '').gsub(/%2Fschemata(%2F[^%]*%2F)/, '%23%2Fdefinitions\1')
+          datum['href'] = datum['href'].gsub('%23', '')
+                                       .gsub(/%2Fschemata(%2F[^%]*%2F)/,
+                                             '%23%2Fdefinitions\1')
         end
         datum.each { |k,v| datum[k] = reference_localizer.call(v) }
       else
@@ -85,7 +88,9 @@ module Prmd
       id_ary = id.split('/').last
 
       if s = schemata_map[id]
-        $stderr.puts "`#{id}` (from #{schema.filename}) was already defined in `#{s.filename}` and will overwrite the first definition"
+        $stderr.puts "`#{id}` (from #{schema.filename}) was already defined" \
+                     "in `#{s.filename}` and will overwrite the first" \
+                     "definition"
       end
       schemata_map[id] = schema
 
