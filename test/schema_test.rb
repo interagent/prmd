@@ -23,6 +23,17 @@ class SchemaTest < Minitest::Test
     assert_equal(value, user_input_schema['definitions']['user']['definitions']['id'])
   end
 
+  def test_dereference_with_overridable_values
+    key, value = user_input_schema.dereference({
+      '$ref' => '#/definitions/user/properties',
+      'id' => {
+        'example' => 'my-custom-override-id'
+      }
+    })
+    assert_equal(value['id']['$ref'],    '#/definitions/user/definitions/id')
+    assert_equal(value['id']['example'], 'my-custom-override-id')
+  end
+
   def test_dereference_with_local_context
     key, value = user_input_schema.dereference({
       '$ref'     => '#/definitions/user/properties/id',

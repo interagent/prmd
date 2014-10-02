@@ -2,14 +2,16 @@ PATH
   remote: .
   specs:
     prmd (0.6.2)
+      deep_merge (~> 1.0)
       erubis (~> 2.7)
-      json_schema (~> 0.1)
+      json_schema (~> 0.1, >= 0.1.8)
 
 GEM
   remote: https://rubygems.org/
   specs:
+    deep_merge (1.0.1)
     erubis (2.7.0)
-    json_schema (0.1.4)
+    json_schema (0.2.0)
     minitest (5.3.2)
     rake (10.2.2)
 

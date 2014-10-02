@@ -1,4 +1,5 @@
 require "cgi"
+require 'deep_merge'
 require "erubis"
 require "json"
 require "yaml"

@@ -48,7 +48,7 @@ module Prmd
         dereferenced_key, dereferenced_value = dereference(datum)
         [
           [key, dereferenced_key].compact.last,
-          [dereferenced_value, value].inject({}) { |composite, element| composite.merge(element) }
+          [dereferenced_value, value].inject({}) { |composite, element| composite.deep_merge!(element) }
         ]
       rescue => error
         $stderr.puts("Failed to dereference `#{key}`")
@@ -60,10 +60,7 @@ module Prmd
       if value.has_key?('example')
         value['example']
       elsif value.has_key?('anyOf')
-        idRef = value['anyOf'].detect do |ref|
-          ref['$ref'] && ref['$ref'].split('/').last == 'id'
-        end
-        ref = idRef || value['anyOf'].first
+        ref = value['anyOf'].detect {|ref| ref.has_key?('$ref') && ref['$ref'].split('/').last == 'id'} || value['anyOf'].first
         schema_example(ref)
       elsif value.has_key?('properties') # nested properties
         schema_example(value)
