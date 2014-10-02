@@ -29,6 +29,6 @@ class SchemaTest < Minitest::Test
       'override' => true
     })
     assert_equal(key,   '#/definitions/user/definitions/id')
-    assert_equal(value, {'override' => true}.merge(user_input_schema['definitions']['user']['definitions']['id']))
+    assert_equal(value, { 'override' => true }.merge(user_input_schema['definitions']['user']['definitions']['id']))
   end
 end
