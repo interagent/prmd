@@ -15,7 +15,9 @@ module Prmd
         if datum.key?('type') && datum['type'].is_a?(String)
           datum['type'] = [*datum['type']]
         end
-        datum.each { |k, v| datum[k] = convert_type_to_array(v) }
+        datum.each_with_object({}) do |(k, v), hash|
+          hash[k] = convert_type_to_array(v)
+        end
       else
         datum
       end
