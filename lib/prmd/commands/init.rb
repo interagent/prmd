@@ -1,21 +1,30 @@
 require 'json'
 require 'prmd/template'
+require 'prmd/core/generator'
 
 module Prmd
+  module Generate
+    def self.make_generator
+      base = Prmd::Template.load_json('init_default.json')
+      template = Prmd::Template.load_template('init_resource.json.erb', '')
+      Prmd::Generator.new(base: base, template: template)
+    end
+  end
+
   def self.init(resource, options = {})
-    data = Prmd::Template.load_json('init_default.json')
+    gen = Generate.make_generator
 
-    schema = Prmd::Schema.new(data)
-
+    generator_options = {}
     if resource
+      parent = nil
       if resource.include?('/')
         parent, resource = resource.split('/')
       end
-      res = Prmd::Template.render('init_resource.json.erb', '',
-                                  resource: resource, parent: parent)
-      resource_schema = JSON.parse(res)
-      schema.merge!(resource_schema)
+      generator_options[:parent] = parent
+      generator_options[:resource] = resource
     end
+
+    schema = gen.generate(generator_options)
 
     if options[:yaml]
       schema.to_yaml
