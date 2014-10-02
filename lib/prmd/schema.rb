@@ -14,7 +14,7 @@ module Prmd
         when Array
           datum.map { |element| convert_type_to_array.call(element) }
         when Hash
-          if datum.has_key?('type') && datum['type'].is_a?(String)
+          if datum.key?('type') && datum['type'].is_a?(String)
             datum['type'] = [*datum['type']]
           end
           datum.each { |k,v| datum[k] = convert_type_to_array.call(v) }
@@ -28,7 +28,7 @@ module Prmd
 
     def dereference(reference)
       if reference.is_a?(Hash)
-        if reference.has_key?('$ref')
+        if reference.key?('$ref')
           value = reference.dup
           key = value.delete('$ref')
         else
@@ -56,19 +56,19 @@ module Prmd
     end
 
     def schema_value_example(value)
-      if value.has_key?('example')
+      if value.key?('example')
         value['example']
-      elsif value.has_key?('anyOf')
+      elsif value.key?('anyOf')
         idRef = value['anyOf'].detect do |ref|
           ref['$ref'] && ref['$ref'].split('/').last == 'id'
         end
         ref = idRef || value['anyOf'].first
         schema_example(ref)
-      elsif value.has_key?('properties') # nested properties
+      elsif value.key?('properties') # nested properties
         schema_example(value)
-      elsif value.has_key?('items') # array of objects
+      elsif value.key?('items') # array of objects
         _, items = dereference(value['items'])
-        if value['items'].has_key?('example')
+        if value['items'].key?('example')
           [items['example']]
         else
           [schema_example(items)]
@@ -79,16 +79,16 @@ module Prmd
     def schema_example(schema)
       _, _schema = dereference(schema)
 
-      if _schema.has_key?('example')
+      if _schema.key?('example')
         _schema['example']
-      elsif _schema.has_key?('properties')
+      elsif _schema.key?('properties')
         example = {}
         _schema['properties'].each do |key, value|
           _, value = dereference(value)
           example[key] = schema_value_example(value)
         end
         example
-      elsif _schema.has_key?('items')
+      elsif _schema.key?('items')
         schema_value_example(_schema)
       end
     end

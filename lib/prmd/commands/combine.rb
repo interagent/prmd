@@ -59,7 +59,7 @@ module Prmd
     # tracks which entities where defined in which file
     schemata_map = {}
 
-    if options[:meta] && File.exists?(options[:meta])
+    if options[:meta] && File.exist?(options[:meta])
       data.merge!(load_schema_file(options[:meta]))
     end
 
@@ -68,10 +68,10 @@ module Prmd
       when Array
         datum.map {|element| reference_localizer.call(element)}
       when Hash
-        if datum.has_key?('$ref')
+        if datum.key?('$ref')
           datum['$ref'] = '#/definitions' + datum['$ref'].gsub('#', '').gsub('/schemata', '')
         end
-        if datum.has_key?('href') && datum['href'].is_a?(String)
+        if datum.key?('href') && datum['href'].is_a?(String)
           datum['href'] = datum['href'].gsub('%23', '').gsub(%r{%2Fschemata(%2F[^%]*%2F)}, '%23%2Fdefinitions\1')
         end
         datum.each { |k,v| datum[k] = reference_localizer.call(v) }
