@@ -90,19 +90,19 @@ module Prmd
     end
 
     def schema_example(schema)
-      _, _schema = dereference(schema)
+      _, dff_schema = dereference(schema)
 
-      if _schema.key?('example')
-        _schema['example']
-      elsif _schema.key?('properties')
+      if dff_schema.key?('example')
+        dff_schema['example']
+      elsif dff_schema.key?('properties')
         example = {}
-        _schema['properties'].each do |key, value|
+        dff_schema['properties'].each do |key, value|
           _, value = dereference(value)
           example[key] = schema_value_example(value)
         end
         example
-      elsif _schema.key?('items')
-        schema_value_example(_schema)
+      elsif dff_schema.key?('items')
+        schema_value_example(dff_schema)
       end
     end
 

@@ -17,22 +17,31 @@ module Prmd
         super
       end
 
+      private
+
+      # Defines the rake task
+      # @param [String] filename
+      # @return [Array<String>] list of errors produced
+      def verify_file(filename)
+        data = Prmd.load_schema_file(filename)
+        errors = Prmd.verify(data)
+        unless errors.empty?
+          errors.map! { |error| "#{filename}: #{error}" } if filename
+          errors.each { |error| $stderr.puts(error) }
+        end
+        errors
+      end
+
       protected
 
       # Defines the rake task
       # @return [void]
       def define
-        desc "Verifying schemas" unless ::Rake.application.last_comment
+        desc 'Verifying schemas' unless Rake.application.last_comment
         task(name) do
           all_errors = []
           files.each do |filename|
-            data = Prmd.load_schema_file(filename)
-            errors = Prmd.verify(data)
-            unless errors.empty?
-              errors.map! { |error| "#{filename}: #{error}" } if filename
-              errors.each { |error| $stderr.puts(error) }
-              all_errors.concat(errors)
-            end
+            all_errors.concat(verify_file(filename))
           end
           fail unless all_errors.empty?
         end

@@ -8,14 +8,12 @@ module Prmd
       end
       template_dir = File.expand_path(template)
       # to keep backward compatibility
-      unless File.directory?(template_dir)
-        template_dir = File.dirname(template)
-      end
+      template_dir = File.dirname(template) unless File.directory?(template_dir)
       Prmd::Template.load_template('schema.erb', template_dir)
     end
   end
 
-  def self.render(schema, options={})
+  def self.render(schema, options = {})
     renderer = Prmd::Renderer.new(template: Render.get_template(options))
     doc = ''
     if options[:prepend]

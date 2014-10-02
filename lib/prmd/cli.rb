@@ -32,7 +32,7 @@ module Prmd
       global = OptionParser.new do |opts|
         opts.banner = "Usage: #{binname} [options] [command [options]]"
         opts.separator "\nAvailable options:"
-        opts.on('--version', 'Return version') do |opts|
+        opts.on('--version', 'Return version') do
           puts "prmd #{Prmd::VERSION}"
           exit(0)
         end
