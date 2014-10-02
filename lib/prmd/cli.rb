@@ -18,7 +18,7 @@ module Prmd
         doc: OptionParser.new do |opts|
           opts.banner = "#{binname} doc [options] <combined schema>"
           opts.on('-s', '--settings FILENAME', String, 'Config file to use') do |s|
-            settings = YAML.load_file(s) || {}
+            settings = Prmd.load_schema_file(s) || {}
             options = HashHelpers.deep_symbolize_keys(settings).merge(options)
           end
           opts.on('-p', '--prepend header,overview', Array, 'Prepend files to output') do |p|
