@@ -5,8 +5,8 @@ require 'prmd/load_schema_file'
 
 module Prmd
   module CLI
-    def self.make_parsers(options, opts = {})
-      binname = opts.fetch(:bin, 'prmd')
+    def self.make_parsers(options, props = {})
+      binname = props.fetch(:bin, 'prmd')
 
       commands = {
         combine: OptionParser.new do |opts|
