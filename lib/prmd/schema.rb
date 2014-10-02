@@ -1,6 +1,5 @@
 module Prmd
   class Schema
-
     def [](key)
       @data[key]
     end
@@ -119,6 +118,5 @@ module Prmd
     def to_s
       to_json
     end
-
   end
 end

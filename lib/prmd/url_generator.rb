@@ -1,6 +1,5 @@
 module Prmd
   class UrlGenerator
-
     def initialize(params)
       @schema = params[:schema]
       @link = params[:link]

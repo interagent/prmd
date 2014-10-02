@@ -1,4 +1,5 @@
 require 'forwardable'
+require 'prmd/load_schema_file'
 
 module Prmd
   class SchemaHash

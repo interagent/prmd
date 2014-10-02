@@ -1,43 +1,43 @@
-require "prmd/core_ext/optparse"
+require 'prmd/core_ext/optparse'
 
 module Prmd
   module CLI
-    def self.parse_options(argv, opts={})
-      binname = opts.fetch(:bin, "prmd")
+    def self.parse_options(argv, opts = {})
+      binname = opts.fetch(:bin, 'prmd')
       options = {}
 
       commands = {
         combine: OptionParser.new do |opts|
           opts.banner = "#{binname} combine [options] <file or directory>"
-          opts.on("-m", "--meta FILENAME", String, "Set defaults for schemata") do |m|
+          opts.on('-m', '--meta FILENAME', String, 'Set defaults for schemata') do |m|
             options[:meta] = m
           end
         end,
         doc: OptionParser.new do |opts|
           opts.banner = "#{binname} doc [options] <combined schema>"
-          opts.on("-s", "--settings FILENAME", String, "Config file to use") do |s|
+          opts.on('-s', '--settings FILENAME', String, 'Config file to use') do |s|
             settings = YAML.load_file(s) || {}
             options = HashHelpers.deep_symbolize_keys(settings).merge(options)
           end
-          opts.on("-p", "--prepend header,overview", Array, "Prepend files to output") do |p|
+          opts.on('-p', '--prepend header,overview', Array, 'Prepend files to output') do |p|
             options[:prepend] = p
           end
-          opts.on("-c", "--content-type application/json", String, "Content-Type header") do |c|
+          opts.on('-c', '--content-type application/json', String, 'Content-Type header') do |c|
             options[:content_type] = c
           end
         end,
         init: OptionParser.new do |opts|
           opts.banner = "#{binname} init [options] <resource name>"
-          opts.on("-y", "--yaml", "Generate YAML") do |y|
+          opts.on('-y', '--yaml', 'Generate YAML') do |y|
             options[:yaml] = y
           end
         end,
         render: OptionParser.new do |opts|
           opts.banner = "#{binname} render [options] <combined schema>"
-          opts.on("-p", "--prepend header,overview", Array, "Prepend files to output") do |p|
+          opts.on('-p', '--prepend header,overview', Array, 'Prepend files to output') do |p|
             options[:prepend] = p
           end
-          opts.on("-t", "--template templates", String, "Use alternate template") do |t|
+          opts.on('-t', '--template templates', String, 'Use alternate template') do |t|
             options[:template] = t
           end
         end,
@@ -47,7 +47,7 @@ module Prmd
       }
 
       commands.each_value do |opts|
-        opts.on("-o", "--output-file FILENAME", String, "File to write result to") do |n|
+        opts.on('-o', '--output-file FILENAME', String, 'File to write result to') do |n|
           options[:output_file] = n
         end
       end
@@ -57,9 +57,9 @@ module Prmd
       end.join("\n")
 
       global = OptionParser.new do |opts|
-        opts.banner = "Usage: prmd [options] [command [options]]"
+        opts.banner = "Usage: #{binname} [options] [command [options]]"
         opts.separator "\nAvailable options:"
-        opts.on("--version", "Return version") do |opts|
+        opts.on('--version', 'Return version') do |opts|
           puts "prmd #{Prmd::VERSION}"
           exit(0)
         end
@@ -91,7 +91,7 @@ module Prmd
 
     def self.write_result(data, options)
       if output_file = options[:output_file]
-        File.open(output_file, "w") do |f|
+        File.open(output_file, 'w') do |f|
           f.write(data)
         end
       else
@@ -105,11 +105,11 @@ module Prmd
       elsif !$stdin.tty?
         return :io, JSON.load($stdin.read)
       else
-        abort "Nothing to read"
+        abort 'Nothing to read'
       end
     end
 
-    def self.combine(paths, options={})
+    def self.combine(paths, options = {})
       write_result Prmd.combine(paths, options).to_s, options
     end
 
@@ -139,7 +139,7 @@ module Prmd
       write_result data, options
     end
 
-    def self.run(uargv, opts={})
+    def self.run(uargv, opts = {})
       options = parse_options(uargv, opts)
       argv = options.delete(:argv)
       command = options.delete(:command)

@@ -1,20 +1,20 @@
-require "json"
-require "json_schema"
+require 'json'
+require 'json_schema'
 
 module Prmd
   # These schemas are listed manually and in order because they reference each
   # other.
   SCHEMAS = [
-    "schema.json",
-    "hyper-schema.json",
-    "interagent-hyper-schema.json"
+    'schema.json',
+    'hyper-schema.json',
+    'interagent-hyper-schema.json'
   ]
 
   def self.verify(schema_data)
     store = init_document_store
 
-    if !(schema_uri = schema_data["$schema"])
-      return ["Missing $schema."]
+    if !(schema_uri = schema_data['$schema'])
+      return ['Missing $schema.']
     end
 
     # for good measure, make sure that the schema parses and that its

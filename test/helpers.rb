@@ -1,6 +1,6 @@
-require "minitest"
-require "minitest/autorun"
-require "prmd"
+require 'minitest'
+require 'minitest/autorun'
+require 'prmd'
 
 def input_schemas_path
   @@data_path ||= File.join(File.dirname(__FILE__), 'schemata', 'input')

@@ -1,7 +1,7 @@
-require "cgi"
-require "erubis"
-require "json"
-require "yaml"
+require 'cgi'
+require 'erubis'
+require 'json'
+require 'yaml'
 
 require 'prmd/version'
 require 'prmd/load_schema_file'

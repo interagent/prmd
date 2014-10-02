@@ -11,7 +11,7 @@ module Prmd
       doc << options[:prepend].map {|path| File.read(path)}.join("\n") << "\n"
     end
 
-    template = options.fetch(:template) { abort "render: Template was not provided" }
+    template = options.fetch(:template) { abort 'render: Template was not provided' }
     template_dir = File.expand_path(template)
     if not File.directory?(template_dir)  # to keep backward compatibility
       template_dir = File.dirname(template)
