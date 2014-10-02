@@ -1,5 +1,5 @@
 <%=
-  schemata_template = Prmd::Template::load('schemata.erb', options[:template])
+  schemata_template = Prmd::Template::load('schemata.md.erb', options[:template])
 
   schema['properties'].map do |resource, property|
     begin

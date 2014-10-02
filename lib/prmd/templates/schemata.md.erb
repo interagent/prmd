@@ -25,7 +25,7 @@
 <%- end %>
 <%- schemata['links'].each do |link, datum| %>
 <%=
-  Prmd::Template.render('schemata/link.erb', options[:template], {
+  Prmd::Template.render('schemata/link.md.erb', options[:template], {
     options:         options,
     resource:        resource,
     schema:          schema,
