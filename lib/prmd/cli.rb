@@ -3,7 +3,10 @@ require 'prmd/core_ext/optparse'
 require 'prmd/hash_helpers'
 require 'prmd/load_schema_file'
 
+# :nodoc:
 module Prmd
+  ##
+  #
   module CLI
     def self.make_parsers(options, props = {})
       binname = props.fetch(:bin, 'prmd')
@@ -69,7 +72,7 @@ module Prmd
         opts.separator help_text
       end
 
-      return {
+      {
         global: global,
         commands: commands
       }
@@ -105,7 +108,8 @@ module Prmd
     end
 
     def self.write_result(data, options)
-      if output_file = options[:output_file]
+      output_file = options[:output_file]
+      if output_file
         File.open(output_file, 'w') do |f|
           f.write(data)
         end
@@ -139,15 +143,15 @@ module Prmd
     end
 
     def self.doc(filename, options)
-      template = File.expand_path(File.join(File.dirname(__FILE__), 'templates'))
+      template = File.expand_path('templates', File.dirname(__FILE__))
       render filename, options.merge(template: template)
     end
 
     def self.verify(filename, options)
       _, data = try_read(filename)
       errors = Prmd.verify(data)
-      errors.map! { |error| "#{filename}: #{error}" } if filename
       unless errors.empty?
+        errors.map! { |error| "#{filename}: #{error}" } if filename
         errors.each { |error| $stderr.puts(error) }
         exit(1)
       end

@@ -14,12 +14,10 @@ module Prmd
   def self.init(resource, options = {})
     gen = Generate.make_generator
 
-    generator_options = {}
+    generator_options = { resource: nil, parent: nil }
     if resource
       parent = nil
-      if resource.include?('/')
-        parent, resource = resource.split('/')
-      end
+      parent, resource = resource.split('/') if resource.include?('/')
       generator_options[:parent] = parent
       generator_options[:resource] = resource
     end
