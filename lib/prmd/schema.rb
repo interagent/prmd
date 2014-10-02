@@ -72,10 +72,10 @@ module Prmd
       if value.key?('example')
         value['example']
       elsif value.key?('anyOf')
-        idRef = value['anyOf'].detect do |ref|
+        id_ref = value['anyOf'].find do |ref|
           ref['$ref'] && ref['$ref'].split('/').last == 'id'
         end
-        ref = idRef || value['anyOf'].first
+        ref = id_ref || value['anyOf'].first
         schema_example(ref)
       elsif value.key?('properties') # nested properties
         schema_example(value)
