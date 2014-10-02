@@ -39,7 +39,7 @@ module Prmd
       end
       begin
         datum = @data
-        key.gsub(%r{[^#]*#/}, '').split('/').each do |fragment|
+        key.gsub(/[^#]*#\//, '').split('/').each do |fragment|
           datum = datum[fragment]
         end
         # last dereference will have nil key, so compact it out

@@ -72,7 +72,7 @@ module Prmd
           datum['$ref'] = '#/definitions' + datum['$ref'].gsub('#', '').gsub('/schemata', '')
         end
         if datum.key?('href') && datum['href'].is_a?(String)
-          datum['href'] = datum['href'].gsub('%23', '').gsub(%r{%2Fschemata(%2F[^%]*%2F)}, '%23%2Fdefinitions\1')
+          datum['href'] = datum['href'].gsub('%23', '').gsub(/%2Fschemata(%2F[^%]*%2F)/, '%23%2Fdefinitions\1')
         end
         datum.each { |k,v| datum[k] = reference_localizer.call(v) }
       else

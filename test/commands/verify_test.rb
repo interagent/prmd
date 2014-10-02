@@ -15,8 +15,8 @@ class InteragentHyperSchemaVerifyTest < Minitest::Test
     data.delete('title')
     errors = verify
     assert_equal 1, errors.count
-    assert_match %r{^#: }, errors[0]
-    assert_match %r{Missing required keys "title" in object}, errors[0]
+    assert_match /^#: /, errors[0]
+    assert_match /Missing required keys "title" in object/, errors[0]
   end
 
   def test_api_property_format
@@ -25,7 +25,7 @@ class InteragentHyperSchemaVerifyTest < Minitest::Test
     })
     errors = verify
     assert_match %r{^#/properties/app: }, errors[0]
-    assert_match %r{Missing required keys "\$ref" in object}, errors[0]
+    assert_match /Missing required keys "\$ref" in object/, errors[0]
   end
 
   #
@@ -37,7 +37,7 @@ class InteragentHyperSchemaVerifyTest < Minitest::Test
     errors = verify
     assert_equal 1, errors.count
     assert_match %r{^#/definitions/app: }, errors[0]
-    assert_match %r{Missing required keys "title" in object}, errors[0]
+    assert_match /Missing required keys "title" in object/, errors[0]
   end
 
   def test_resource_identity_format
@@ -47,7 +47,7 @@ class InteragentHyperSchemaVerifyTest < Minitest::Test
     errors = verify
     assert_equal 1, errors.count
     assert_match %r{^#/definitions/app/definitions/identity: }, errors[0]
-    assert_match %r{any subschema of "anyOf" condition.}, errors[0]
+    assert_match /any subschema of "anyOf" condition./, errors[0]
   end
 
   # an empty schema can be specified to bypass the identity check
@@ -66,7 +66,7 @@ class InteragentHyperSchemaVerifyTest < Minitest::Test
     errors = verify
     assert_equal 1, errors.count
     assert_match %r{^#/definitions/app/properties: }, errors[0]
-    assert_match %r{Extra keys in object: my-property}, errors[0]
+    assert_match /Extra keys in object: my-property/, errors[0]
   end
 
   def test_resource_strict_properties
@@ -76,7 +76,7 @@ class InteragentHyperSchemaVerifyTest < Minitest::Test
     errors = verify
     assert_equal 1, errors.count
     assert_match %r{^#/definitions/app/strictProperties: }, errors[0]
-    assert_match %r{to be a member of enum \[true\], value was: false}, errors[0]
+    assert_match /to be a member of enum \[true\], value was: false/, errors[0]
   end
 
   #
@@ -90,7 +90,7 @@ class InteragentHyperSchemaVerifyTest < Minitest::Test
     errors = verify
     assert_equal 1, errors.count
     assert_match %r{^#/definitions/app/definitions/name: }, errors[0]
-    assert_match %r{Data matched subschema of "not" condition}, errors[0]
+    assert_match /Data matched subschema of "not" condition/, errors[0]
   end
 
   def test_resource_definition_required
@@ -98,7 +98,7 @@ class InteragentHyperSchemaVerifyTest < Minitest::Test
     errors = verify
     assert_equal 1, errors.count
     assert_match %r{^#/definitions/app/definitions/name: }, errors[0]
-    assert_match %r{Missing required keys "description" in object}, errors[0]
+    assert_match /Missing required keys "description" in object/, errors[0]
   end
 
   #
@@ -112,7 +112,7 @@ class InteragentHyperSchemaVerifyTest < Minitest::Test
     errors = verify
     assert_equal 1, errors.count
     assert_match %r{^#/definitions/app/links/0/href: }, errors[0]
-    assert_match %r{Expected string to match pattern}, errors[0]
+    assert_match /Expected string to match pattern/, errors[0]
   end
 
   def test_resource_link_required
@@ -120,7 +120,7 @@ class InteragentHyperSchemaVerifyTest < Minitest::Test
     errors = verify
     assert_equal 1, errors.count
     assert_match %r{^#/definitions/app/links/0: }, errors[0]
-    assert_match %r{Missing required keys "method" in object}, errors[0]
+    assert_match /Missing required keys "method" in object/, errors[0]
   end
 
   private
