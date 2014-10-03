@@ -102,7 +102,7 @@ module Prmd
     end
 
     def href
-      (@data['links'].detect { |link| link['rel'] == 'self' } || {})['href']
+      (@data['links'] && @data['links'].detect { |link| link['rel'] == 'self' } || {})['href']
     end
 
     def to_json
