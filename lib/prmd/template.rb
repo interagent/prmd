@@ -21,7 +21,7 @@ module Prmd
         fallback = template_path
 
         resolved = File.join(base, path)
-        if not File.exist?(resolved)
+        unless File.exist?(resolved)
           resolved = File.join(fallback, path)
         end
 
