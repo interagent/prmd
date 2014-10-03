@@ -16,7 +16,9 @@ module Prmd
 
         OptionParser.new do |opts|
           opts.banner = "#{binname} verify [options] <combined schema>"
-
+          opts.on('-y', '--yaml', 'Generate YAML') do |y|
+            yield :yaml, y
+          end
           opts.on('-o', '--output-file FILENAME', String, 'File to write result to') do |n|
             yield :output_file, n
           end
@@ -39,7 +41,8 @@ module Prmd
           errors.each { |error| $stderr.puts(error) }
           exit(1)
         end
-        write_result data, options
+        result = options[:yaml] ? data.to_yaml : JSON.pretty_generate(data)
+        write_result result, options
       end
     end
   end
