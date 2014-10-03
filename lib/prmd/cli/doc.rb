@@ -62,7 +62,7 @@ module Prmd
         _, data = try_read(filename)
         schema = Prmd::Schema.new(data)
         opts = options.merge(template: template)
-        write_result Prmd.render(schema, options), opts
+        write_result Prmd.render(schema, opts), options
       end
     end
   end
