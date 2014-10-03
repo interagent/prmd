@@ -67,7 +67,7 @@ module Prmd
       def parse_options(argv, options = {})
         opts = {}
         parser = make_parser(options) do |key, value|
-          set_option(options, key, value)
+          set_option(opts, key, value)
         end
         argv = execute_parser(parser, argv)
         opts[:argv] = argv
