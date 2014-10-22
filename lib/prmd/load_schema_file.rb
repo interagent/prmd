@@ -1,15 +1,25 @@
-module Prmd
-  def self.load_schema_file(filename)
-    data = File.read(filename)
-    extname = File.extname(filename)
+require 'yaml'
+require 'json'
 
-    case extname.downcase
-    when ".yaml", ".yml"
-      YAML.load(data)
-    when ".json"
-      JSON.load(data)
-    else
-      abort "Cannot load schema file #{filename}, (unsupported file extension #{extname})"
+# :nodoc:
+module Prmd
+  # Attempts to load either a json or yaml file, the type is determined by
+  # filename extension.
+  #
+  # @param [String] filename
+  # @return [Object] data
+  def self.load_schema_file(filename)
+    extname = File.extname(filename)
+    File.open(filename) do |file|
+      case extname.downcase
+      when '.yaml', '.yml'
+        YAML.load(file.read)
+      when '.json'
+        JSON.load(file.read)
+      else
+        abort "Cannot load schema file #{filename}" \
+              "(unsupported file extension #{extname})"
+      end
     end
   end
 end

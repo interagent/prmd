@@ -1,27 +1,37 @@
+require 'prmd/core/renderer'
+
+# :nodoc:
 module Prmd
-  def self.render(schema, options={})
+  # Render helper module
+  module Render
+    # Retrieve the schema template
+    #
+    # @param [Hash<Symbol, Object>] options
+    # @return (see Prmd::Template.load_template)
+    def self.get_template(options)
+      template = options.fetch(:template) do
+        abort 'render: Template was not provided'
+      end
+      template_dir = File.expand_path(template)
+      # to keep backward compatibility
+      template_dir = File.dirname(template) unless File.directory?(template_dir)
+      Prmd::Template.load_template('schema.erb', template_dir)
+    end
+  end
+
+  # Render provided schema to Markdown
+  #
+  # @param [Prmd::Schema] schema
+  # @return [String] rendered schema in Markdown
+  def self.render(schema, options = {})
+    renderer = Prmd::Renderer.new(template: Render.get_template(options))
     doc = ''
-    options[:http_header] ||= {}
-    options[:content_type] ||= 'application/json'
-    options[:doc] ||= {}
-    options[:doc][:url_style] ||= 'default'
-    options[:doc][:disable_title_and_description] ||= false
-
     if options[:prepend]
-      doc << options[:prepend].map {|path| File.read(path)}.join("\n") << "\n"
+      doc <<
+      options[:prepend].map { |path| File.read(path) }.join("\n") <<
+      "\n"
     end
-
-    template = options.fetch(:template) { abort "render: Template was not provided" }
-    template_dir = File.expand_path(template)
-    if not File.directory?(template_dir)  # to keep backward compatibility
-      template_dir = File.dirname(template)
-    end
-
-    doc << Prmd::Template.render('schema.erb', template_dir, {
-      options:         options,
-      schema:          schema
-    })
-
+    doc << renderer.render(schema, options)
     doc
   end
 end

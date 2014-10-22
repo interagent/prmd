@@ -1,4 +1,5 @@
-# Prmd
+# Prmd [![Travis Status](https://travis-ci.org/interagent/prmd.svg)](https://travis-ci.org/interagent/prmd)
+
 [![Gem Version](https://badge.fury.io/rb/prmd.svg)](http://badge.fury.io/rb/prmd)
 
 JSON Schema tooling: scaffold, verify, and generate documentation
@@ -116,6 +117,35 @@ Available options (and their defaults)
     "disable_title_and_description": false // remove the title and the description, useful when using your own custom header
   }
 }
+```
+
+## Use as rake task
+
+In addition, prmd can be used via rake tasks
+
+```ruby
+# Rakefile
+require 'prmd/rake_tasks/combine'
+require 'prmd/rake_tasks/verify'
+require 'prmd/rake_tasks/doc'
+
+namespace :schema do
+  Prmd::RakeTasks::Combine.new do |t|
+    t.options[:meta] = 'schema/meta.json'
+    t.paths << 'schema/schemata/api'
+    t.output_file = 'schema/api.json'
+  end
+
+  Prmd::RakeTasks::Verify.new do |t|
+    t.files << 'schema/api.json'
+  end
+
+  Prmd::RakeTasks::Doc.new do |t|
+    t.files = { 'schema/api.json' => 'schema/api.md' }
+  end
+end
+
+task default: ['schema:combine', 'schema:verify', 'schema:doc']
 ```
 
 ## File Layout
