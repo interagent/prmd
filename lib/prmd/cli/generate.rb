@@ -35,8 +35,9 @@ module Prmd
       #
       # @param (see Prmd::CLI::Base#execute)
       # @return (see Prmd::CLI::Base#execute)
-      def self.execute(options = {})
+      def self.execute(options = {}, parser)
         name = options.fetch(:argv).first
+        abort parser if name.nil? || name.empty?
         write_result Prmd.init(name, options), options
       end
     end

@@ -110,7 +110,7 @@ module Prmd
       # @param [Hash<Symbol, Object>] options
       # @return [void]
       # @abstract
-      def execute(options = {})
+      def execute(options = {}, parser)
         #
       end
 
@@ -119,7 +119,7 @@ module Prmd
       #
       # @param [Hash<Symbol, Object>] options
       # @return [void]
-      def noop_execute(options = {})
+      def noop_execute(options = {}, parser)
         $stderr.puts options
       end
 
@@ -133,12 +133,12 @@ module Prmd
       # @param [Array<String>] argv
       # @param [Hash<Symbol, Object>] options
       # @return [void]
-      def run(argv, options = {})
+      def run(argv, options = {}, parser)
         options = options.merge(parse_options(argv, options))
         if options[:noop]
-          noop_execute(options)
+          noop_execute(options, parser)
         else
-          execute(options)
+          execute(options, parser)
         end
       end
 

@@ -13,13 +13,15 @@ module Prmd
     File.open(filename) do |file|
       case extname.downcase
       when '.yaml', '.yml'
-        YAML.load(file.read)
+        result = YAML.load(file.read)
       when '.json'
-        JSON.load(file.read)
+        result = JSON.load(file.read)
       else
         abort "Cannot load schema file #{filename}" \
               "(unsupported file extension #{extname})"
       end
+      abort "Cannot parse schema file #{filename}" if result.nil?
+      result
     end
   end
 end

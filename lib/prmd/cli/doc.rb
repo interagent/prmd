@@ -56,8 +56,9 @@ module Prmd
       #
       # @param (see Prmd::CLI::Base#execute)
       # @return (see Prmd::CLI::Base#execute)
-      def self.execute(options = {})
+      def self.execute(options = {}, parser)
         filename = options.fetch(:argv).first
+        abort parser if filename.nil? || filename.empty?
         template = File.expand_path('templates', File.dirname(__FILE__))
         _, data = try_read(filename)
         schema = Prmd::Schema.new(data)
