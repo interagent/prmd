@@ -63,7 +63,7 @@ HTTP/1.1 <%=
 <%=   response_example['body'] %>
 <%- else %>
 <%-   if link['rel'] == 'empty' %>
-<%-   elsif link.has_key?('targetSchema') && link['targetSchema'].has_key?('properties') %>
+<%-   elsif link.has_key?('targetSchema') %>
 <%=     JSON.pretty_generate(schema.schema_example(link['targetSchema'])) %>
 <%-   elsif link['rel'] == 'instances' %>
 <%=     JSON.pretty_generate([schema.schemata_example(resource)]) %>
