@@ -5,7 +5,12 @@
     get_params = []
 
     if link.has_key?('schema')
-      data.merge!(schema.schema_example(link['schema']))
+      payload = schema.schema_example(link['schema'])
+      if payload.is_a?(Array)
+        data = payload
+      else
+        data.merge!(payload)
+      end
 
       if link['method'].upcase == 'GET' && !data.empty?
         get_params << Prmd::UrlGenerator.new({schema: schema, link: link, options: options}).url_params
