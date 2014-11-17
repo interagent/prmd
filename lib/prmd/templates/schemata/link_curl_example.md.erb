@@ -1,18 +1,13 @@
 ```bash
   <%-
-    data = {}
+    data = nil
     path = path.gsub(/{([^}]*)}/) {|match| '$' + match.gsub(/[{}]/, '').upcase}
     get_params = []
 
     if link.has_key?('schema')
-      payload = schema.schema_example(link['schema'])
-      if payload.is_a?(Array)
-        data = payload
-      else
-        data.merge!(payload)
-      end
+      data = schema.schema_example(link['schema'])
 
-      if link['method'].upcase == 'GET' && !data.empty?
+      if link['method'].upcase == 'GET' && !data.nil?
         get_params << Prmd::UrlGenerator.new({schema: schema, link: link, options: options}).url_params
       end
     end
@@ -25,7 +20,7 @@ $ curl -n -X <%= link['method'] %> <%= schema.href %><%= path -%><%- unless opti
   <%- options[:http_header].each do |key, value| %>
   -H "<%= key %>: <%= value %>" \
   <%- end %>
-<%- if !data.empty? && link['method'].upcase != 'GET' %> \
+<%- if !data.nil? && link['method'].upcase != 'GET' %> \
   -d '<%= JSON.pretty_generate(data) %>'
 <%- elsif !get_params.empty? && link['method'].upcase == 'GET' %> -G \
   -d <%= get_params.join(" \\\n  -d ") %>
