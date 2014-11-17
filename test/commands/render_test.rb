@@ -25,6 +25,13 @@ class InteragentRenderTest < Minitest::Test
     assert_match /version.*v10\.9\.rc1/, markdown
   end
 
+  def test_render_for_example_as_an_array
+    # matches -d '[{...}]' taking into account line breaks and spacing
+    expression = /-d '\[[\s\n]+\{[\n\s]+\"name\": \"EXAMPLE\",[\n\s]+\"value\": \"example\"[\s\n]+\}[\n\s]+\]/
+    markdown = render
+    assert_match expression, markdown
+  end
+
   private
 
   def data
@@ -62,6 +69,56 @@ class InteragentRenderTest < Minitest::Test
           ],
           'properties' => {
           }
+        },
+        'config-var' => {
+          'description' => 'A configuration variable for an app.',
+          'title' => 'Config-var',
+          'type' => 'object',
+          'definitions' => {
+            'name' => {
+              'description' => 'The config-var\'s name.',
+              'type'        => 'string',
+              'example'     => 'EXAMPLE'
+            },
+            'value' => {
+              'description' => 'The config-var\'s value.',
+              'type'        => 'string',
+              'example'     => 'example'
+            },
+          },
+          'links' => [
+            {
+              'description' => 'Create many config-vars.',
+              'href' => '/config-vars',
+              'method' => 'PATCH',
+              'rel' => 'instances',
+              'title' => 'Create Config-var',
+              'schema' => {
+                'type' => [
+                  'array'
+                ],
+                'items' => {
+                  'name' => {
+                    '$ref' => '#/definitions/config-var/definitions/name'
+                  },
+                  'value' => {
+                    '$ref' => '#/definitions/config-var/definitions/value'
+                  },
+                  'example' => [
+                    { 'name' => 'EXAMPLE', 'value' => 'example' }
+                  ]
+                }
+              }
+            }
+          ],
+          'properties' => {
+            'name' => {
+              '$ref' => '#/definitions/config-var/definitions/name'
+            },
+            'value' => {
+              '$ref' => '#/definitions/config-var/definitions/value'
+            }
+          }
         }
       },
       'links' => [
@@ -73,6 +130,9 @@ class InteragentRenderTest < Minitest::Test
       'properties' => {
         'app' => {
           '$ref' => '#/definitions/app'
+        },
+        'config-var' => {
+          '$ref' => '#/definitions/config-var'
         }
       },
       'type' => 'object'

@@ -103,7 +103,11 @@ module Prmd
       elsif value.key?('items') # array of objects
         _, items = dereference(value['items'])
         if value['items'].key?('example')
-          [items['example']]
+          if items["example"].is_a?(Array)
+            items["example"]
+          else
+            [items['example']]
+          end
         else
           [schema_example(items)]
         end
