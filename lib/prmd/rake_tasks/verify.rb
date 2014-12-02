@@ -19,13 +19,21 @@ module Prmd
 
       # Creates a new task with name +name+.
       #
-      # @param [String, Symbol] name the name of the rake task
-      def initialize(name = :verify)
-        @files = []
+      # @param [Hash<Symbol, Object>] options
+      #   .option [Array<String>] files  schema files to verify
+      def initialize(options = {}, &block)
+        @files = options.fetch(:files) { [] }
         super
       end
 
       private
+
+      # Default name of the rake task
+      #
+      # @return [Symbol]
+      def default_name
+        :verify
+      end
 
       # Defines the rake task
       #

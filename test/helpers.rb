@@ -55,10 +55,28 @@ module CliBaseTestHelpers
   end
 end
 
+module PrmdTestHelpers
+  module Paths
+    def self.schemas(*args)
+      File.join(File.expand_path('schemata', File.dirname(__FILE__)), *args)
+    end
+
+    def self.input_schemas(*args)
+      schemas('input', *args)
+    end
+
+    def self.output_schemas(*args)
+      schemas('output', *args)
+    end
+  end
+end
+
 def input_schemas_path(*args)
-  @data_path ||= File.expand_path(File.join(*args),
-                                  File.join(File.dirname(__FILE__),
-                                            'schemata/input'))
+  PrmdTestHelpers::Paths.input_schemas(*args)
+end
+
+def output_schemas_path(*args)
+  PrmdTestHelpers::Paths.output_schemas(*args)
 end
 
 def user_input_schema
