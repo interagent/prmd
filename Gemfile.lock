@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    prmd (0.6.2)
+    prmd (0.7.0)
       erubis (~> 2.7)
       json_schema (~> 0.3, >= 0.3.1)
 
@@ -10,8 +10,8 @@ GEM
   specs:
     erubis (2.7.0)
     json_schema (0.3.1)
-    minitest (5.4.2)
-    rake (10.3.2)
+    minitest (5.4.3)
+    rake (10.4.1)
 
 PLATFORMS
   ruby
