@@ -21,14 +21,26 @@ module Prmd
 
       # Creates a new task with name +name+.
       #
-      # @param [String, Symbol] name the name of the rake task
-      def initialize(name = :doc, &block)
-        @files = []
-        super name, &block
+      # @overload initialize(name)
+      #   @param [String]
+      # @overload initialize(options)
+      #   @param [Hash<Symbol, Object>] options
+      #     .option [Array<String>, Hash<String, String>] files  schema files
+      def initialize(*args, &block)
+        options = legacy_parameters(*args)
+        @files = options.fetch(:files) { [] }
+        super options, &block
         @options[:template] ||= Prmd::Template.template_dirname
       end
 
       private
+
+      # Default name of the rake task
+      #
+      # @return [Symbol]
+      def default_name
+        :doc
+      end
 
       # Render file to markdown
       #
@@ -40,13 +52,17 @@ module Prmd
         Prmd.render(schema, options)
       end
 
+      # Render +infile+ to +outfile+
+      #
       # @param [String] infile
       # @param [String] outfile
       # @return [void]
       def render_to_file(infile, outfile)
         result = render_file(infile)
-        File.open(outfile, 'w') do |file|
-          file.write(result)
+        if outfile
+          File.open(outfile, 'w') do |file|
+            file.write(result)
+          end
         end
       end
 

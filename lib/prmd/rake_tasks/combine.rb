@@ -24,10 +24,26 @@ module Prmd
 
       # Creates a new task with name +name+.
       #
-      # @param [String, Symbol] name the name of the rake task
-      def initialize(name = :combine)
-        @paths = []
-        super
+      # @overload initialize(name)
+      #   @param [String]
+      # @overload initialize(options)
+      #   @param [Hash<Symbol, Object>] options
+      #     .option [String] output_file
+      #     .option [Array<String>] paths
+      def initialize(*args, &block)
+        options = legacy_parameters(*args)
+        @paths = options.fetch(:paths) { [] }
+        @output_file = options[:output_file]
+        super options, &block
+      end
+
+      private
+
+      # Default name of the rake task
+      #
+      # @return [Symbol]
+      def default_name
+        :combine
       end
 
       protected

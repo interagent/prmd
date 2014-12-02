@@ -1,0 +1,9 @@
+{
+  "id": "rake_task_meta",
+  "title": "Rake Task Test",
+  "links": [{
+    "href": "https://prmd.rake_task_test.io",
+    "rel": "self"
+  }],
+  "description": "Testing schema for Prmd RakeTasks"
+}
