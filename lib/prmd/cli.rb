@@ -73,7 +73,7 @@ module Prmd
       abort parser unless commands.include?(command)
       options[:argv] = com_argv
       options[:command] = command
-      options
+      [options, parser]
     end
 
     # Execute the Prmd CLI, or its subcommands
@@ -82,21 +82,21 @@ module Prmd
     # @param [Hash<Symbol, Object>] opts
     # @return [void]
     def self.run(uargv, opts = {})
-      options = parse_options(uargv, opts)
+      options, parser = parse_options(uargv, opts)
       argv = options.delete(:argv)
       command = options.delete(:command)
 
       case command
       when :combine
-        CLI::Combine.run(argv, options)
+        CLI::Combine.run(argv, options, parser)
       when :doc
-        CLI::Doc.run(argv, options)
+        CLI::Doc.run(argv, options, parser)
       when :init
-        CLI::Generate.run(argv, options)
+        CLI::Generate.run(argv, options, parser)
       when :render
-        CLI::Render.run(argv, options)
+        CLI::Render.run(argv, options, parser)
       when :verify
-        CLI::Verify.run(argv, options)
+        CLI::Verify.run(argv, options, parser)
       end
     end
 

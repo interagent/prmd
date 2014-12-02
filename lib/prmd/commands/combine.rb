@@ -80,6 +80,7 @@ module Prmd
       schema = base['$schema']
       meta = {}
       meta = Prmd.load_schema_file(options[:meta]) if options[:meta]
+      abort "Loading meta file failed" if meta.nil? && options[:meta]
       combiner = Prmd::Combiner.new(meta: meta, base: base, schema: schema)
       combiner.combine(*schemata)
     end
