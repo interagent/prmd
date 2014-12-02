@@ -24,13 +24,17 @@ module Prmd
 
       # Creates a new task with name +name+.
       #
-      # @param [Hash<Symbol, Object>] options
-      #   .option [String] output_file
-      #   .option [Array<String>] paths
-      def initialize(options = {}, &block)
+      # @overload initialize(name)
+      #   @param [String]
+      # @overload initialize(options)
+      #   @param [Hash<Symbol, Object>] options
+      #     .option [String] output_file
+      #     .option [Array<String>] paths
+      def initialize(*args, &block)
+        options = legacy_parameters(*args)
         @paths = options.fetch(:paths) { [] }
         @output_file = options[:output_file]
-        super
+        super options, &block
       end
 
       private

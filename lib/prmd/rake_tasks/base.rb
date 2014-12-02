@@ -33,6 +33,23 @@ module Prmd
 
       private
 
+      # This method will be removed in the future
+      # @api private
+      def legacy_parameters(*args)
+        if args.size == 0
+          return {}
+        else
+          arg, = *args
+          case arg
+          when String, Symbol
+            warn "#{self.class}.new(name) has been deprecated, use .new(name: name) instead"
+            return { name: arg }
+          else
+            return arg
+          end
+        end
+      end
+
       # Default name of the rake task
       #
       # @return [Symbol]
