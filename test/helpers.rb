@@ -71,6 +71,10 @@ module PrmdTestHelpers
   end
 end
 
+def schemas_path(*args)
+  PrmdTestHelpers::Paths.schemas(*args)
+end
+
 def input_schemas_path(*args)
   PrmdTestHelpers::Paths.input_schemas(*args)
 end

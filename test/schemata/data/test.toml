@@ -1,0 +1,4 @@
+test = "yes"
+
+[object]
+is_a = "Object"
