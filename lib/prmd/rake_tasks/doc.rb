@@ -59,8 +59,10 @@ module Prmd
       # @return [void]
       def render_to_file(infile, outfile)
         result = render_file(infile)
-        File.open(outfile, 'w') do |file|
-          file.write(result)
+        if outfile
+          File.open(outfile, 'w') do |file|
+            file.write(result)
+          end
         end
       end
 
