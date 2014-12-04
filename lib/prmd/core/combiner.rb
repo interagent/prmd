@@ -65,8 +65,8 @@ module Prmd
         id_ary = id.split('/').last
 
         if s = schemata_map[id]
-          $stderr.puts "`#{id}` (from #{schema.filename}) was already defined" \
-                       "in `#{s.filename}` and will overwrite the first" \
+          $stderr.puts "`#{id}` (from #{schema.filename}) was already defined " \
+                       "in `#{s.filename}` and will overwrite the first " \
                        "definition"
         end
         # avoinding damaging the original schema
