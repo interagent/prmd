@@ -1,6 +1,6 @@
 {
-  "$schema": "http://json-schema.org/draft-04/hyper-schema",
+  "$schema": "http://interagent.github.io/interagent-hyper-schema",
+  "type": ["object"],
   "definitions": {},
-  "properties": {},
-  "type": ["object"]
+  "properties": {}
 }
