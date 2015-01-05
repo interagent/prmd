@@ -4,6 +4,7 @@
   link_schema_properties_template = Prmd::Template.load_template('link_schema_properties.md.erb', options[:template])
 -%>
 ### <%= title %> <%= link['title'] %>
+
 <%= link['description'] %>
 
 ```
@@ -18,16 +19,19 @@
   %>
   <%- unless required.empty? %>
 #### Required Parameters
+
 <%= link_schema_properties_template.result(params: required, schema: schema, options: options) %>
 
   <%- end %>
   <%- unless optional.empty? %>
 #### Optional Parameters
+
 <%= link_schema_properties_template.result(params: optional, schema: schema, options: options) %>
   <%- end %>
 <%- end %>
 
 #### Curl Example
+
 <%=
   curl_options = options.dup
   http_header = link['http_header'] || {}
@@ -43,6 +47,7 @@
 %>
 
 #### Response Example
+
 ```
 <%- if response_example %>
 <%=   response_example['head'] %>
@@ -58,6 +63,7 @@ HTTP/1.1 <%=
   end %>
 <%- end %>
 ```
+
 ```json
 <%- if response_example %>
 <%=   response_example['body'] %>

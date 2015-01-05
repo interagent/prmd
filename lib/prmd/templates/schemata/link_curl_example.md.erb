@@ -25,5 +25,4 @@ $ curl -n -X <%= link['method'] %> <%= schema.href %><%= path -%><%- unless opti
 <%- elsif !get_params.empty? && link['method'].upcase == 'GET' %> -G \
   -d <%= get_params.join(" \\\n  -d ") %>
 <%- end %>
-
 ```
