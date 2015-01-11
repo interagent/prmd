@@ -2,6 +2,8 @@
   def extract_attributes(schema, properties)
     attributes = []
 
+    _, properties = schema.dereference(properties)
+
     properties.each do |key, value|
       # found a reference to another element:
       _, value = schema.dereference(value)
