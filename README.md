@@ -171,12 +171,14 @@ We suggest the following file layout for JSON schema related files:
 /docs (top-level directory for project documentation)
   /schema (API schema documentation)
     /schemata
-      /{resource.{json,yml}} (individual resource schema)
-    /meta.{json,yml} (overall API metadata)
+      /{resource.[json,yml]} (individual resource schema)
+    /meta.[json,yml] (overall API metadata)
     /overview.md (preamble for generated API docs)
     /schema.json (complete generated JSON schema file)
     /schema.md (complete generated API documentation file)
 ```
+
+where `[json,yml]` means that it could be either `json` or `yml`.
 
 ## Contributing
 
