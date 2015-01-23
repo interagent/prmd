@@ -84,6 +84,9 @@ Links that expect a json-encoded body as input MUST also include the following a
 The `schema` object MAY also include a `required` array to define all attributes for this link, which can not be omitted.
 If this field is not present, all attributes in this link are considered as optional.
 
+Links that expect a custom http header MUST include the following attributes:
+* `http_header` - an object which has the key as the header name, and value as an example header value.
+
 ```javascript
 {
   "links": [
@@ -92,6 +95,7 @@ If this field is not present, all attributes in this link are considered as opti
       "href":         "/resources",
       "method":       "POST",
       "rel":          "create",
+      "http_header": { "Custom-Header": "examplevalue" },
       "schema":       {
         "properties": {
           "owner":  { "$ref": "/schemata/user#/definitions/identity" },
