@@ -65,8 +65,8 @@ HTTP/1.1 <%=
 <%=     JSON.pretty_generate(schema.schema_example(link['targetSchema'])) %>
 <%-   elsif link['rel'] == 'instances' %>
 <%=     JSON.pretty_generate([schema.schemata_example(resource)]) %>
-<%-   else %>
-<%=     JSON.pretty_generate(schema.schemata_example(resource)) %>
+<%-   elsif example = schema.schemata_example(resource)%>
+<%=     JSON.pretty_generate(example) %>
 <%-   end %>
 <%- end %>
 ```

@@ -73,8 +73,8 @@ module Prmd
       def define
         desc 'Verifying schemas' unless Rake.application.last_comment
         task name, :infile, :outfile do |t, arg|
-          if arg[:infile]
-            out_name = outfile || infile.ext('md')
+          if infile = arg[:infile]
+            out_name = arg[:outfile] || infile.ext('md')
             render_to_file(infile, out_name)
           end
 
