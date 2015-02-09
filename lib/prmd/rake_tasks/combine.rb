@@ -52,8 +52,13 @@ module Prmd
       # @return [void]
       def define
         desc 'Combine schemas' unless Rake.application.last_comment
-        task(name) do
-          result = Prmd.combine(paths, options)
+        task name, [:meta, :paths, :outfile] do |t, arg|
+
+          self.output_file = arg[:outfile] if arg[:outfile]
+          self.paths += arg[:paths].split(",") if arg[:paths]
+          self.options[:meta] = arg[:meta] if arg[:meta]
+
+          result = Prmd.combine(self.paths, options)
           if output_file
             File.open(output_file, 'w') do |file|
               file.write(result)

@@ -72,14 +72,21 @@ module Prmd
       # @return [void]
       def define
         desc 'Verifying schemas' unless Rake.application.last_comment
-        task(name) do
-          if files.is_a?(Hash)
-            files.each do |infile, outfile|
-              render_to_file(infile, outfile)
-            end
-          else
-            files.each do |infile|
-              render_to_file(infile, infile.ext('md'))
+        task name, :infile, :outfile do |t, arg|
+          if arg[:infile]
+            out_name = outfile || infile.ext('md')
+            render_to_file(infile, out_name)
+          end
+
+          unless files.empty?
+            if files.is_a?(Hash)
+              files.each do |infile, outfile|
+                render_to_file(infile, outfile)
+              end
+            else
+              files.each do |infile|
+                render_to_file(infile, infile.ext('md'))
+              end
             end
           end
         end

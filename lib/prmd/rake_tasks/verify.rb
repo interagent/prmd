@@ -59,9 +59,10 @@ module Prmd
       # @return [void]
       def define
         desc 'Verifying schemas' unless Rake.application.last_comment
-        task(name) do
+        task name, [:files] do |t, arg|
+          self.files += arg[:files].split(",").map(&:strip) unless arg[:files].empty?
           all_errors = []
-          files.each do |filename|
+          self.files.each do |filename|
             all_errors.concat(verify_file(filename))
           end
           fail unless all_errors.empty?
