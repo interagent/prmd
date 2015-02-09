@@ -1,6 +1,6 @@
 require File.expand_path(File.join(File.dirname(__FILE__), '..', 'helpers'))
 require 'prmd/cli/render'
-
+require 'pry'
 class PrmdCliRenderTest < Minitest::Test
   include CliBaseTestHelpers
 

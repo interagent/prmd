@@ -18,7 +18,8 @@ module Prmd
         http_header: {},
         content_type: 'application/json',
         doc: {},
-        prepend: nil
+        prepend: nil,
+        schema: "schemata.md.erb"
       }
     end
 

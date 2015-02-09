@@ -31,6 +31,9 @@ module Prmd
           opts.on('-o', '--output-file FILENAME', String, 'File to write result to') do |n|
             yield :output_file, n
           end
+          opts.on('-t', '--to slate', String, 'Target schema') do |t|
+            yield :schema, "schemata_#{t}.md.erb"
+          end
         end
       end
 

@@ -1,0 +1,29 @@
+ <%-
+  return unless schemata.has_key?('links') && !schemata['links'].empty?
+
+  Prmd::Template.render('schemata/helper.erb', options[:template], {
+    options:         options,
+    resource:        resource,
+    schema:          schema,
+    schemata:        schemata
+  })
+
+  title = schemata['title'].split(' - ', 2).last
+-%>
+<%- unless options[:doc][:disable_title_and_description] %>
+# <%= title %>
+<%= schemata['description'] %>
+<%- end -%>
+
+<%- schemata['links'].each do |link, datum| %>
+<%=
+  Prmd::Template.render('schemata/link.md.erb', options[:template], {
+    options:         options,
+    resource:        resource,
+    schema:          schema,
+    schemata:        schemata,
+    link:            link,
+    title:           title
+  })
+%>
+<%- end -%>

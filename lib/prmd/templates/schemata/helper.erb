@@ -1,16 +1,17 @@
 <%-
   def extract_attributes(schema, properties)
-    attributes = []
+    attributes = {principal: []}
 
     _, properties = schema.dereference(properties)
 
     properties.each do |key, value|
       # found a reference to another element:
+
       _, value = schema.dereference(value)
 
       # include top level reference to nested things, when top level is nullable
       if value.has_key?('type') && value['type'].include?('null') && (value.has_key?('items') || value.has_key?('properties'))
-        attributes << build_attribute(schema, key, value)
+        attributes[:principal] << build_attribute(schema, key, value)
       end
 
       if value.has_key?('anyOf')
@@ -35,28 +36,37 @@
         end
 
         example = [*examples].map { |e| "`#{e.to_json}`" }.join(" or ")
-        attributes << [key, "string", description, example]
+        attributes[:principal] << [key, "string", description, example]
 
       # found a nested object
       elsif value['properties']
         nested = extract_attributes(schema, value['properties'])
-        nested.each do |attribute|
-          attribute[0] = "#{key}:#{attribute[0]}"
+        attributes[key] = nested[:principal]
+        attributes[:principal] << [key, "object", value["description"], "see below"]
+        nested.each do |k, v|
+          k == :principal ? attributes[key] = nested[:principal]  : attributes[k] = v
         end
-        attributes.concat(nested)
+
       # found an array with nested objects
-      elsif value['items'] && value['items']['properties']
-        nested = extract_attributes(schema, value['items']['properties'])
-        nested.each do |attribute|
-          attribute[0] = "#{key}/#{attribute[0]}"
+      elsif value['items'] && ((props = value['items']['properties']) || ref = value['items']['$ref'])
+        properties = props ? props : schema.dereference(ref)[1]['properties']
+        nested = extract_attributes(schema, properties)
+        attributes[:principal] << [key, "array", value["description"], "see below"]
+        nested.each do |k, v|
+          k == :principal ? attributes[key] = nested[:principal]  : attributes[k] = v
         end
-        attributes.concat(nested)
+
       # just a regular attribute
       else
-        attributes << build_attribute(schema, key, value)
+        attributes[:principal] << build_attribute(schema, key, value)
       end
     end
+
     return attributes
+  end
+
+  def md_link(text, target)
+    "[#{text}](#{target})"
   end
 
   def build_attribute(schema, key, value)

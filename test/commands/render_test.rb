@@ -9,6 +9,12 @@ class InteragentRenderTest < Minitest::Test
     assert_match /An app in our PaaS ecosystem./, markdown
   end
 
+  def test_render_slate_schema
+    markdown = render schema: "schemata_slate.md.erb"
+
+    assert_match /An app in our PaaS ecosystem./, markdown
+  end
+
   def test_render_for_schema_with_property_defined_with_anyOf
     pointer('#/definitions/app').merge!({
       'properties' => {
@@ -143,11 +149,10 @@ class InteragentRenderTest < Minitest::Test
     JsonPointer.evaluate(data, path)
   end
 
-  def render
+  def render options = {}
     schema = Prmd::Schema.new(data)
 
     template = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'lib', 'prmd', 'templates'))
-
-    Prmd.render(schema, template: template)
+    Prmd.render(schema, options.merge!(template: template))
   end
 end

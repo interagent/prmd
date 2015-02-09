@@ -1,5 +1,19 @@
 | Name | Type | Description | Example |
 | ------- | ------- | ------- | ------- |
-<%- extract_attributes(schema, params).each do |(key, type, description, example)| %>
+<%- attributes = extract_attributes(schema, params) %>
+<%- attributes[:principal].each do |(key, type, description, example)| %>
 | **<%= key %>** | *<%= type %>* | <%= description %> | <%= example %> |
+<%- end %>
+
+<%- if attributes.length > 1 %>
+<%- attributes.each do |k, v| %>
+<%- unless k == :principal %>
+####<%= k %>
+| Name | Type | Description | Example |
+| ------- | ------- | ------- | ------- |
+<%- v.each do |(key, type, description, example)| %>
+| **<%= key %>** | *<%= type %>* | <%= description %> | <%= example %> |
+<%- end %>
+<%- end %>
+<%- end %>
 <%- end %>
