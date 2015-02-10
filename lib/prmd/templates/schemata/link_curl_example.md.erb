@@ -1,6 +1,9 @@
 > Request Example
 
-```
+```shell
+  <%
+    require "prmd/url_generator"
+  %>
   <%-
     data = nil
     path = path.gsub(/{([^}]*)}/) {|match| '$' + match.gsub(/[{}]/, '').upcase}
