@@ -87,6 +87,24 @@
       description += "<br/> **pattern:** <code>#{value['pattern'].gsub /\|/, '&#124;'}</code>"
     end
 
+    if value['minLength'] || value['maxLength']
+      description += "<br/> **Length:** `"
+      if value['minLength']
+        description += "#{value['minLength'].to_json}"
+      end
+      unless value['minLength'] == value['maxLength']
+        if value['maxLength']
+          unless value['minLength']
+            description += "0"
+          end
+          description += "..#{value['maxLength'].to_json}"
+        else
+          description += "..∞"
+        end
+      end
+      description += "`"
+    end
+
     if value.has_key?('example')
       example = if value['example'].is_a?(Hash) && value['example'].has_key?('oneOf')
         value['example']['oneOf'].map { |e| "`#{e.to_json}`" }.join(" or ")
