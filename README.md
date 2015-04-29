@@ -125,7 +125,7 @@ $ prmd doc --settings config.json schema.json > schema.md
 ```
 
 Available options (and their defaults)
-```json
+```js
 {
   "doc": {
     "url_style": "default", // can also be "json"
