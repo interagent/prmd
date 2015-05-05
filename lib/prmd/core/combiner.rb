@@ -1,5 +1,6 @@
 require 'prmd/schema'
 require 'prmd/core/schema_hash'
+require 'prmd/core/reference_localizer'
 
 # :nodoc:
 module Prmd
@@ -14,39 +15,10 @@ module Prmd
       @meta = properties.fetch(:meta, {})
     end
 
-    # @param [Array] array
-    # @return [Array]
-    def reference_localizer_array(array)
-      array.map { |element| reference_localizer(element) }
-    end
-
-    # @param [Hash] hash
-    # @return [Hash]
-    def reference_localizer_hash(hash)
-      if hash.key?('$ref')
-        hash['$ref'] = '#/definitions' + hash['$ref'].gsub('#', '')
-                                                     .gsub('/schemata', '')
-      end
-      if hash.key?('href') && hash['href'].is_a?(String)
-        hash['href'] = hash['href'].gsub('%23', '')
-                                   .gsub(/%2Fschemata(%2F[^%]*%2F)/,
-                                         '%23%2Fdefinitions\1')
-      end
-      hash.each_with_object({}) { |(k, v), r| r[k] = reference_localizer(v) }
-    end
-
-    #
     # @param [Object] datum
     # @return [Object]
     def reference_localizer(datum)
-      case datum
-      when Array
-        reference_localizer_array(datum)
-      when Hash
-        reference_localizer_hash(datum)
-      else
-        datum
-      end
+      ReferenceLocalizer.localize(datum)
     end
 
     #
@@ -84,8 +56,6 @@ module Prmd
       Prmd::Schema.new(data)
     end
 
-    private :reference_localizer_array
-    private :reference_localizer_hash
     private :reference_localizer
   end
 end
