@@ -17,8 +17,6 @@
       (link['schema']['required'] || []).include?(k)
     end.map { |partition| Hash[partition] }
   %>
-  <%- unless required.empty? %>
-### Required Parameters
 <%=
   curl_options = options.dup
   http_header = link['http_header'] || {}
@@ -32,6 +30,8 @@
     path:            path
   })
 %>
+  <%- unless required.empty? %>
+### Required Parameters
 <%= link_schema_properties_template.result(params: required, schema: schema, options: options) %>
 
   <%- end %>
