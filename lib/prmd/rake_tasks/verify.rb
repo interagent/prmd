@@ -58,7 +58,7 @@ module Prmd
       # Defines the rake task
       # @return [void]
       def define
-        desc 'Verifying schemas' unless Rake.application.last_comment
+        desc 'Verify schemas' unless Rake.application.last_comment
         task(name) do
           all_errors = []
           files.each do |filename|
