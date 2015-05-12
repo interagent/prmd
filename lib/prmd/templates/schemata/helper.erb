@@ -28,12 +28,14 @@
 
         # avoid repetition :}
         description = if descriptions.size > 1
-          descriptions.first.gsub!(/ of (this )?.*/, "")
-          descriptions[1..-1].map { |d| d.gsub!(/unique /, "") }
+          # descriptions.first.gsub!(/ of (this )?.*/, "")
+          # descriptions[1..-1].map { |d| d.gsub!(/unique /, "") }
           [descriptions[0...-1].join(", "), descriptions.last].join(" or ")
         else
           description = descriptions.last
         end
+
+        description = "#{value['description']}. #{description}" if value.has_key?('description')
 
         example = [*examples].map { |e| "`#{e.to_json}`" }.join(" or ")
         attributes[:principal] << [key, "string", description, example]
