@@ -10,12 +10,12 @@ module Prmd
     "number"  => 42.0,
     "string"  => "example",
 
-    "date-time" => "2009-11-11T01:00:00+02:00",
-    "email"     => "john@example.com",
+    "date-time" => "2015-01-01T12:00:00Z",
+    "email"     => "username@example.com",
     "hostname"  => "example.com",
     "ipv4"      => "192.0.2.1",
     "ipv6"      => "2001:DB8::1",
-    "uuid"      => "5b76891d-563e-4d49-a0a8-1e0292236ccc",
+    "uuid"      => "01234567-89ab-cdef-0123-456789abcdef",
   }
 
   # Schema object
