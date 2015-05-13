@@ -70,11 +70,7 @@ HTTP/1.1 <%=
 <%- else %>
 <%-   if link['rel'] == 'empty' %>
 <%-   elsif link.has_key?('targetSchema') %>
-<%-     if link['targetSchema']['type'].include?('array') -%>
-<%=       JSON.pretty_generate([schema.schema_example(link['targetSchema'])]) %>
-<%-     else -%>
-<%=       JSON.pretty_generate(schema.schema_example(link['targetSchema'])) %>
-<%-     end -%>
+<%=     JSON.pretty_generate(schema.schema_example(link['targetSchema'])) %>
 <%-   elsif link['rel'] == 'instances' %>
 <%=     JSON.pretty_generate([schema.schemata_example(resource)]) %>
 <%-   else %>
