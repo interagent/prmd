@@ -56,6 +56,12 @@
         attributes << build_attribute(schema, key, value)
       end
     end
+    attributes.map! { |key, type, description, example|
+      if example.nil? && Prmd::DefaultExamples.key?(type)
+        example = Prmd::DefaultExamples[type]
+      end
+      [key, type, description, example]
+    }
     return attributes
   end
 
