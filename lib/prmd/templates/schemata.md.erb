@@ -1,6 +1,4 @@
 <%-
-  return unless schemata.has_key?('links') && !schemata['links'].empty?
-
   Prmd::Template.render('schemata/helper.erb', options[:template], {
     options:         options,
     resource:        resource,
@@ -26,7 +24,7 @@
 <%- end %>
 
 <%- end %>
-<%- schemata['links'].each do |link, datum| %>
+<%- (schemata['links'] || []).each do |link, datum| %>
 <%=
   Prmd::Template.render('schemata/link.md.erb', options[:template], {
     options:         options,
