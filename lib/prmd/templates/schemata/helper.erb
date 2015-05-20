@@ -58,7 +58,7 @@
     end
     attributes.map! { |key, type, description, example|
       if example.nil? && Prmd::DefaultExamples.key?(type)
-        example = Prmd::DefaultExamples[type]
+        example = "`%s`" % Prmd::DefaultExamples[type].to_json
       end
       [key, type, description, example]
     }
