@@ -65,6 +65,38 @@
     return attributes
   end
 
+  def extract_schemata_refs(schema, properties)
+    ret = []
+    properties.each do |_, value|
+      ref, value = schema.dereference(value)
+      if value['properties']
+        refs = extract_schemata_refs(schema, value['properties'])
+      elsif value['items'] && value['items']['properties']
+        refs = extract_schemata_refs(schema, value['items']['properties'])
+      else
+        refs = [ref]
+      end
+      if value.has_key?('type') && value['type'].include?('null') && (value.has_key?('items') || value.has_key?('properties'))
+        # A nullable object usually isn't a reference to another schema. It's
+        # either not a reference at all, or it's a reference within the same
+        # schema. Instead, the definition of the nullable object might contain
+        # references to specific properties.
+        #
+        # If all properties refer to the same schema, we'll use that as the
+        # reference. This might even overwrite an actual, intra-schema
+        # reference.
+
+        l = refs.map {|v| v && v.split("/")[0..2]}
+        if l.uniq.size == 1 && l[0] != nil
+          ref = l[0].join("/")
+        end
+        ret << ref
+      end
+      ret.concat(refs)
+    end
+    ret
+  end
+
   def build_attribute(schema, key, value)
     description = value['description'] || ""
     if value['default']
