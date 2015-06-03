@@ -11,6 +11,9 @@
         "identity": {
             "anyOf": [
                 {
+                    "$ref": "#/definitions/ref"
+                },
+                {
                     "additionalProperties": false,
                     "properties": {
                         "anyOf": {
