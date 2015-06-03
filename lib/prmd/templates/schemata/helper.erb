@@ -109,7 +109,6 @@
       end
 
       if is_polymorphic(value)
-        binding.pry
         (value.keys & polymorphism).each do |morph|
           nested_fields = extract_nested_fields(schema, value[morph])
           description = polymorphic_description(nested_fields, morph)
