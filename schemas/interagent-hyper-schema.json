@@ -107,7 +107,7 @@
         "resourceLink": {
             "properties": {
                 "href": {
-                    "pattern": "^(/([a-z][a-z\\-]*[a-z]|\\{\\(.*\\)\\}))+$"
+                    "pattern": "^(/([a-z][a-z_\\-]*[a-z]|\\{\\(.*\\)\\}))+$"
                 },
                 "schema": {
                     "anyOf": [
