@@ -1,6 +1,6 @@
-require 'prmd/load_schema_file'
-require 'prmd/core/schema_hash'
-require 'prmd/core/combiner'
+require_relative '../load_schema_file'
+require_relative '../core/schema_hash'
+require_relative '../core/combiner'
 
 # :nodoc:
 module Prmd

@@ -1,4 +1,4 @@
-require 'prmd/template'
+require_relative '../template'
 
 # :nodoc:
 module Prmd

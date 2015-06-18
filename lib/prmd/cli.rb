@@ -1,9 +1,9 @@
-require 'prmd/core_ext/optparse'
-require 'prmd/cli/combine'
-require 'prmd/cli/doc'
-require 'prmd/cli/generate'
-require 'prmd/cli/render'
-require 'prmd/cli/verify'
+require_relative 'core_ext/optparse'
+require_relative 'cli/combine'
+require_relative 'cli/doc'
+require_relative 'cli/generate'
+require_relative 'cli/render'
+require_relative 'cli/verify'
 
 # :nodoc:
 module Prmd

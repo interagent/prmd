@@ -1,4 +1,4 @@
-require 'prmd/core/renderer'
+require_relative '../core/renderer'
 
 # :nodoc:
 module Prmd

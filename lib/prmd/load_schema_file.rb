@@ -1,6 +1,6 @@
 require 'yaml'
 require 'json'
-require 'prmd/multi_loader'
+require_relative 'multi_loader'
 
 module Prmd #:nodoc:
   # Attempts to load either a json or yaml file, the type is determined by

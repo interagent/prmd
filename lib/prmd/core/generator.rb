@@ -1,5 +1,5 @@
 require 'json'
-require 'prmd/schema'
+require_relative '../schema'
 
 # :nodoc:
 module Prmd

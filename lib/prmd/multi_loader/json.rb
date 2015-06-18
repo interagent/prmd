@@ -1,4 +1,4 @@
-require 'prmd/multi_loader/loader'
+require_relative 'loader'
 require 'json'
 
 module Prmd #:nodoc:

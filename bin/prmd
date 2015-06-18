@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require 'optparse'
-require 'prmd'
-require 'prmd/cli'
+require_relative '../lib/prmd'
+require_relative '../lib/prmd/cli'
 
 Prmd::CLI.run(ARGV.dup, bin: File.basename(__FILE__))

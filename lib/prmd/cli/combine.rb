@@ -1,5 +1,5 @@
-require 'prmd/cli/base'
-require 'prmd/commands/combine'
+require_relative 'base'
+require_relative '../commands/combine'
 
 module Prmd
   module CLI

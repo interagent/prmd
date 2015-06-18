@@ -1,4 +1,4 @@
-require 'prmd/commands/combine'
-require 'prmd/commands/init'
-require 'prmd/commands/render'
-require 'prmd/commands/verify'
+require_relative 'commands/combine'
+require_relative 'commands/init'
+require_relative 'commands/render'
+require_relative 'commands/verify'

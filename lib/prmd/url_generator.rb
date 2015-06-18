@@ -1,5 +1,5 @@
-require 'prmd/url_generators/generators/default'
-require 'prmd/url_generators/generators/json'
+require_relative 'url_generators/generators/default'
+require_relative 'url_generators/generators/json'
 
 # :nodoc:
 module Prmd

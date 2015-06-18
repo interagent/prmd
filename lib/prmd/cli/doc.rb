@@ -1,6 +1,6 @@
-require 'prmd/cli/base'
-require 'prmd/commands/render'
-require 'prmd/hash_helpers'
+require_relative 'base'
+require_relative '../commands/render'
+require_relative '../hash_helpers'
 
 module Prmd
   module CLI

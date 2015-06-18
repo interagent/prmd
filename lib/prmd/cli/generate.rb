@@ -1,5 +1,5 @@
-require 'prmd/cli/base'
-require 'prmd/commands/init'
+require_relative 'base'
+require_relative '../commands/init'
 
 module Prmd
   module CLI

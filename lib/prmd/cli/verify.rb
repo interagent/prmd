@@ -1,5 +1,5 @@
-require 'prmd/cli/base'
-require 'prmd/commands/verify'
+require_relative 'base'
+require_relative '../commands/verify'
 
 module Prmd
   module CLI

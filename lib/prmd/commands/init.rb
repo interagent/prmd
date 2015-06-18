@@ -1,6 +1,6 @@
 require 'json'
-require 'prmd/template'
-require 'prmd/core/generator'
+require_relative '../template'
+require_relative '../core/generator'
 
 # :nodoc:
 module Prmd

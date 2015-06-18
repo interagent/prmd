@@ -1,2 +1,2 @@
 # alias for yaml
-require 'prmd/multi_loader/yaml'
+require_relative 'yaml'

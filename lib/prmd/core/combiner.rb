@@ -1,6 +1,6 @@
-require 'prmd/schema'
-require 'prmd/core/schema_hash'
-require 'prmd/core/reference_localizer'
+require_relative '../schema'
+require_relative 'schema_hash'
+require_relative 'reference_localizer'
 
 # :nodoc:
 module Prmd

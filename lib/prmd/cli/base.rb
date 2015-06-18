@@ -1,6 +1,6 @@
 require 'json'
-require 'prmd/core_ext/optparse'
-require 'prmd/load_schema_file'
+require_relative '../core_ext/optparse'
+require_relative '../load_schema_file'
 
 module Prmd
   module CLI
