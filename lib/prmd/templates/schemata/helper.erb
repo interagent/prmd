@@ -44,13 +44,28 @@
           attribute[0] = "#{key}:#{attribute[0]}"
         end
         attributes.concat(nested)
+
       # found an array with nested objects
-      elsif value['items'] && value['items']['properties']
-        nested = extract_attributes(schema, value['items']['properties'])
-        nested.each do |attribute|
-          attribute[0] = "#{key}/#{attribute[0]}"
+      elsif value['items'] 
+        if value['items']['properties']
+          nested = extract_attributes(schema, value['items']['properties'])
+          nested.each do |attribute|
+            attribute[0] = "#{key}/#{attribute[0]}"
+          end
+          attributes.concat(nested)
         end
-        attributes.concat(nested)
+        if value['items']['oneOf']
+          value['items']['oneOf'].each_with_index do |oneof, index|
+          ref,  oneof_definition = schema.dereference(oneof)
+          oneof_name = ref ? ref.split('/').last : index
+          nested = extract_attributes(schema, oneof_definition['properties'])
+          nested.each do |attribute|
+            attribute[0] = "#{key}/#{attribute[0]}[#{oneof_name.upcase}]"
+          end
+          attributes.concat(nested)
+        end
+      end
+
       # just a regular attribute
       else
         attributes << build_attribute(schema, key, value)

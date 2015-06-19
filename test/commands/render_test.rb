@@ -20,10 +20,19 @@ class InteragentRenderTest < Minitest::Test
         }
       }
     })
-
     markdown = render
     assert_match /version.*v10\.9\.rc1/, markdown
   end
+
+
+  def test_render_for_schema_with_property_defined_with_oneOf
+    markdown = render
+
+   assert_match /\*\*options\/type\[OPTION1\]\*\*/, markdown
+   assert_match /\*\*options\/type\[OPTION2\]\*\*/, markdown
+  end
+
+
 
   def test_render_for_example_as_an_array
     # matches -d '[{...}]' taking into account line breaks and spacing
@@ -85,6 +94,43 @@ class InteragentRenderTest < Minitest::Test
               'type'        => 'string',
               'example'     => 'example'
             },
+            'option-type1' => {
+              'type' => 'string', 
+              'example' => 'OPTION1', 
+              'enum' => 'OPTION1'                   
+            },
+            'option-type2' => {
+              'type' => 'string', 
+              'example' => 'OPTION2',
+              'enum' => 'OPTION2'
+            },
+            'option1' => {
+              'properties' => {
+                'type' => {
+                    '$ref' => '#/definitions/config-var/definitions/option-type1'    
+                }
+              }
+            },
+            'option2' => {
+              'properties' => {
+                'type' => {
+                    '$ref' => '#/definitions/config-var/definitions/option-type2'    
+                }
+              }
+            },
+            'options' => {                      
+              'items' => {
+                'example'=> 'CHOICE1',
+                'oneOf' => [
+                  { 
+                    '$ref' => '#/definitions/config-var/definitions/option1'
+                  },
+                  { 
+                   '$ref' => '#/definitions/config-var/definitions/option2'
+                  }
+                ]
+              }
+            }
           },
           'links' => [
             {
@@ -117,6 +163,9 @@ class InteragentRenderTest < Minitest::Test
             },
             'value' => {
               '$ref' => '#/definitions/config-var/definitions/value'
+            },
+            'options' => {
+              '$ref' => '#/definitions/config-var/definitions/options'
             }
           }
         }
