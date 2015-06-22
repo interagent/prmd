@@ -1,0 +1,82 @@
+<%-
+  path = build_link_path(schema, link)
+  response_example = link['response_example']
+  link_schema_properties_template = Prmd::Template.load_template('link_schema_properties.md.erb', options[:template])
+-%>
+### <%= title %> <%= link['title'] %>
+
+<%= link['description'] %>
+
+```
+<%= link['method'] %> <%= path %>
+```
+
+<%- if link.has_key?('schema') && link['schema'].has_key?('properties') %>
+  <%-
+    required, optional = link['schema']['properties'].partition do |k, v|
+      (link['schema']['required'] || []).include?(k)
+    end.map { |partition| Hash[partition] }
+  %>
+  <%- unless required.empty? %>
+#### Required Parameters
+
+<%= link_schema_properties_template.result(params: required, schema: schema, options: options) %>
+
+  <%- end %>
+  <%- unless optional.empty? %>
+#### Optional Parameters
+
+<%= link_schema_properties_template.result(params: optional, schema: schema, options: options) %>
+  <%- end %>
+<%- end %>
+
+#### Curl Example
+
+<%=
+  curl_options = options.dup
+  http_header = link['http_header'] || {}
+  curl_options[:http_header] = curl_options[:http_header].merge(http_header)
+  Prmd::Template.render('schemata/link_curl_example.md.erb', File.dirname(options[:template]), {
+    options:         curl_options,
+    resource:        resource,
+    schema:          schema,
+    schemata:        schemata,
+    link:            link,
+    path:            path
+  })
+%>
+
+#### Response Example
+
+```
+<%- if response_example %>
+<%=   response_example['head'] %>
+<%- else %>
+HTTP/1.1 <%=
+  case link['rel']
+  when 'create'
+    '201 Created'
+  when 'empty'
+    '202 Accepted'
+  else
+    '200 OK'
+  end %>
+<%- end %>
+```
+
+<%- if response_example || link['rel'] != 'empty' %>
+```json
+<%- if response_example %>
+<%=   response_example['body'] %>
+<%- else %>
+<%-   if link['rel'] == 'empty' %>
+<%-   elsif link.has_key?('targetSchema') %>
+<%=     JSON.pretty_generate(schema.schema_example(link['targetSchema'])) %>
+<%-   elsif link['rel'] == 'instances' %>
+<%=     JSON.pretty_generate([schema.schemata_example(resource)]) %>
+<%-   else %>
+<%=     JSON.pretty_generate(schema.schemata_example(resource)) %>
+<%-   end %>
+<%- end %>
+```
+<%- end %>

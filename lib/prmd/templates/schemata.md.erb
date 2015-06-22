@@ -1,0 +1,44 @@
+<%-
+  Prmd::Template.render('schemata/helper.erb', options[:template], {
+    options:         options,
+    resource:        resource,
+    schema:          schema,
+    schemata:        schemata
+  })
+
+  title = schemata['title'].split(' - ', 2).last
+-%>
+<%- unless options[:doc][:disable_title_and_description] %>
+## <a name="resource-<%= resource %>"></a><%= title %>
+
+<%= schemata['description'] %>
+<%- end -%>
+
+<%- if schemata['properties'] && !schemata['properties'].empty? %>
+### Attributes
+
+| Name | Type | Description | Example |
+| ------- | ------- | ------- | ------- |
+<%- refs = extract_schemata_refs(schema, schemata['properties']).map {|v| v && v.split("/")} %>
+<%- extract_attributes(schema, schemata['properties']).each_with_index do |(key, type, description, example), i| %>
+<%- if refs[i] && refs[i][1] == "definitions" && refs[i][2] != resource %>
+<%- name = '[%s](#%s)' % [key, 'resource-' + refs[i][2]] %>
+<%- else %>
+<%- name = key %>
+<%- end %>
+| **<%= name %>** | *<%= type %>* | <%= description %> | <%= example %> |
+<%- end %>
+
+<%- end %>
+<%- (schemata['links'] || []).each do |link, datum| %>
+<%=
+  Prmd::Template.render('schemata/link.md.erb', options[:template], {
+    options:         options,
+    resource:        resource,
+    schema:          schema,
+    schemata:        schemata,
+    link:            link,
+    title:           title
+  })
+%>
+<%- end -%>

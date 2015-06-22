@@ -1,19 +1,7 @@
-require "cgi"
-require "erubis"
-require "json"
-require "yaml"
-
-dir = File.dirname(__FILE__)
-require File.join(dir, 'prmd', 'commands', 'combine')
-require File.join(dir, 'prmd', 'commands', 'expand')
-require File.join(dir, 'prmd', 'commands', 'init')
-require File.join(dir, 'prmd', 'commands', 'render')
-require File.join(dir, 'prmd', 'commands', 'verify')
-require File.join(dir, 'prmd', 'schema')
-require File.join(dir, 'prmd', 'version')
-require File.join(dir, 'prmd', 'template')
-require File.join(dir, 'prmd', 'url_generator')
-require File.join(dir, 'prmd', 'hash_helpers')
-
-module Prmd
-end
+require_relative 'prmd/version'
+require_relative 'prmd/load_schema_file'
+require_relative 'prmd/commands'
+require_relative 'prmd/schema'
+require_relative 'prmd/template'
+require_relative 'prmd/url_generator'
+require_relative 'prmd/hash_helpers'

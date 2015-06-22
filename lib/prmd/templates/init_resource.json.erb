@@ -1,0 +1,103 @@
+{
+  "id": "schemata/<%= resource %>",
+  "title": "FIXME - <%= resource.capitalize %>",
+  "definitions": {
+    "id": {
+      "description": "unique identifier of <%= resource %>",
+      "readOnly": true,
+      "format": "uuid",
+      "type": ["string"]
+    },
+    "name": {
+      "description": "unique name of <%= resource %>",
+      "readOnly": true,
+      "type": ["string"]
+    },
+    "identity": {
+      "anyOf": [
+        {
+          "$ref": "/schemata/<%= resource %>#/definitions/id"
+	},
+	{
+          "$ref": "/schemata/<%= resource %>#/definitions/name"
+	}
+      ]
+    },
+    "created_at": {
+      "description": "when <%= resource %> was created",
+      "format": "date-time",
+      "type": ["string"]
+    },
+    "updated_at": {
+      "description": "when <%= resource %> was updated",
+      "format": "date-time",
+      "type": ["string"]
+    }
+  },
+  "properties": {
+    "created_at": {
+      "$ref": "/schemata/<%= resource %>#/definitions/created_at"
+    },
+    "id": {
+      "$ref": "/schemata/<%= resource %>#/definitions/id"
+    },
+    "name": {
+      "$ref": "/schemata/<%= resource %>#/definitions/name"
+    },
+    "updated_at": {
+      "$ref": "/schemata/<%= resource %>#/definitions/updated_at"
+    }
+  },
+  "links": [
+    {
+      "description": "Create a new <%= resource %>.",
+      "href": "/<%= resource %>s",
+      "method": "POST",
+      "rel": "create",
+      "schema": {
+        "properties": {},
+        "type": ["object"]
+      },
+      "title": "Create"
+    },
+    {
+      "description": "Delete an existing <%= resource %>.",
+      "href": "/<%= resource %>s/{(%2Fschemata%2F<%= resource %>%23%2Fdefinitions%2Fidentity)}",
+      "method": "DELETE",
+      "rel": "destroy",
+      "title": "Delete"
+    },
+    {
+      "description": "Info for existing <%= resource %>.",
+      "href": "/<%= resource %>s/{(%2Fschemata%2F<%= resource %>%23%2Fdefinitions%2Fidentity)}",
+      "method": "GET",
+      "rel": "self",
+      "title": "Info"
+    },
+    {
+      "description": "List existing <%= resource %>s.",
+      "href": "/<%= resource %>s",
+      "method": "GET",
+      "rel": "instances",
+      "title": "List"
+    },
+    {
+      "description": "Update an existing <%= resource %>.",
+      "href": "/<%= resource %>s/{(%2Fschemata%2F<%= resource %>%23%2Fdefinitions%2Fidentity)}",
+      "method": "PATCH",
+      "rel": "update",
+      "schema": {
+        "properties": {},
+        "type": ["object"]
+      },
+      "title": "Update"
+    }<% if parent %>,
+    {
+      "description": "List existing <%= resource %>s for existing <%= parent %>.",
+      "href": "/<%= parent %>s/{(%2Fschemata%2F<%= parent %>%23%2Fdefinitions%2Fidentity)}/<%= resource %>s",
+      "method": "GET",
+      "rel": "instances",
+      "title": "List"
+    }<% end %>
+  ]
+}

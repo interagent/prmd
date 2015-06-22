@@ -1,7 +1,8 @@
 <%-
   def extract_attributes(schema, properties)
     attributes = []
-    properties = properties.sort_by {|k,v| k} # ensure consistent ordering
+
+    _, properties = schema.dereference(properties)
 
     properties.each do |key, value|
       # found a reference to another element:
@@ -55,7 +56,45 @@
         attributes << build_attribute(schema, key, value)
       end
     end
+    attributes.map! { |key, type, description, example|
+      if example.nil? && Prmd::DefaultExamples.key?(type)
+        example = "`%s`" % Prmd::DefaultExamples[type].to_json
+      end
+      [key, type, description, example]
+    }
     return attributes
+  end
+
+  def extract_schemata_refs(schema, properties)
+    ret = []
+    properties.each do |_, value|
+      ref, value = schema.dereference(value)
+      if value['properties']
+        refs = extract_schemata_refs(schema, value['properties'])
+      elsif value['items'] && value['items']['properties']
+        refs = extract_schemata_refs(schema, value['items']['properties'])
+      else
+        refs = [ref]
+      end
+      if value.has_key?('type') && value['type'].include?('null') && (value.has_key?('items') || value.has_key?('properties'))
+        # A nullable object usually isn't a reference to another schema. It's
+        # either not a reference at all, or it's a reference within the same
+        # schema. Instead, the definition of the nullable object might contain
+        # references to specific properties.
+        #
+        # If all properties refer to the same schema, we'll use that as the
+        # reference. This might even overwrite an actual, intra-schema
+        # reference.
+
+        l = refs.map {|v| v && v.split("/")[0..2]}
+        if l.uniq.size == 1 && l[0] != nil
+          ref = l[0].join("/")
+        end
+        ret << ref
+      end
+      ret.concat(refs)
+    end
+    ret
   end
 
   def build_attribute(schema, key, value)
@@ -84,6 +123,24 @@
 
     if value['pattern']
       description += "<br/> **pattern:** <code>#{value['pattern'].gsub /\|/, '&#124;'}</code>"
+    end
+
+    if value['minLength'] || value['maxLength']
+      description += "<br/> **Length:** `"
+      if value['minLength']
+        description += "#{value['minLength'].to_json}"
+      end
+      unless value['minLength'] == value['maxLength']
+        if value['maxLength']
+          unless value['minLength']
+            description += "0"
+          end
+          description += "..#{value['maxLength'].to_json}"
+        else
+          description += "..∞"
+        end
+      end
+      description += "`"
     end
 
     if value.has_key?('example')

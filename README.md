@@ -1,4 +1,6 @@
-# Prmd
+# Prmd [![Travis Status](https://travis-ci.org/interagent/prmd.svg)](https://travis-ci.org/interagent/prmd)
+
+[![Gem Version](https://badge.fury.io/rb/prmd.svg)](http://badge.fury.io/rb/prmd)
 
 JSON Schema tooling: scaffold, verify, and generate documentation
 from JSON Schema documents.
@@ -78,6 +80,21 @@ $ prmd verify schema.json
 $ prmd doc schema.json > schema.md
 ```
 
+### Using YAML instead of JSON as a resource and meta format
+
+`init` and `combine` supports YAML format:
+
+```bash
+# Generate resources in YAML format
+$ prmd init --yaml app  > schemata/app.yml
+$ prmd init --yaml user > schemata/user.yml
+
+# Combine into a single schema
+$ prmd combine --meta meta.json schemata/ > schema.json
+```
+
+`combine` can detect both `*.yml` and `*.json` and use them side by side. For example, if one have a lot of legacy JSON resources and wants to create new resources in YAML format - `combine` will be able to handle it properly.
+
 # Render from schema
 
 ```bash
@@ -108,13 +125,42 @@ $ prmd doc --settings config.json schema.json > schema.md
 ```
 
 Available options (and their defaults)
-```json
+```js
 {
   "doc": {
     "url_style": "default", // can also be "json"
     "disable_title_and_description": false // remove the title and the description, useful when using your own custom header
   }
 }
+```
+
+## Use as rake task
+
+In addition, prmd can be used via rake tasks
+
+```ruby
+# Rakefile
+require 'prmd/rake_tasks/combine'
+require 'prmd/rake_tasks/verify'
+require 'prmd/rake_tasks/doc'
+
+namespace :schema do
+  Prmd::RakeTasks::Combine.new do |t|
+    t.options[:meta] = 'schema/meta.json'    # use meta.yml if you prefer YAML format
+    t.paths << 'schema/schemata/api'
+    t.output_file = 'schema/api.json'
+  end
+
+  Prmd::RakeTasks::Verify.new do |t|
+    t.files << 'schema/api.json'
+  end
+
+  Prmd::RakeTasks::Doc.new do |t|
+    t.files = { 'schema/api.json' => 'schema/api.md' }
+  end
+end
+
+task default: ['schema:combine', 'schema:verify', 'schema:doc']
 ```
 
 ## File Layout
@@ -125,12 +171,14 @@ We suggest the following file layout for JSON schema related files:
 /docs (top-level directory for project documentation)
   /schema (API schema documentation)
     /schemata
-      /{resource.json} (individual resource schema)
-    /meta.json (overall API metadata)
+      /{resource.[json,yml]} (individual resource schema)
+    /meta.[json,yml] (overall API metadata)
     /overview.md (preamble for generated API docs)
     /schema.json (complete generated JSON schema file)
     /schema.md (complete generated API documentation file)
 ```
+
+where `[json,yml]` means that it could be either `json` or `yml`.
 
 ## Contributing
 

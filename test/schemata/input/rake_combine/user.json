@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-04/hyper-schema",
+  "title": "User",
+  "definitions": {
+    "id": {
+      "description": "unique identifier of user",
+      "example": "01234567-89ab-cdef-0123-456789abcdef",
+      "format": "uuid",
+      "type": [
+        "string"
+      ]
+    },
+    "identity": {
+      "$ref": "/schemata/user#/definitions/id"
+    },
+    "created_at": {
+      "description": "when user was created",
+      "example": "2012-01-01T12:00:00Z",
+      "format": "date-time",
+      "type": [
+        "string"
+      ]
+    },
+    "updated_at": {
+      "description": "when user was updated",
+      "example": "2012-01-01T12:00:00Z",
+      "format": "date-time",
+      "type": [
+        "string"
+      ]
+    }
+  },
+  "description": "FIXME",
+  "links": [
+    {
+      "description": "Create a new user.",
+      "href": "/users",
+      "method": "POST",
+      "rel": "create",
+      "schema": {
+        "properties": {
+        },
+        "type": [
+          "object"
+        ]
+      },
+      "title": "Create"
+    },
+    {
+      "description": "Delete an existing user.",
+      "href": "/users/{(%2Fschemata%2Fuser%23%2Fdefinitions%2Fidentity)}",
+      "method": "DELETE",
+      "rel": "destroy",
+      "title": "Delete"
+    },
+    {
+      "description": "Info for existing user.",
+      "href": "/users/{(%2Fschemata%2Fuser%23%2Fdefinitions%2Fidentity)}",
+      "method": "GET",
+      "rel": "self",
+      "title": "Info"
+    },
+    {
+      "description": "List existing users.",
+      "href": "/users",
+      "method": "GET",
+      "rel": "instances",
+      "title": "List"
+    },
+    {
+      "description": "Update an existing user.",
+      "href": "/users/{(%2Fschemata%2Fuser%23%2Fdefinitions%2Fidentity)}",
+      "method": "PATCH",
+      "rel": "update",
+      "schema": {
+        "properties": {
+        },
+        "type": [
+          "object"
+        ]
+      },
+      "title": "Update"
+    }
+  ],
+  "properties": {
+    "created_at": {
+      "$ref": "/schemata/user#/definitions/created_at"
+    },
+    "id": {
+      "$ref": "/schemata/user#/definitions/id"
+    },
+    "updated_at": {
+      "$ref": "/schemata/user#/definitions/updated_at"
+    }
+  },
+  "type": [
+    "object"
+  ],
+  "id": "schemata/user"
+}

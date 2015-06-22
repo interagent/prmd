@@ -1,0 +1,6 @@
+{
+  "$schema": "http://interagent.github.io/interagent-hyper-schema",
+  "type": ["object"],
+  "definitions": {},
+  "properties": {}
+}

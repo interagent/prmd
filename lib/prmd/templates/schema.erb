@@ -1,10 +1,10 @@
 <%=
-  schemata_template = Prmd::Template::load('schemata.erb', options[:template])
+  schemata_template = Prmd::Template::load('schemata.md.erb', options[:template])
 
   schema['properties'].map do |resource, property|
     begin
       _, schemata = schema.dereference(property)
-      Erubis::Eruby.new(schemata_template).result({
+      schemata_template.result({
         options:         options,
         resource:        resource,
         schema:          schema,
