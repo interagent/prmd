@@ -28,8 +28,8 @@ class InteragentRenderTest < Minitest::Test
   def test_render_for_schema_with_property_defined_with_oneOf
     markdown = render
 
-   assert_match /\*\*options\/type\[OPTION1\]\*\*/, markdown
-   assert_match /\*\*options\/type\[OPTION2\]\*\*/, markdown
+   assert_match /\*\*options\/\[OPTION1\]\.type\*\*/, markdown
+   assert_match /\*\*options\/\[OPTION2\]\.type\*\*/, markdown
   end
 
 
