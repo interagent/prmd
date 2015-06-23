@@ -1,4 +1,98 @@
 <%-
+  def is_an_array(value)
+    value.has_key?('items')
+  end
+
+  def is_a_nested_object(value)
+    value.has_key?('properties')
+  end
+
+  def polymorphism
+    conjunctions.keys
+  end
+
+  def conjunctions
+    {
+      'anyOf' => " and/or ",
+      'oneOf' => " or ",
+      'allOf' => " and "
+    }
+  end
+
+  def is_polymorphic(value)
+    !(value.keys & polymorphism).empty? && !is_an_array(value) && !is_a_nested_object(value)
+  end
+
+  def combine_polymorphic_attribute(value, attribute, morphs=nil)
+    globals = value.has_key?(attribute) ? value[attribute] : []
+    globals = [globals] unless globals.is_a? Array
+    attributes = {}
+
+    if morphs.nil?
+      morphs = value.keys & polymorphism
+    elsif morphs.is_a? String
+      morphs = [morphs]
+    end
+
+    morphs.each do |morph|
+      attributes[morph] = polymorphic_attribute(value[morph], attribute)
+    end
+    
+    if attributes.has_key?('allOf')
+      globals = globals | attributes.delete('allOf')
+    end
+
+    result = globals.size > 1 ? "All of: " : "" 
+    result << "`#{globals.flatten.uniq.join('`, `')}`" if globals.size > 0
+
+    attributes.each do |morph, values|
+      if values.size > 0
+        result << " and #{morph.underscore.humanize.downcase}: `#{values.flatten.uniq.join('`, `')}`"
+      end
+    end
+
+    return result
+  end
+
+  def polymorphic_attribute(fields, attribute)
+    attributes = []
+    fields.each do |field|
+      attributes << field[attribute] if field[attribute]
+    end
+    return attributes.flatten.uniq
+  end
+
+  def polymorphic_description(fields, morph)
+    descriptions = polymorphic_attribute(fields, 'description')
+    return description = if descriptions.size > 1
+      [descriptions[0...-1].join(", "), descriptions.last].join(conjunctions[morph])
+    else
+      description = descriptions.last
+    end
+  end
+
+  def polymorphic_example(fields, morph)
+    examples = polymorphic_attribute(fields, 'example')
+    example = [*examples].map { |e| "`#{e.to_json}`" }.join(conjunctions[morph])
+    return example
+  end
+
+  def polymorphic_type(fields, morph)
+    types = polymorphic_attribute(fields, 'type')
+    type = types.join('*, *')
+    type.gsub(%r|/*null*/|, '*nullable*')
+    return type
+  end
+
+  def extract_nested_fields(schema, refs)
+    nested_fields = []
+    refs.each do |ref|
+      _, nested_field = schema.dereference(ref)
+      nested_fields << nested_field
+    end
+    return nested_fields
+  end
+
   def extract_attributes(schema, properties)
     attributes = {principal: []}
 
@@ -14,49 +108,45 @@
         attributes[:principal] << build_attribute(schema, key, value)
       end
 
-      if value.has_key?('anyOf')
-        descriptions = []
-        examples = []
-
-        anyof = value['anyOf']
-
-        anyof.each do |ref|
-          _, nested_field = schema.dereference(ref)
-          descriptions << nested_field['description'] if nested_field['description']
-          examples << nested_field['example'] if nested_field['example']
+      if is_polymorphic(value)
+        (value.keys & polymorphism).each do |morph|
+          nested_fields = extract_nested_fields(schema, value[morph])
+          description = polymorphic_description(nested_fields, morph)
+          description = "#{value['description']}. #{description}" if value.has_key?('description')
+          example = polymorphic_example(nested_fields, morph)
+          type = polymorphic_type(nested_fields, morph)
+          attributes[:principal] << [key, type, description, example]
         end
 
-        # avoid repetition :}
-        description = if descriptions.size > 1
-          descriptions.first.gsub!(/ of (this )?.*/, "")
-          descriptions[1..-1].map { |d| d.gsub!(/unique /, "") }
-          [descriptions[0...-1].join(", "), descriptions.last].join(" or ")
-        else
-          description = descriptions.last
-        end
-
-        example = [*examples].map { |e| "`#{e.to_json}`" }.join(" or ")
-        attributes[:principal] << [key, "string", description, example]
-
-      # found a nested object
-      elsif value['properties']
+      elsif is_a_nested_object(value)
         nested = extract_attributes(schema, value['properties'])
+        morph = value.keys & polymorphism
+        required = combine_polymorphic_attribute(value, 'required')
+        
+        description = ""
+        description << value['description'] if value['description']
+        description << "<br />" if description.length > 0 && required.length > 0
+        description << "**Required** #{required}" if required.length > 0
+
+        morph.each do |m|
+          value[m].each do |alternative|
+            if alternative.has_key?('properties')
+              alt_attributes = extract_attributes(schema, alternative['properties'])
+              nested[:principal] = nested[:principal] | alt_attributes[:principal]
+            end
+          end
+        end
+        
         attributes[key] = nested[:principal]
-        attributes[:principal] << [key, "object", value["description"], "see below"]
+        attributes[:principal] << [key, "object", description, "see below"]
         nested.each do |k, v|
           k == :principal ? attributes[key] = nested[:principal]  : attributes[k] = v
         end
-
-      # found an array with nested objects
-      elsif value['items'] && ((props = value['items']['properties']) || ref = value['items']['$ref'])
+      elsif is_an_array(value) && ((props = value['items']['properties']) || ref = value['items']['$ref'])
         properties = props ? props : schema.dereference(ref)[1]['properties']
         nested = extract_attributes(schema, properties)
         attributes[:principal] << [key, "array", value["description"], "see below"]
-        nested.each do |k, v|
-          k == :principal ? attributes[key] = nested[:principal]  : attributes[k] = v
-        end
-
-      # just a regular attribute
+        attributes = build_nested_attributes(attributes, key, nested)
       else
         attributes[:principal] << build_attribute(schema, key, value)
       end
@@ -65,18 +155,34 @@
     return attributes
   end
 
+  def build_nested_attributes(attributes, key, nested)
+    nested.each do |k, v|
+      k == :principal ? attributes[key] = nested[:principal]  : attributes[k] = v
+    end
+    return attributes
+  end
+
   def md_link(text, target)
     "[#{text}](#{target})"
   end
 
   def build_attribute(schema, key, value)
+
+    if morph = value.keys & polymorphism
+      morph.each do |m|
+        value[m].each do |k, v|
+          value[k] = combine_polymorphic_attribute(value, k, m)
+        end
+      end
+    end
+
     description = value['description'] || ""
     if value['default']
-      description += "<br/> **default:** `#{value['default'].to_json}`"
+      description += "<br />**Default:** `#{value['default'].to_json}`"
     end
 
     if value['minimum'] || value['maximum']
-      description += "<br/> **Range:** `"
+      description += "<br />**Range:** `"
       if value['minimum']
         comparator = value['exclusiveMinimum'] ? "<" : "<="
         description += "#{value['minimum'].to_json} #{comparator} "
@@ -90,15 +196,15 @@
     end
 
     if value['enum']
-      description += '<br/> **one of:**' + [*value['enum']].map { |e| "`#{e.to_json}`" }.join(" or ")
+      description += '<br />**One of:**' + [*value['enum']].map { |e| "`#{e.to_json}`" }.join(" or ")
     end
 
     if value['pattern']
-      description += "<br/> **pattern:** <code>#{value['pattern'].gsub /\|/, '&#124;'}</code>"
+      description += "<br />**Pattern:** <code>#{value['pattern'].gsub /\|/, '&#124;'}</code>"
     end
 
     if value['minLength'] || value['maxLength']
-      description += "<br/> **Length:** `"
+      description += "<br /> **Length:** `"
       if value['minLength']
         description += "#{value['minLength'].to_json}"
       end
@@ -117,7 +223,7 @@
 
     if value.has_key?('example')
       example = if value['example'].is_a?(Hash) && value['example'].has_key?('oneOf')
-        value['example']['oneOf'].map { |e| "`#{e.to_json}`" }.join(" or ")
+        value['example']['oneOf'].map { |e| "`#{e.to_json}`" }.join(conjunctions['oneOf'])
       else
         "`#{value['example'].to_json}`"
       end
@@ -132,7 +238,7 @@
     else
       ''
     end
-    type += (value['format'] || (value['type'] - ['null']).first)
+    type += (value['format'] || (value['type'] - ['null']).map {|t| "#{t.to_s}"}.join('*, *') )
     [key, type, description, example]
   end
 
