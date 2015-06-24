@@ -37,12 +37,12 @@
     morphs.each do |morph|
       attributes[morph] = polymorphic_attribute(value[morph], attribute)
     end
-    
+
     if attributes.has_key?('allOf')
       globals = globals | attributes.delete('allOf')
     end
 
-    result = globals.size > 1 ? "All of: " : "" 
+    result = globals.size > 1 ? "All of: " : ""
     result << "`#{globals.flatten.uniq.join('`, `')}`" if globals.size > 0
 
     attributes.each do |morph, values|
@@ -100,7 +100,6 @@
 
     properties.each do |key, value|
       # found a reference to another element:
-
       _, value = schema.dereference(value)
 
       # include top level reference to nested things, when top level is nullable
@@ -122,7 +121,7 @@
         nested = extract_attributes(schema, value['properties'])
         morph = value.keys & polymorphism
         required = combine_polymorphic_attribute(value, 'required')
-        
+
         description = ""
         description << value['description'] if value['description']
         description << "<br />" if description.length > 0 && required.length > 0
@@ -136,17 +135,27 @@
             end
           end
         end
-        
+
         attributes[key] = nested[:principal]
         attributes[:principal] << [key, "object", description, "see below"]
         nested.each do |k, v|
           k == :principal ? attributes[key] = nested[:principal]  : attributes[k] = v
         end
-      elsif is_an_array(value) && ((props = value['items']['properties']) || ref = value['items']['$ref'])
-        properties = props ? props : schema.dereference(ref)[1]['properties']
-        nested = extract_attributes(schema, properties)
+      elsif is_an_array(value)
+
+        if props = value['items']['properties']
+          nested = extract_attributes(schema, props)
+          attributes = build_nested_attributes(attributes, key, nested)
+        elsif ref = value['items']['$ref']
+          dereference = schema.dereference(ref)[1]
+          if props = dereference['properties']
+            nested = extract_attributes(schema, props)
+            attributes = build_nested_attributes(attributes, key, nested)
+          elsif dereference["type"]
+            attributes[:principal] << build_attribute(schema, key, dereference)
+          end
+        end
         attributes[:principal] << [key, "array", value["description"], "see below"]
-        attributes = build_nested_attributes(attributes, key, nested)
       else
         attributes[:principal] << build_attribute(schema, key, value)
       end
