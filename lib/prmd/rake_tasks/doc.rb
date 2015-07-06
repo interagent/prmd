@@ -1,6 +1,7 @@
 require 'prmd/commands/render'
 require 'prmd/rake_tasks/base'
 require 'prmd/load_schema_file'
+require 'prmd/url_generator'
 require 'prmd/template'
 require 'prmd/schema'
 
