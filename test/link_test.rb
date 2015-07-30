@@ -18,6 +18,13 @@ module Prmd
         title: "child_required",
         optional: {"user:name" => "string"},
         required: {"user:email" => "string"}
+      },
+      {
+        title: "multiple_nested_required" ,
+        optional: {"user:name" => "string"},
+        required: {"user:email" => "string", 
+                   "address:street" => "string",
+                   "address:zip" => "string"}
       }
     ].each do |test_hash|
 
