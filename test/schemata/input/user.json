@@ -42,10 +42,19 @@
       "rel": "create",
       "schema": {
         "properties": {
+          "user": {
+             "type": "object",
+             "properties" : {
+                "email": "string",
+                "name": "string"
+             },
+             "required": ["email"]
+          }
         },
         "type": [
           "object"
-        ]
+        ],
+        "required": ["user"]
       },
       "title": "Create"
     },

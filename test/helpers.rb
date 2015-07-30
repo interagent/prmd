@@ -86,3 +86,63 @@ end
 def user_input_schema
   @user_input_schema ||= Prmd.combine(input_schemas_path('user.json'))
 end
+
+module PrmdLinkTestHelpers
+  def link_parent_required
+    {
+      "description"=>"Create User",
+      "href"=>"/users",
+      "method"=>"POST",
+      "rel"=>"create",
+      "schema"=> {
+        "properties"=>{
+          "user"=>{
+            "type"=>["object"], "properties"=>{"email"=>"string", "name"=>"string"}}
+        },
+        "type"=>["object"],
+        "required"=>["user"]
+      },
+      "title"=>"Create"
+    }
+  end
+
+  def link_no_required
+    {
+      "description"=>"Create User",
+      "href"=>"/users",
+      "method"=>"POST",
+      "rel"=>"create",
+      "schema"=> {
+        "properties"=>{
+          "user"=>{
+            "type"=>["object"], "properties"=>{"email"=>"string", "name"=>"string"}}
+        },
+        "type"=>["object"]
+      },
+      "title"=>"Create"
+    }
+  end
+
+  def link_child_required
+    {
+      "description"=>"Create user",
+      "href"=>"/users",
+      "method"=>"POST",
+      "rel"=>"create",
+      "schema"=> {
+        "properties"=>{
+          "user"=>{
+            "type"=>["object"],
+            "properties"=>{
+              "email"=>"string",
+              "name"=>"string"
+            },
+            "required" =>  ["email"]
+          }
+        },
+        "type"=>["object"]
+      },
+      "title"=>"Create"
+    }
+  end
+end

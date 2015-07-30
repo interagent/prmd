@@ -13,9 +13,7 @@
 
 <%- if link.has_key?('schema') && link['schema'].has_key?('properties') %>
   <%-
-    required, optional = link['schema']['properties'].partition do |k, v|
-      (link['schema']['required'] || []).include?(k)
-    end.map { |partition| Hash[partition] }
+    required, optional = Prmd::Link.new(link).required_and_optional_parameters
   %>
   <%- unless required.empty? %>
 #### Required Parameters

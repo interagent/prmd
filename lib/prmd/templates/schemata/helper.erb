@@ -27,17 +27,17 @@
 
         # avoid repetition :}
         description = if descriptions.size > 1
-          descriptions.first.gsub!(/ of (this )?.*/, "")
-          descriptions[1..-1].map { |d| d.gsub!(/unique /, "") }
-          [descriptions[0...-1].join(", "), descriptions.last].join(" or ")
-        else
-          description = descriptions.last
-        end
+                        descriptions.first.gsub!(/ of (this )?.*/, "")
+                        descriptions[1..-1].map { |d| d.gsub!(/unique /, "") }
+                        [descriptions[0...-1].join(", "), descriptions.last].join(" or ")
+                      else
+                        description = descriptions.last
+                      end
 
         example = [*examples].map { |e| "`#{e.to_json}`" }.join(" or ")
         attributes << [key, "string", description, example]
 
-      # found a nested object
+        # found a nested object
       elsif value['properties']
         nested = extract_attributes(schema, value['properties'])
         nested.each do |attribute|
@@ -45,7 +45,7 @@
         end
         attributes.concat(nested)
 
-      # found an array with nested objects
+        # found an array with nested objects
       elsif value['items'] 
         if value['items']['properties']
           nested = extract_attributes(schema, value['items']['properties'])
@@ -56,17 +56,17 @@
         end
         if value['items']['oneOf']
           value['items']['oneOf'].each_with_index do |oneof, index|
-          ref,  oneof_definition = schema.dereference(oneof)
-          oneof_name = ref ? ref.split('/').last : index
-          nested = extract_attributes(schema, oneof_definition['properties'])
-          nested.each do |attribute|
-            attribute[0] = "#{key}/[#{oneof_name.upcase}].#{attribute[0]}"
+            ref,  oneof_definition = schema.dereference(oneof)
+            oneof_name = ref ? ref.split('/').last : index
+            nested = extract_attributes(schema, oneof_definition['properties'])
+            nested.each do |attribute|
+              attribute[0] = "#{key}/[#{oneof_name.upcase}].#{attribute[0]}"
+            end
+            attributes.concat(nested)
           end
-          attributes.concat(nested)
         end
-      end
 
-      # just a regular attribute
+        # just a regular attribute
       else
         attributes << build_attribute(schema, key, value)
       end
@@ -160,10 +160,10 @@
 
     if value.has_key?('example')
       example = if value['example'].is_a?(Hash) && value['example'].has_key?('oneOf')
-        value['example']['oneOf'].map { |e| "`#{e.to_json}`" }.join(" or ")
-      else
-        "`#{value['example'].to_json}`"
-      end
+                  value['example']['oneOf'].map { |e| "`#{e.to_json}`" }.join(" or ")
+                else
+                  "`#{value['example'].to_json}`"
+                end
     elsif value['type'] == ['array'] && value.has_key?('items')
       example = "`#{schema.schema_value_example(value)}`"
     elsif value['type'].include?('null')
@@ -171,10 +171,10 @@
     end
 
     type = if value['type'].include?('null')
-      'nullable '
-    else
-      ''
-    end
+             'nullable '
+           else
+             ''
+           end
     type += (value['format'] || (value['type'] - ['null']).first)
     [key, type, description, example]
   end
@@ -192,4 +192,5 @@
       end
     end
   end
+
 %>
