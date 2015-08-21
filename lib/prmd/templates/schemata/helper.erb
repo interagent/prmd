@@ -45,8 +45,7 @@
         end
         attributes.concat(nested)
 
-      # found an array with nested objects
-      elsif value['items'] 
+      elsif array_with_nested_objects?(value['items'])
         if value['items']['properties']
           nested = extract_attributes(schema, value['items']['properties'])
           nested.each do |attribute|
@@ -191,5 +190,10 @@
         '{' + ref_resource + '_' + identity_key.split('/').last + '}'
       end
     end
+  end
+
+  def array_with_nested_objects?(items)
+    return unless items
+    items['properties'] || items['oneOf']
   end
 %>
