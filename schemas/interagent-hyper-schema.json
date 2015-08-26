@@ -112,6 +112,9 @@
                 "schema": {
                     "anyOf": [
                         {
+                            "$ref": "#/definitions/ref"
+                        },
+                        {
                             "required": ["properties"]
                         },
                         {
