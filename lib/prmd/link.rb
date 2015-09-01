@@ -1,3 +1,5 @@
+require 'ostruct'
+
 module Prmd
   class Link
     def initialize(link_schema)
