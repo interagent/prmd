@@ -115,6 +115,9 @@
                             "$ref": "#/definitions/ref"
                         },
                         {
+                            "required": ["items"]
+                        },
+                        {
                             "required": ["properties"]
                         },
                         {
