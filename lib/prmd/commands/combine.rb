@@ -79,12 +79,15 @@ module Prmd
       base = Prmd::Template.load_json('combine_head.json')
       schema = base['$schema']
       meta = {}
-      if filename = options[:meta]
-        meta = Prmd.load_schema_file(filename)
-        if meta.nil?
-          warn "Meta file #{filename} was empty, please fill it next time."
-          meta = {}
+      filename = options[:meta]
+      meta = Prmd.load_schema_file(filename) if filename
+      if meta.nil? || meta.empty?
+        if filename
+          warn "Meta file (#{filename}) is empty, please fill it next time."
+        else
+          warn "Meta is empty, please fill it next time."
         end
+        meta ||= {}
       end
       combiner = Prmd::Combiner.new(meta: meta, base: base, schema: schema)
       combiner.combine(*schemata)
