@@ -115,16 +115,15 @@
                             "$ref": "#/definitions/ref"
                         },
                         {
-                            "required": ["items"]
+                            "required": ["items", "type"]
                         },
                         {
-                            "required": ["properties"]
+                            "required": ["properties", "type"]
                         },
                         {
-                            "required": ["patternProperties"]
+                            "required": ["patternProperties", "type"]
                         }
-                    ],
-                    "required": ["type"]
+                    ]
                 }
             },
             "required": ["description", "href", "method", "rel", "title"]
