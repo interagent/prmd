@@ -3,6 +3,7 @@ require_relative 'cli/combine'
 require_relative 'cli/doc'
 require_relative 'cli/generate'
 require_relative 'cli/render'
+require_relative 'cli/stub'
 require_relative 'cli/verify'
 
 # :nodoc:
@@ -17,6 +18,7 @@ module Prmd
         doc:     CLI::Doc.make_parser(props),
         init:    CLI::Generate.make_parser(props),
         render:  CLI::Render.make_parser(props),
+        stub:    CLI::Stub.make_parser(props),
         verify:  CLI::Verify.make_parser(props)
       }
     end
@@ -95,6 +97,8 @@ module Prmd
         CLI::Generate.run(argv, options)
       when :render
         CLI::Render.run(argv, options)
+      when :stub
+        CLI::Stub.run(argv, options)
       when :verify
         CLI::Verify.run(argv, options)
       end
