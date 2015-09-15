@@ -141,6 +141,8 @@ Links that expect a custom http header MUST include the following attributes:
 }
 ```
 
+Links MAY specify a different serialization than defined in [properties](#properties) via `targetSchema`.
+
 ### `properties`
 
 Properties defines the attributes that exist in the serialization of the object.
