@@ -163,7 +163,7 @@
       else
         "`#{value['example'].to_json}`"
       end
-    elsif value['type'] == ['array'] && value.has_key?('items')
+    elsif (value['type'] == ['array'] && value.has_key?('items')) || value.has_key?('enum')
       example = "`#{schema.schema_value_example(value)}`"
     elsif value['type'].include?('null')
       example = "`null`"
