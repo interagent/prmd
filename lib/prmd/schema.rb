@@ -126,6 +126,8 @@ module Prmd
         else
           [schema_example(items)]
         end
+      elsif value.key?('enum')
+        value['enum'][0]
       elsif DefaultExamples.key?(value["format"])
         DefaultExamples[value["format"]]
       elsif DefaultExamples.key?(value["type"][0])
