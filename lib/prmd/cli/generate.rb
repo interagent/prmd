@@ -18,6 +18,9 @@ module Prmd
 
         OptionParser.new do |opts|
           opts.banner = "#{binname} init [options] <resource name>"
+          opts.on('-t', '--template templates', String, 'Use alternate template') do |t|
+            yield :template, t
+          end
           opts.on('-y', '--yaml', 'Generate YAML') do |y|
             yield :yaml, y
           end
