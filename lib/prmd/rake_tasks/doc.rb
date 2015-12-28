@@ -4,6 +4,7 @@ require 'prmd/load_schema_file'
 require 'prmd/url_generator'
 require 'prmd/template'
 require 'prmd/schema'
+require 'prmd/link'
 
 # :nodoc:
 module Prmd
