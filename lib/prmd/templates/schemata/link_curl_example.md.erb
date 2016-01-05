@@ -21,12 +21,12 @@ $ curl -n -X <%= link['method'] %> <%= schema.href %><%= path -%><%- unless opti
 <%- else %>
 $ curl -n <%= schema.href %><%= path -%><%- unless options[:http_header].empty? %> \<%- end %>
 <%- end %>
-  <%- options[:http_header].each do |key, value| %>
-  -H "<%= key %>: <%= value %>"<%- unless key == options[:http_header].keys.last %> \<%- end %>
-  <%- end %>
-<%- if !data.nil? && link['method'].upcase != 'GET' %> \
-  -d '<%= JSON.pretty_generate(data) %>'
+<%- if !data.nil? && link['method'].upcase != 'GET' %>
+  -d '<%= JSON.pretty_generate(data) %>'<%- unless options[:http_header].empty? %> \<%- end %>
 <%- elsif !get_params.empty? && link['method'].upcase == 'GET' %> -G \
-  -d <%= get_params.join(" \\\n  -d ") %>
+  -d <%= get_params.join(" \\\n  -d ") %><%- unless options[:http_header].empty? %> \<%- end %>
+<%- end %>
+<%- options[:http_header].each do |key, value| %>
+  -H "<%= key %>: <%= value %>"<%- if key != options[:http_header].keys.last %> \<%- end %>
 <%- end %>
 ```
