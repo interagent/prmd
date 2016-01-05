@@ -4,9 +4,9 @@
 
     _, properties = schema.dereference(properties)
 
-    properties.each do |key, value|
+    properties.keys.sort.each do |key|
       # found a reference to another element:
-      _, value = schema.dereference(value)
+      _, value = schema.dereference(properties[key])
 
       # include top level reference to nested things, when top level is nullable
       if value.has_key?('type') && value['type'].include?('null') && (value.has_key?('items') || value.has_key?('properties'))
