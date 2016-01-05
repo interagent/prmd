@@ -22,6 +22,9 @@ module Prmd
           opts.on('-o', '--output-file FILENAME', String, 'File to write result to') do |n|
             yield :output_file, n
           end
+          opts.on('-s', '--custom-schema FILENAME', String, 'Path to custom schema') do |n|
+            yield :custom_schema, n
+          end
         end
       end
 
@@ -35,7 +38,8 @@ module Prmd
       def self.execute(options = {})
         filename = options.fetch(:argv).first
         _, data = try_read(filename)
-        errors = Prmd.verify(data)
+        custom_schema = options[:custom_schema]
+        errors = Prmd.verify(data, custom_schema: custom_schema)
         unless errors.empty?
           errors.map! { |error| "#{filename}: #{error}" } if filename
           errors.each { |error| $stderr.puts(error) }

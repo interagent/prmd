@@ -18,12 +18,17 @@ module Prmd
       store = JsonSchema::DocumentStore.new
       SCHEMAS.each do |file|
         file = File.expand_path("../../../../schemas/#{file}", __FILE__)
-        data = JSON.parse(File.read(file))
-        schema = JsonSchema::Parser.new.parse!(data)
-        schema.expand_references!(store: store)
-        store.add_schema(schema)
+        add_schema(store, file)
       end
+      add_schema(store, @custom_schema) unless @custom_schema.nil?
       store
+    end
+
+    def self.add_schema(store, file)
+      data = JSON.parse(File.read(file))
+      schema = JsonSchema::Parser.new.parse!(data)
+      schema.expand_references!(store: store)
+      store.add_schema(schema)
     end
 
     # @return [JsonSchema::DocumentStore]
@@ -70,7 +75,8 @@ module Prmd
     #
     # @param [Hash] schema_data
     # @return [Array<String>] errors from failed verification
-    def self.verify(schema_data)
+    def self.verify(schema_data, custom_schema: nil)
+      @custom_schema = custom_schema
       a = verify_schema(schema_data)
       return a unless a.empty?
       b = verify_parsable(schema_data)
@@ -88,7 +94,7 @@ module Prmd
   end
 
   # (see Prmd::Verification.verify)
-  def self.verify(schema_data)
-    Verification.verify(schema_data)
+  def self.verify(schema_data, custom_schema: nil)
+    Verification.verify(schema_data, custom_schema: custom_schema)
   end
 end
