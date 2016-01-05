@@ -46,7 +46,7 @@ module Prmd
 
     class Schema < OpenStruct
       def has_properties?
-        !self.properties.empty?
+        self.properties && !self.properties.empty?
       end
 
       def property_is_required?(property_name)
