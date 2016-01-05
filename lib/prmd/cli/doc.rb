@@ -22,14 +22,14 @@ module Prmd
             options = HashHelpers.deep_symbolize_keys(settings)
             yield :settings, options
           end
-          opts.on('-p', '--prepend header,overview', Array, 'Prepend files to output') do |p|
-            yield :prepend, p
-          end
           opts.on('-c', '--content-type application/json', String, 'Content-Type header') do |c|
             yield :content_type, c
           end
           opts.on('-o', '--output-file FILENAME', String, 'File to write result to') do |n|
             yield :output_file, n
+          end
+          opts.on('-p', '--prepend header,overview', Array, 'Prepend files to output') do |p|
+            yield :prepend, p
           end
         end
       end
