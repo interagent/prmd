@@ -4,9 +4,9 @@
 
     _, properties = schema.dereference(properties)
 
-    properties.keys.sort.each do |key|
+    properties.each do |key, value|
       # found a reference to another element:
-      _, value = schema.dereference(properties[key])
+      _, value = schema.dereference(value)
 
       # include top level reference to nested things, when top level is nullable
       if value.has_key?('type') && value['type'].include?('null') && (value.has_key?('items') || value.has_key?('properties'))
@@ -76,7 +76,7 @@
       end
       [key, type, description, example]
     }
-    return attributes
+    return attributes.sort
   end
 
   def extract_schemata_refs(schema, properties)
