@@ -47,7 +47,7 @@
 #### Response Example
 
 ```
-<%- if response_example %>
+<%- if response_example.has_key?('head') %>
 <%=   response_example['head'] %>
 <%- else %>
 HTTP/1.1 <%=
@@ -62,9 +62,9 @@ HTTP/1.1 <%=
 <%- end %>
 ```
 
-<%- if response_example || link['rel'] != 'empty' %>
+<%- if response_example.has_key?('body') || link['rel'] != 'empty' %>
 ```json
-<%- if response_example %>
+<%- if response_example.has_key?('body') %>
 <%=   response_example['body'] %>
 <%- else %>
 <%-   if link['rel'] == 'empty' %>
