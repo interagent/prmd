@@ -11,6 +11,10 @@
 <%- unless options[:doc][:disable_title_and_description] %>
 ## <a name="resource-<%= resource %>"><%= title %></a>
 
+<%- if schemata['stability'] && !schemata['stability'].empty? %>
+Stability: `<%= schemata['stability'] %>`
+<%- end -%>
+
 <%= schemata['description'] %>
 <%- end -%>
 
