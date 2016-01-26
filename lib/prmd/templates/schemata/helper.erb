@@ -136,7 +136,7 @@
     end
 
     if value['pattern']
-      description += "<br/> **pattern:** <code>#{value['pattern'].gsub /\|/, '&#124;'}</code>"
+      description += "<br/> **pattern:** `#{value['pattern'].gsub /\|/, '&#124;'}`"
     end
 
     if value['minLength'] || value['maxLength']
