@@ -1,4 +1,11 @@
 language: ruby
+rvm:
+- 2.0
+- 2.1
+- 2.2
+- ruby-head
+before_install:
+- gem install bundler -v '~> 1.10'
 script: "bundle exec rake"
 notifications:
   email: false
