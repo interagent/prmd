@@ -122,6 +122,9 @@
                         },
                         {
                             "required": ["patternProperties", "type"]
+                        },
+                        {
+                            "required": ["oneOf"]
                         }
                     ]
                 }
