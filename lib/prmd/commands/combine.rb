@@ -69,13 +69,43 @@ module Prmd
       schemata
     end
 
+    # Escape '#' and '/' in 'href' keys. They need to be escaped in JSON schema,
+    # but to make it easier to write JSON schema with Prmd, those two characters
+    # are escaped automatically when they appear between '{()}'.
+    # See https://github.com/interagent/prmd/issues/106.
+    #
+    # @api private
+    # @param [Array<SchemaHash>] schema hashes
+    # @return [Array<SchemaHash>] schema hashes
+    def self.escape_hrefs(data)
+      if data.is_a? Array
+        data.map! {
+          |x| escape_hrefs(x)
+        }
+      elsif data.is_a? Hash
+        data.each { |k,v|
+          if k == 'href'
+            if v.is_a? String
+              v = v.gsub(/\{\(.*?\)\}/) { |x|
+                x.gsub('#', '%23').gsub('/', '%2F')
+              }
+            end
+          else
+            v = escape_hrefs(v)
+          end
+          data[k] = v
+        }
+      end
+      data
+    end
+
     # Merges all found schema files in the given paths into a single Schema
     #
     # @param [Array<String>] paths
     # @param [Hash<Symbol, Object>] options
     # @return (see Prmd::Combiner#combine)
     def self.combine(paths, options = {})
-      schemata = load_schemas(paths)
+      schemata = escape_hrefs(load_schemas(paths))
       base = Prmd::Template.load_json('combine_head.json')
       schema = base['$schema']
       meta = {}
@@ -99,6 +129,7 @@ module Prmd
       private :load_schema_hash
       private :load_files
       private :load_schemas
+      private :escape_hrefs
     end
   end
 
