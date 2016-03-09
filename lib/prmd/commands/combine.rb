@@ -82,7 +82,7 @@ module Prmd
         data.map! {
           |x| escape_hrefs(x)
         }
-      elsif data.is_a? Hash
+      elsif data.is_a?(Hash) || data.is_a?(Prmd::SchemaHash)
         data.each { |k,v|
           if k == 'href'
             if v.is_a? String
