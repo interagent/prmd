@@ -51,7 +51,7 @@ module Prmd
       # Defines the rake task
       # @return [void]
       def define
-        desc 'Combine schemas' unless Rake.application.last_comment
+        desc 'Combine schemas' unless Rake.application.last_description
         task(name) do
           result = Prmd.combine(paths, options)
           if output_file
