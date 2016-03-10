@@ -73,7 +73,7 @@ module Prmd
       # Defines the rake task
       # @return [void]
       def define
-        desc 'Generate documentation' unless Rake.application.last_comment
+        desc 'Generate documentation' unless Rake.application.last_description
         task(name) do
           if files.is_a?(Hash)
             files.each do |infile, outfile|
