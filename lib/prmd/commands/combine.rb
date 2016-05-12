@@ -64,7 +64,7 @@ module Prmd
     # @return (see .load_files)
     def self.load_schemas(paths, options = {})
       files = crawl_map(paths, options)
-      schemata = load_files(files.sort, options)
+      schemata = load_files(files, options)
       handle_faulty_load(schemata, files) unless options[:faulty_load]
       schemata
     end
