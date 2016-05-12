@@ -33,8 +33,7 @@ module Prmd
       files.flatten!
       files.delete(options[:meta])
       # sort by name without extension for stable order
-      files.sort! {|x, y| x.split('.', 2).first <=> y.split('.', 2) }
-      files
+      files.sort_by {|file| file.split('.', 2).first}
     end
 
     # @api private
