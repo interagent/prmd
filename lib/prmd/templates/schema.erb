@@ -1,7 +1,8 @@
 <%=
   schemata_template = Prmd::Template::load('schemata.md.erb', options[:template])
 
-  schema['properties'].map do |resource, property|
+  schema['properties'].keys.sort.map do |key|
+    resource, property = key, schema['properties'][key]
     begin
       _, schemata = schema.dereference(property)
       schemata_template.result({
