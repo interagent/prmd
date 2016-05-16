@@ -32,8 +32,7 @@ module Prmd
       end
       files.flatten!
       files.delete(options[:meta])
-      # sort by name without extension for stable order
-      files.sort_by {|file| file.split('.', 2).first}
+      files
     end
 
     # @api private
@@ -64,7 +63,8 @@ module Prmd
     # @return (see .load_files)
     def self.load_schemas(paths, options = {})
       files = crawl_map(paths, options)
-      schemata = load_files(files, options)
+      # sort for stable loading across platforms
+      schemata = load_files(files.sort, options)
       handle_faulty_load(schemata, files) unless options[:faulty_load]
       schemata
     end
