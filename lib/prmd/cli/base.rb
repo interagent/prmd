@@ -33,8 +33,8 @@ module Prmd
       # @param [Array<String>] argv
       # @return [Array<String>] remaining arguments
       # @private
-      def execute_parser(parser, argv)
-        parser.parse(argv)
+      def execute_parser(argv)
+        @parser.parse(argv)
       end
 
       # Set the given key and value in the given options Hash.
@@ -66,10 +66,10 @@ module Prmd
       # @return [Hash<Symbol, Object>] parsed options
       def parse_options(argv, options = {})
         opts = {}
-        parser = make_parser(options) do |key, value|
+        @parser = make_parser(options) do |key, value|
           set_option(opts, key, value)
         end
-        argv = execute_parser(parser, argv)
+        argv = execute_parser(argv)
         opts[:argv] = argv
         opts
       end
