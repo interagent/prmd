@@ -1,5 +1,6 @@
 require_relative 'base'
 require_relative '../commands/init'
+require_relative '../utils'
 
 module Prmd
   module CLI
@@ -40,7 +41,11 @@ module Prmd
       # @return (see Prmd::CLI::Base#execute)
       def self.execute(options = {})
         name = options.fetch(:argv).first
-        write_result Prmd.init(name, options), options
+        if Prmd::Utils.blank?(name)
+          abort @parser
+        else
+          write_result Prmd.init(name, options), options
+        end
       end
     end
   end
