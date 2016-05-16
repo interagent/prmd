@@ -2,7 +2,7 @@
 module Prmd
   # Well, duh, its a Version module, what did you expect?
   module Version
-    MAJOR, MINOR, TEENY, PATCH = 0, 11, 9, nil
+    MAJOR, MINOR, TEENY, PATCH = 0, 11, 10, nil
     # version string
     # @return [String]
     STRING = [MAJOR, MINOR, TEENY, PATCH].compact.join('.').freeze
