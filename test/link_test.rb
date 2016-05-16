@@ -1,4 +1,5 @@
-require File.expand_path(File.join(File.dirname(__FILE__), '.', 'helpers'))
+require_relative 'helpers'
+
 module Prmd
   class LinkTest < MiniTest::Test
     include PrmdLinkTestHelpers
@@ -22,7 +23,7 @@ module Prmd
       {
         title: "multiple_nested_required" ,
         optional: {"user:name" => "string"},
-        required: {"user:email" => "string", 
+        required: {"user:email" => "string",
                    "address:street" => "string",
                    "address:zip" => "string"}
       }

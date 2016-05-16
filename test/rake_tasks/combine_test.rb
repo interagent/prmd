@@ -1,4 +1,4 @@
-require File.expand_path('../helpers', File.dirname(__FILE__))
+require_relative '../helpers'
 require 'prmd/rake_tasks/combine'
 require 'rake'
 
