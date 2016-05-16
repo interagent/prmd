@@ -1,4 +1,4 @@
-require File.expand_path(File.join(File.dirname(__FILE__), '..', 'helpers'))
+require_relative '../helpers'
 require 'prmd/cli/doc'
 
 class PrmdCliDocTest < Minitest::Test

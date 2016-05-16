@@ -1,4 +1,4 @@
-require File.expand_path(File.join(File.dirname(__FILE__), '..', 'helpers'))
+require_relative '../helpers'
 
 require 'json_pointer'
 
@@ -6,7 +6,7 @@ class InteragentRenderTest < Minitest::Test
   def test_render_for_valid_schema
     markdown = render
 
-    assert_match /An app in our PaaS ecosystem./, markdown
+    assert_match(/An app in our PaaS ecosystem./, markdown)
   end
 
   def test_render_for_schema_with_property_defined_with_anyOf
@@ -21,15 +21,15 @@ class InteragentRenderTest < Minitest::Test
       }
     })
     markdown = render
-    assert_match /version.*v10\.9\.rc1/, markdown
+    assert_match(/version.*v10\.9\.rc1/, markdown)
   end
 
 
   def test_render_for_schema_with_property_defined_with_oneOf
     markdown = render
 
-   assert_match /\*\*options\/\[OPTION1\]\.type\*\*/, markdown
-   assert_match /\*\*options\/\[OPTION2\]\.type\*\*/, markdown
+   assert_match(/\*\*options\/\[OPTION1\]\.type\*\*/, markdown)
+   assert_match(/\*\*options\/\[OPTION2\]\.type\*\*/, markdown)
   end
 
 
@@ -95,37 +95,37 @@ class InteragentRenderTest < Minitest::Test
               'example'     => 'example'
             },
             'option-type1' => {
-              'type' => 'string', 
-              'example' => 'OPTION1', 
-              'enum' => 'OPTION1'                   
+              'type' => 'string',
+              'example' => 'OPTION1',
+              'enum' => 'OPTION1'
             },
             'option-type2' => {
-              'type' => 'string', 
+              'type' => 'string',
               'example' => 'OPTION2',
               'enum' => 'OPTION2'
             },
             'option1' => {
               'properties' => {
                 'type' => {
-                    '$ref' => '#/definitions/config-var/definitions/option-type1'    
+                    '$ref' => '#/definitions/config-var/definitions/option-type1'
                 }
               }
             },
             'option2' => {
               'properties' => {
                 'type' => {
-                    '$ref' => '#/definitions/config-var/definitions/option-type2'    
+                    '$ref' => '#/definitions/config-var/definitions/option-type2'
                 }
               }
             },
-            'options' => {                      
+            'options' => {
               'items' => {
                 'example'=> 'CHOICE1',
                 'oneOf' => [
-                  { 
+                  {
                     '$ref' => '#/definitions/config-var/definitions/option1'
                   },
-                  { 
+                  {
                    '$ref' => '#/definitions/config-var/definitions/option2'
                   }
                 ]

@@ -1,4 +1,4 @@
-require File.expand_path('common', File.dirname(__FILE__))
+require_relative 'common'
 begin
   require 'prmd/multi_loader/toml'
 rescue LoadError

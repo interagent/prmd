@@ -1,4 +1,4 @@
-require File.expand_path('common', File.dirname(__FILE__))
+require_relative 'common'
 require 'prmd/multi_loader/json'
 
 class PrmdMultiLoaderJsonTest < Minitest::Test
