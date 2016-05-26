@@ -81,7 +81,8 @@
 
   def extract_schemata_refs(schema, properties)
     ret = []
-    properties.each do |_, value|
+    properties.keys.sort.each do |key|
+      value = properties[key]
       ref, value = schema.dereference(value)
       if value['properties']
         refs = extract_schemata_refs(schema, value['properties'])
