@@ -22,6 +22,9 @@ module Prmd
           opts.on('-o', '--output-file FILENAME', String, 'File to write result to') do |n|
             yield :output_file, n
           end
+          opts.on('-t', '--type-as-string', 'Allow type as string') do |t|
+            options[:type_as_string] = t
+          end
         end
       end
 
@@ -30,7 +33,8 @@ module Prmd
       # @example Usage
       #   Prmd::CLI::Combine.execute(argv: ['schema/schemata/api'],
       #                              meta: 'schema/meta.json',
-      #                              output_file: 'schema/api.json')
+      #                              output_file: 'schema/api.json',
+      #                              type-as-string)
       #
       # @param (see Prmd::CLI::Base#execute)
       # @return (see Prmd::CLI::Base#execute)
