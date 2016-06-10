@@ -24,24 +24,24 @@ module Prmd
     attr_reader :data
 
     # @param [Hash<String, Object>] new_data
-    def initialize(new_data = {})
-      @data = convert_type_to_array(new_data)
+    def initialize(new_data = {}, options = {})
+      @data = convert_type_to_array(new_data, options)
       @schemata_examples = {}
     end
 
     #
     # @param [Object] datum
     # @return [Object] same type as the input object
-    def convert_type_to_array(datum)
+    def convert_type_to_array(datum, options)
       case datum
       when Array
-        datum.map { |element| convert_type_to_array(element) }
+        datum.map { |element| convert_type_to_array(element, options) }
       when Hash
-        if datum.key?('type') && datum['type'].is_a?(String)
+        if datum.key?('type') && datum['type'].is_a?(String) && !options[:type_as_string]
           datum['type'] = [*datum['type']]
         end
         datum.each_with_object({}) do |(k, v), hash|
-          hash[k] = convert_type_to_array(v)
+          hash[k] = convert_type_to_array(v, options)
         end
       else
         datum

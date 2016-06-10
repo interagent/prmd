@@ -119,7 +119,7 @@ module Prmd
         end
         meta ||= {}
       end
-      combiner = Prmd::Combiner.new(meta: meta, base: base, schema: schema)
+      combiner = Prmd::Combiner.new(meta: meta, base: base, schema: schema, options: options)
       combiner.combine(*schemata)
     end
 

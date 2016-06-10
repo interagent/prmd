@@ -13,6 +13,7 @@ module Prmd
       @schema = properties.fetch(:schema)
       @base = properties.fetch(:base, {})
       @meta = properties.fetch(:meta, {})
+      @options = properties.fetch(:options, {})
     end
 
     # @param [Object] datum
@@ -53,7 +54,7 @@ module Prmd
         reference_localizer(data['definitions'][id_ary])
       end
 
-      Prmd::Schema.new(data)
+      Prmd::Schema.new(data, @options)
     end
 
     private :reference_localizer
