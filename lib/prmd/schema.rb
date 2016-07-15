@@ -10,6 +10,7 @@ module Prmd
     "number"  => 42.0,
     "string"  => "example",
 
+    "date"      => "2015-01-01",
     "date-time" => "2015-01-01T12:00:00Z",
     "email"     => "username@example.com",
     "hostname"  => "example.com",

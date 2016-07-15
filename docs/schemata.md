@@ -42,7 +42,7 @@ Each attribute MUST include the following properties:
 Each attribute MAY include the following properties:
 
 * `pattern` - a javascript regex encoded in a string that the valid values MUST match
-* `format` - format of the value. MUST be one of spec defined `["date-time", "email", "hostname", "ipv4", "ipv6", "uri"]` or defined by us `["uuid"]`
+* `format` - format of the value. MUST be one of spec defined `["date", "date-time", "email", "hostname", "ipv4", "ipv6", "uri"]` or defined by us `["uuid"]`
 
 Examples:
 
