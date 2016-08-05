@@ -92,10 +92,6 @@
                 },
                 {
                     "required": ["type"],
-                    "type": ["array"]
-                },
-                {
-                    "required": ["type"],
                     "type": ["object"]
                 }
             ],
