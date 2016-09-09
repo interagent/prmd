@@ -42,7 +42,11 @@ module Prmd
           datum['type'] = [*datum['type']]
         end
         datum.each_with_object({}) do |(k, v), hash|
-          hash[k] = convert_type_to_array(v, options)
+          if k != 'example'
+            hash[k] = convert_type_to_array(v, options)
+          else
+            hash[k] = v
+          end
         end
       else
         datum
