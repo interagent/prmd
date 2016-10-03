@@ -1,0 +1,6 @@
+# The table of contents
+<% schema['properties'].keys.sort.map do |key| %>
+  <% resource, property = key, schema['properties'][key] %>
+  <% _, schemata = schema.dereference(property) %>
+  - <a href="#resource-<%= resource %>"><%= schemata['title'].split(' - ', 2).last %></a>
+<% end %>

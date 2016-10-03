@@ -21,6 +21,8 @@ module Prmd
       # @return [Array<String>, Hash<String, String>] list of files
       attr_accessor :files
 
+      attr_accessor :toc
+
       # Creates a new task with name +name+.
       #
       # @overload initialize(name)

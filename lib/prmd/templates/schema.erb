@@ -1,3 +1,4 @@
+<% if options[:toc] %><%= Prmd::Template::load('table_of_contents.erb', options[:template]).result({schema: schema}) %> <%end %>
 <%=
   schemata_template = Prmd::Template::load('schemata.md.erb', options[:template])
 
