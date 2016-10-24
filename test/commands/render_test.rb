@@ -28,11 +28,20 @@ class InteragentRenderTest < Minitest::Test
   def test_render_for_schema_with_property_defined_with_oneOf
     markdown = render
 
-   assert_match(/\*\*options\/\[OPTION1\]\.type\*\*/, markdown)
-   assert_match(/\*\*options\/\[OPTION2\]\.type\*\*/, markdown)
+    assert_match(/\*\*options\/\[OPTION1\]\.type\*\*/, markdown)
+    assert_match(/\*\*options\/\[OPTION2\]\.type\*\*/, markdown)
   end
 
+  def test_render_for_toc
+    schema = Prmd::Schema.new(data)
+    template = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'lib', 'prmd', 'templates'))
+    markdown = Prmd.render(schema, template: template, doc: { toc: true })
 
+    assert_match /^# The table of contents/, markdown
+    assert_match '<a href="#resource-app"', markdown
+    assert_match '- <a href="#link-POST-app-/apps">POST /apps', markdown
+    assert_match '<a name="link-POST-app-/apps"', markdown
+  end
 
   def test_render_for_example_as_an_array
     # matches -d '[{...}]' taking into account line breaks and spacing

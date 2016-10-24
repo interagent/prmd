@@ -28,7 +28,8 @@ module Prmd
     def append_default_options(options)
       options[:doc] = {
         url_style: 'default',
-        disable_title_and_description: false
+        disable_title_and_description: false,
+        toc: false
       }.merge(options[:doc])
     end
 
