@@ -138,6 +138,7 @@ Links that expect a custom http header MUST include the following attributes:
       },
       "title":        "Update"
     }
+  ]
 }
 ```
 
