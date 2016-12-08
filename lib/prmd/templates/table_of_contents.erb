@@ -1,9 +1,11 @@
-# The table of contents
+<%- Prmd::Template.render('schemata/helper.erb', options[:template]) -%>
+## The table of contents
+
 <% schema['properties'].keys.sort.map do |key| %>
   <% resource, property = key, schema['properties'][key] %>
   <% _, schemata = schema.dereference(property) %>
-  - <a href="#resource-<%= resource %>"><%= schemata['title'].split(' - ', 2).last %></a>
+- <a href="#resource-<%= resource %>"><%= schemata['title'].split(' - ', 2).last %></a>
   <% schemata.fetch('links', []).each do |l| %>
-    - <a href="#link-<%= l['method'] %>-<%= resource %>-<%= l['href'] %>"><%= l['method'] %> <%= l['href'] %></a>
+  - <a href="#link-<%= l['method'] %>-<%= resource %>-<%= l['href'] %>"><%= l['method'] %> <%= build_link_path(schema, l) %></a>
   <% end %>
- <% end %>
+<% end %>
