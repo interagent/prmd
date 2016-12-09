@@ -37,7 +37,7 @@ class InteragentRenderTest < Minitest::Test
     template = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'lib', 'prmd', 'templates'))
     markdown = Prmd.render(schema, template: template, doc: { toc: true })
 
-    assert_match /^# The table of contents/, markdown
+    assert_match /^## The table of contents/, markdown
     assert_match '<a href="#resource-app"', markdown
     assert_match '- <a href="#link-POST-app-/apps">POST /apps', markdown
     assert_match '<a name="link-POST-app-/apps"', markdown
