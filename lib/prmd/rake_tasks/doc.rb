@@ -37,7 +37,7 @@ module Prmd
         super options, &block
         if @options[:settings].is_a? String
           settings = Prmd.load_schema_file(@options[:settings])
-          @options[:settings] = HashHelpers.deep_symbolize_keys(settings)
+          @options.merge! HashHelpers.deep_symbolize_keys(settings)
         end
         @options[:template] ||= Prmd::Template.template_dirname
       end
