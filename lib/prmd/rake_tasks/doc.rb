@@ -5,6 +5,7 @@ require 'prmd/url_generator'
 require 'prmd/template'
 require 'prmd/schema'
 require 'prmd/link'
+require_relative '../hash_helpers'
 
 # :nodoc:
 module Prmd
@@ -34,6 +35,10 @@ module Prmd
         options = legacy_parameters(*args)
         @files = options.fetch(:files) { [] }
         super options, &block
+        if @options[:settings].is_a? String
+          settings = Prmd.load_schema_file(@options[:settings])
+          @options.merge! HashHelpers.deep_symbolize_keys(settings)
+        end
         @options[:template] ||= Prmd::Template.template_dirname
       end
 
