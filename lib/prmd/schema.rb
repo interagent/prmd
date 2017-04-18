@@ -118,6 +118,8 @@ module Prmd
         end
         ref = id_ref || value['anyOf'].first
         schema_example(ref)
+      elsif value.key?('allOf')
+        value['allOf'].map { |ref| schema_example(ref) }.reduce({}, &:merge)
       elsif value.key?('properties') # nested properties
         schema_example(value)
       elsif value.key?('items') # array of objects
