@@ -55,6 +55,11 @@ Examples:
       "format":       "uuid",
       "type":         ["string"]
     },
+    "identity": {
+      "anyOf": [
+        { "$ref": "/schemata/example#/definitions/id" }
+      ]
+    },
     "url": {
       "description":  "URL of resource",
       "example":      "http://example.com",
