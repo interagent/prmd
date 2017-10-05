@@ -21,6 +21,8 @@ Stability: `<%= schemata['stability'] %>`
 <%- if schemata['properties'] && !schemata['properties'].empty? %>
 ### Attributes
 
+<details>
+
 | Name | Type | Description | Example |
 | ------- | ------- | ------- | ------- |
 <%- refs = extract_schemata_refs(schema, schemata['properties']).map {|v| v && v.split("/")} %>
@@ -46,3 +48,5 @@ Stability: `<%= schemata['stability'] %>`
   })
 %>
 <%- end -%>
+
+</details>
