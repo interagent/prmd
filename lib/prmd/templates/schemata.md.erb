@@ -18,8 +18,12 @@ Stability: `<%= schemata['stability'] %>`
 <%= schemata['description'] %>
 <%- end -%>
 
+<details>
+  <summary>Details</summary>
+
 <%- if schemata['properties'] && !schemata['properties'].empty? %>
 ### Attributes
+
 
 | Name | Type | Description | Example |
 | ------- | ------- | ------- | ------- |
@@ -46,3 +50,5 @@ Stability: `<%= schemata['stability'] %>`
   })
 %>
 <%- end -%>
+
+</details>
