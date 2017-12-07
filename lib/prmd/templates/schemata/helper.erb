@@ -175,7 +175,7 @@
     else
       ''
     end
-    type += (value['format'] || (value['type'] - ['null']).first)
+    type += (value['format'] || (value['type'] - ['null']).join(' or '))
     [key, type, description, example]
   end
 
