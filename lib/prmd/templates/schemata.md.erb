@@ -18,11 +18,12 @@ Stability: `<%= schemata['stability'] %>`
 <%= schemata['description'] %>
 <%- end -%>
 
+<%- if schemata['properties'] && !schemata['properties'].empty? %>
+
+### Attributes
+
 <details>
   <summary>Details</summary>
-
-<%- if schemata['properties'] && !schemata['properties'].empty? %>
-### Attributes
 
 
 | Name | Type | Description | Example |
@@ -37,6 +38,8 @@ Stability: `<%= schemata['stability'] %>`
 | **<%= name %>** | *<%= type %>* | <%= description %> | <%= example %> |
 <%- end %>
 
+</details>
+
 <%- end %>
 <%- (schemata['links'] || []).each do |link, datum| %>
 <%=
@@ -50,5 +53,3 @@ Stability: `<%= schemata['stability'] %>`
   })
 %>
 <%- end -%>
-
-</details>
