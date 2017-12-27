@@ -6,6 +6,6 @@
   <% _, schemata = schema.dereference(property) %>
 - <a href="#resource-<%= resource %>"><%= schemata['title'].split(' - ', 2).last %></a>
   <% schemata.fetch('links', []).each do |l| %>
-  - <a href="#link-<%= l['method'] %>-<%= resource %>-<%= l['href'] %>"><%= l['method'] %> <%= build_link_path(schema, l) %></a>
+  - <a href="#<%= schemata['title'].gsub(/\s/, '-').downcase %>-<%= l['title'].gsub(/\s/, '-').downcase %>"><%= l['method'] %> <%= build_link_path(schema, l) %></a>
   <% end %>
 <% end %>
