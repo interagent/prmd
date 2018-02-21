@@ -197,4 +197,22 @@
     return unless items
     items['properties'] || items['oneOf']
   end
+
+  def underscore(string)
+    string.gsub(/::/, '/').
+    gsub(/([A-Z]+)([A-Z][a-z])/,'\1_\2').
+    gsub(/([a-z\d])([A-Z])/,'\1_\2').
+    tr("-", "_").
+    downcase
+  end
+
+  def link_path(key)
+    splited = key.split(':')
+    if splited.count > 1
+      filename = underscore(splited[-2]) + '.md'
+      "./#{filename}"
+    else
+      ''
+    end
+  end
 %>
