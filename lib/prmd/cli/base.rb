@@ -1,4 +1,5 @@
 require 'json'
+require 'fileutils'
 require_relative '../core_ext/optparse'
 require_relative '../load_schema_file'
 
@@ -7,6 +8,8 @@ module Prmd
     # Base module for CLI commands.
     # @api
     module Base
+      SCHEMA_INDEX_FILENAME = 'schema.md'
+
       # Create a parser specific for this command.
       # The parsers produced by this method should yield their options.
       #
@@ -80,10 +83,26 @@ module Prmd
       # @param [Hash<Symbol, Object>] options
       # @return [void]
       def write_result(data, options = {})
+
         output_file = options[:output_file]
+        output_dir = options[:output_dir]
         if output_file
           File.open(output_file, 'w') do |f|
             f.write(data)
+          end
+        elsif output_dir
+          schema_index = data.delete(SCHEMA_INDEX_FILENAME)
+          File.open(File.join(output_dir, SCHEMA_INDEX_FILENAME), 'w') do |f|
+            f.write(schema_index)
+          end
+
+          subdir = File.join(output_dir, 'mds')
+          FileUtils.mkdir(File.join(output_dir, 'mds')) unless File.exists?(subdir)
+
+          data.each do |filename, d|
+            File.open(File.join(subdir, filename), 'w') do |f|
+              f.write(d)
+            end
           end
         else
           $stdout.puts data

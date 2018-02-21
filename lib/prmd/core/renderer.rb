@@ -47,7 +47,28 @@ module Prmd
     # @param [Prmd::Schema] schema
     # @param [Hash<Symbol, Object>] options
     def render(schema, options = {})
-      @template.result(schema: schema, options: setup_options(options))
+      if options[:output_dir]
+        data = {}
+        data["schema.md"] = @template[:od_toc].result(schema: schema, options: setup_options(options))
+        schema['properties'].keys.each do |key|
+          resource, property = key, schema['properties'][key]
+          begin
+            _, schemata = schema.dereference(property)
+            data[key + '.md'] = @template[:od_schema].result({
+              options:         setup_options(options),
+              resource:        resource,
+              schema:          schema,
+              schemata:        schemata
+            })
+          rescue => e
+            $stdout.puts("Error in resource: #{resource}")
+            raise e
+          end
+        end
+        data
+      else
+        @template.result(schema: schema, options: setup_options(options))
+      end
     end
 
     private :default_options

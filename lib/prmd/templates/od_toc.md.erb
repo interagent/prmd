@@ -1,0 +1,19 @@
+<%- Prmd::Template.render('schemata/helper.erb', options[:template]) -%>
+## The table of contents
+<% keys = schema['properties'].keys.sort %>
+
+### Endpoints
+<% keys.map do |key| %>
+  <%  property = schema['properties'][key] %>
+  <% _, schemata = schema.dereference(property) %>
+  <% schemata.fetch('links', []).each do |l| %>
+- <a href="./mds/<%= key %>.md#<%= schemata['title'].gsub(/\s/, '-').downcase %>-<%= l['title'].gsub(/\s/, '-').downcase %>"><%= l['method'] %> <%= build_link_path(schema, l) %></a>
+  <% end %>
+<% end %>
+
+### Schema
+<% keys.map do |key| %>
+  <% resource, property = key, schema['properties'][key] %>
+  <% _, schemata = schema.dereference(property) %>
+- <a href="./mds/<%= key %>.md#resource-<%= resource %>"><%= schemata['title'].split(' - ', 2).last %></a>
+<% end %>

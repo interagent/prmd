@@ -31,6 +31,9 @@ module Prmd
           opts.on('-p', '--prepend header,overview', Array, 'Prepend files to output') do |p|
             yield :prepend, p
           end
+          opts.on('-od', '--output-dir DIRNAME', String, 'Divided files to write result to') do |d|
+            yield :output_dir, d
+          end
         end
       end
 

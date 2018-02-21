@@ -5,8 +5,11 @@
 -%>
 ### <a name="link-<%= link['method'] %>-<%= resource %>-<%= link['href'] %>"><%= title %> <%= link['title'] %></a>
 
+<%- unless options[:output_dir] %>
 <details>
 <summary>Detail</summary>
+<%- end %>
+
 
 <%= link['description'] %>
 
@@ -82,4 +85,6 @@ HTTP/1.1 <%=
 ```
 <%- end %>
 
+<%- unless options[:output_dir] %>
 </details>
+<%- end %>
