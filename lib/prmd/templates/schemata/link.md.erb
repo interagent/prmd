@@ -3,7 +3,8 @@
   response_example = link['response_example']
   link_schema_properties_template = Prmd::Template.load_template('link_schema_properties.md.erb', options[:template])
 -%>
-### <a name="link-<%= link['method'] %>-<%= resource %>-<%= link['href'] %>"><%= title %> <%= link['title'] %></a>
+<a name="link-<%= link['method'] %>-<%= resource %>-<%= link['href'] %>"></a>
+### <%= title %> <%= link['title'] %>
 
 <details>
   <summary>Details</summary>
