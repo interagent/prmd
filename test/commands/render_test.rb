@@ -39,8 +39,9 @@ class InteragentRenderTest < Minitest::Test
 
     assert_match /^## The table of contents/, markdown
     assert_match '<a href="#resource-app"', markdown
-    assert_match '- <a href="#link-POST-app-/apps">POST /apps', markdown
-    assert_match '<a name="link-POST-app-/apps"></a>', markdown
+    assert_match '<a name="resource-app"', markdown
+    assert_match '- <a href="#link-post-app-/apps">POST /apps', markdown
+    assert_match '<a name="link-post-app-/apps"></a>', markdown
   end
 
   def test_render_for_example_as_an_array
