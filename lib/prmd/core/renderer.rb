@@ -29,7 +29,8 @@ module Prmd
       options[:doc] = {
         url_style: 'default',
         disable_title_and_description: false,
-        toc: false
+        disable_detail_tag: false,
+        toc: false,
       }.merge(options[:doc])
     end
 

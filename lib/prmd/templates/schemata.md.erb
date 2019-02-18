@@ -23,9 +23,10 @@ Stability: `<%= schemata['stability'] %>`
 
 ### Attributes
 
+<%- unless options[:doc][:disable_detail_tag] %>
 <details>
   <summary>Details</summary>
-
+<%- end -%>
 
 | Name | Type | Description | Example |
 | ------- | ------- | ------- | ------- |
@@ -39,7 +40,9 @@ Stability: `<%= schemata['stability'] %>`
 | **<%= name %>** | *<%= type %>* | <%= description %> | <%= example %> |
 <%- end %>
 
+<%- unless options[:doc][:disable_detail_tag] %>
 </details>
+<%- end -%>
 
 <%- end %>
 <%- (schemata['links'] || []).each do |link, datum| %>

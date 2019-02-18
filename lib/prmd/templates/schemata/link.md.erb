@@ -6,8 +6,10 @@
 <a name="link-<%= link['method'] %>-<%= resource %>-<%= link['href'] %>"></a>
 ### <%= title %> <%= link['title'] %>
 
+<%- unless options[:doc][:disable_detail_tag] %>
 <details>
   <summary>Details</summary>
+<%- end %>
 
 <%= link['description'] %>
 
@@ -83,4 +85,6 @@ HTTP/1.1 <%=
 ```
 <%- end %>
 
+<%- unless options[:doc][:disable_detail_tag] %>
 </details>
+<%- end %>

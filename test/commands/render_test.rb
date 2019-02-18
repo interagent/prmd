@@ -42,6 +42,22 @@ class InteragentRenderTest < Minitest::Test
     assert_match '- <a href="#link-POST-app-/apps">POST /apps', markdown
     assert_match '<a name="link-POST-app-/apps"></a>', markdown
   end
+  
+  def test_render_for_detail_tag
+    schema = Prmd::Schema.new(data)
+    template = File.expand_path(File.join(File.dirname(__FILE__), '..', '..', 'lib', 'prmd', 'templates'))
+    markdown = Prmd.render(schema, template: template, doc: { disable_detail_tag: false })
+    
+    assert_equal markdown.scan(/\<summary\>Details\<\/summary\>/).size, 3
+    assert_equal markdown.scan(/\<details\>/).size, 3
+    assert_equal markdown.scan(/\<\/details\>/).size, 3
+    
+    markdown = Prmd.render(schema, template: template, doc: { disable_detail_tag: true })
+    
+    assert_equal markdown.scan(/\<summary\>Details\<\/summary\>/).size, 0
+    assert_equal markdown.scan(/\<details\>/).size, 0
+    assert_equal markdown.scan(/\<\/details\>/).size, 0
+  end
 
   def test_render_for_example_as_an_array
     # matches -d '[{...}]' taking into account line breaks and spacing
