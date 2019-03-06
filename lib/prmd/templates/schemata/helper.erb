@@ -183,8 +183,8 @@
   def build_link_path(schema, link)
     link['href'].gsub(%r|(\{\([^\)]+\)\})|) do |ref|
       ref = ref.gsub('%2F', '/').gsub('%23', '#').gsub(%r|[\{\(\)\}]|, '')
-      ref_resource = ref.split('#/definitions/').last.split('/').first.gsub('-','_')
       identity_key, identity_value = schema.dereference(ref)
+      ref_resource = identity_key.split('#/definitions/').last.split('/').first.gsub('-','_')
       if identity_value.has_key?('anyOf')
         '{' + ref_resource + '_' + identity_value['anyOf'].map {|r| r['$ref'].split('/').last}.join('_or_') + '}'
       else
