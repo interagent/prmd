@@ -50,6 +50,12 @@ class InteragentRenderTest < Minitest::Test
     assert_match expression, markdown
   end
 
+  def test_render_for_regex_patterns_with_pipes
+    expression = /<pre>\(\^first\$&#x7c;\^second\$\)<\/pre> \| \`"second"\` \|\n/
+    markdown = render
+    assert_match expression, markdown
+  end
+
   private
 
   def data
@@ -113,6 +119,12 @@ class InteragentRenderTest < Minitest::Test
               'example' => 'OPTION2',
               'enum' => 'OPTION2'
             },
+            'patterned-string' => {
+              'description' => 'A string with a regex pattern applied to it.',
+              'type' => 'string',
+              'example' => 'second',
+              'pattern' => '(^first$|^second$)'
+            },
             'option1' => {
               'properties' => {
                 'type' => {
@@ -175,7 +187,10 @@ class InteragentRenderTest < Minitest::Test
             },
             'options' => {
               '$ref' => '#/definitions/config-var/definitions/options'
-            }
+            },
+            'patterned-string' => {
+              '$ref' => '#/definitions/config-var/definitions/patterned-string'
+            },
           }
         }
       },

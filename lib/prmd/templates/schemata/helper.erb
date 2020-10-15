@@ -137,7 +137,10 @@
     end
 
     if value['pattern']
-      description += "<br/> **pattern:** `#{value['pattern']}`"
+      # Prevent the pipe regex pattern characters from being interpreted as markdown table:
+      pattern = value['pattern'].gsub(/\|/, '&#x7c;')
+
+      description += "<br/> **pattern:** <pre>#{pattern}</pre>"
     end
 
     if value['minLength'] || value['maxLength']
