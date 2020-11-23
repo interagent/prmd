@@ -51,7 +51,7 @@ class InteragentRenderTest < Minitest::Test
   end
 
   def test_render_for_regex_patterns_with_pipes
-    expression = /<pre>\(\^first\$&#x7c;\^second\$\)<\/pre> \| \`"second"\` \|\n/
+    expression = /<pre>\^&#91;a-z\]\(\?:&#91;a-z\]&#x7c;\)\+&#91;a-z\]\$/
     markdown = render
     assert_match expression, markdown
   end
@@ -123,7 +123,7 @@ class InteragentRenderTest < Minitest::Test
               'description' => 'A string with a regex pattern applied to it.',
               'type' => 'string',
               'example' => 'second',
-              'pattern' => '(^first$|^second$)'
+              'pattern' => '^[a-z](?:[a-z]&#x7c;)+[a-z]$'
             },
             'option1' => {
               'properties' => {
