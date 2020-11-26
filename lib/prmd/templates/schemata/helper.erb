@@ -138,10 +138,15 @@
 
     if value['pattern']
       # Prevent the pipe regex pattern characters from being interpreted
-      # as markdown table
+      # as markdown table.
       # Prevent instances of []() in regexes from being rendered as
-      # markdown links
-      pattern = value['pattern'].gsub(/\|/, '&#124;').gsub(/\[/, '&#91;')
+      # markdown links.
+      # Prevent patterns with * being rendered as having emphasis
+      # or being an unordered list.
+      pattern = value['pattern']
+        .gsub(/\|/, '&vert;')
+        .gsub(/\[/, '&lbrack;')
+        .gsub(/\*/, '&ast;')
 
       description += "<br/> **pattern:** <pre>#{pattern}</pre>"
     end
