@@ -1,5 +1,6 @@
 require 'json'
 require 'yaml'
+require_relative 'time_to_json_schema'
 
 # :nodoc:
 module Prmd
@@ -196,6 +197,7 @@ module Prmd
     #
     # @return [String]
     def to_s
+      Time.prepend Prmd::TimeToJSONSchema
       to_json
     end
 

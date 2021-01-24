@@ -37,4 +37,10 @@ class SchemaTest < Minitest::Test
     user_id = user_input_schema['definitions']['user']['definitions']['id']
     assert_equal(value, { 'override' => true }.merge(user_id))
   end
+
+  def test_include_time
+    time = user_input_schema['definitions']['user']['definitions']['created_at']['example']
+    json_schema_format = "\"#{Time.parse(time).xmlschema}\""
+    assert_equal(time.to_json, json_schema_format)
+  end
 end
