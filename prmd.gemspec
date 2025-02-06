@@ -18,6 +18,8 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(/^(test|spec|features)\//)
   spec.require_paths = ['lib']
 
+  spec.required_ruby_version = ">= 3.2"
+
   spec.add_dependency 'erubis',      '~> 2.7'
   spec.add_dependency 'json_schema', '~> 0.3', '>= 0.3.1'
 
