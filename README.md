@@ -1,4 +1,4 @@
-# Prmd [![Travis Status](https://travis-ci.org/interagent/prmd.svg)](https://travis-ci.org/interagent/prmd)
+# Prmd
 
 [![Gem Version](https://badge.fury.io/rb/prmd.svg)](http://badge.fury.io/rb/prmd)
 
