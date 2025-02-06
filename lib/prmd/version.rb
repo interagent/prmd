@@ -5,7 +5,7 @@ module Prmd
     MAJOR, MINOR, TEENY, PATCH = 0, 14, 0, nil
     # version string
     # @return [String]
-    STRING = [MAJOR, MINOR, TEENY, PATCH].compact.join('.').freeze
+    STRING = [MAJOR, MINOR, TEENY, PATCH].compact.join(".").freeze
   end
   # @return [String]
   VERSION = Version::STRING

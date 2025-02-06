@@ -1,5 +1,5 @@
-module Prmd #:nodoc:
-  module MultiLoader #:nodoc:
+module Prmd # :nodoc:
+  module MultiLoader # :nodoc:
     # Exception raised when a extension loader cannot be found.
     class LoaderNotFound < StandardError
     end
@@ -18,7 +18,7 @@ module Prmd #:nodoc:
     def self.autoload_loader(name)
       # extension names are preceeded with a .
       # TODO. probably just remove the first .
-      loader_name = name.gsub('.', '')
+      loader_name = name.gsub(".", "")
       require "prmd/multi_loader/#{loader_name}"
       true
     rescue
@@ -109,7 +109,7 @@ module Prmd #:nodoc:
       # @eg
       #   my_loader.load_file('my_file.ext')
       def load_file(filename)
-        File.open(filename, 'r') { |f| return load_stream(f) }
+        File.open(filename, "r") { |f| return load_stream(f) }
       end
 
       # Register the loader to the +args+ extensions

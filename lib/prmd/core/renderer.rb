@@ -1,4 +1,4 @@
-require_relative '../template'
+require_relative "../template"
 
 # :nodoc:
 module Prmd
@@ -16,9 +16,9 @@ module Prmd
     def default_options
       {
         http_header: {},
-        content_type: 'application/json',
+        content_type: "application/json",
         doc: {},
-        prepend: nil
+        prepend: nil,
       }
     end
 
@@ -27,9 +27,9 @@ module Prmd
     # @return [void]
     def append_default_options(options)
       options[:doc] = {
-        url_style: 'default',
+        url_style: "default",
         disable_title_and_description: false,
-        toc: false
+        toc: false,
       }.merge(options[:doc])
     end
 

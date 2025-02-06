@@ -1,7 +1,7 @@
-require 'minitest'
-require 'minitest/autorun'
-require 'prmd'
-require 'prmd/cli/base'
+require "minitest"
+require "minitest/autorun"
+require "prmd"
+require "prmd/cli/base"
 
 module Prmd
   module CLI
@@ -20,11 +20,10 @@ module CliBaseTestHelpers
   end
 
   def options_for_test_run
-    { }
+    {}
   end
 
   def validate_parse_options(options)
-    #
   end
 
   def validate_run_options(options)
@@ -33,7 +32,6 @@ module CliBaseTestHelpers
   end
 
   def command_module
-    #
   end
 
   def test_make_parser
@@ -49,7 +47,7 @@ module CliBaseTestHelpers
 
   def test_run
     opts = command_module.run(argv_for_test_run,
-                              options_for_test_run.merge(noop: true))
+      options_for_test_run.merge(noop: true),)
 
     validate_run_options opts
   end
@@ -57,124 +55,125 @@ end
 
 module PrmdTestHelpers
   module Paths
-    def self.schemas(*args)
-      File.join(File.expand_path('schemata', File.dirname(__FILE__)), *args)
+    def self.schemas(*)
+      File.join(File.expand_path("schemata", File.dirname(__FILE__)), *)
     end
 
-    def self.input_schemas(*args)
-      schemas('input', *args)
+    def self.input_schemas(*)
+      schemas("input", *)
     end
 
-    def self.output_schemas(*args)
-      schemas('output', *args)
+    def self.output_schemas(*)
+      schemas("output", *)
     end
   end
 end
 
-def schemas_path(*args)
-  PrmdTestHelpers::Paths.schemas(*args)
+def schemas_path(*)
+  PrmdTestHelpers::Paths.schemas(*)
 end
 
-def input_schemas_path(*args)
-  PrmdTestHelpers::Paths.input_schemas(*args)
+def input_schemas_path(*)
+  PrmdTestHelpers::Paths.input_schemas(*)
 end
 
-def output_schemas_path(*args)
-  PrmdTestHelpers::Paths.output_schemas(*args)
+def output_schemas_path(*)
+  PrmdTestHelpers::Paths.output_schemas(*)
 end
 
 def user_input_schema
-  @user_input_schema ||= Prmd.combine(input_schemas_path('user.json'))
+  @user_input_schema ||= Prmd.combine(input_schemas_path("user.json"))
 end
 
 module PrmdLinkTestHelpers
   def link_parent_required
     {
-      "description"=>"Create User",
-      "href"=>"/users",
-      "method"=>"POST",
-      "rel"=>"create",
-      "schema"=> {
-        "properties"=>{
-          "user"=>{
-            "type"=>["object"], "properties"=>{"email"=>"string", "name"=>"string"}}
+      "description" => "Create User",
+      "href" => "/users",
+      "method" => "POST",
+      "rel" => "create",
+      "schema" => {
+        "properties" => {
+          "user" => {
+            "type" => ["object"], "properties" => { "email" => "string", "name" => "string" },
+          },
         },
-        "type"=>["object"],
-        "required"=>["user"]
+        "type" => ["object"],
+        "required" => ["user"],
       },
-      "title"=>"Create"
+      "title" => "Create",
     }
   end
 
   def link_no_required
     {
-      "description"=>"Create User",
-      "href"=>"/users",
-      "method"=>"POST",
-      "rel"=>"create",
-      "schema"=> {
-        "properties"=>{
-          "user"=>{
-            "type"=>["object"], "properties"=>{"email"=>"string", "name"=>"string"}}
+      "description" => "Create User",
+      "href" => "/users",
+      "method" => "POST",
+      "rel" => "create",
+      "schema" => {
+        "properties" => {
+          "user" => {
+            "type" => ["object"], "properties" => { "email" => "string", "name" => "string" },
+          },
         },
-        "type"=>["object"]
+        "type" => ["object"],
       },
-      "title"=>"Create"
+      "title" => "Create",
     }
   end
 
   def link_child_required
     {
-      "description"=>"Create user",
-      "href"=>"/users",
-      "method"=>"POST",
-      "rel"=>"create",
-      "schema"=> {
-        "properties"=>{
-          "user"=>{
-            "type"=>["object"],
-            "properties"=>{
-              "email"=>"string",
-              "name"=>"string"
+      "description" => "Create user",
+      "href" => "/users",
+      "method" => "POST",
+      "rel" => "create",
+      "schema" => {
+        "properties" => {
+          "user" => {
+            "type" => ["object"],
+            "properties" => {
+              "email" => "string",
+              "name" => "string",
             },
-            "required" =>  ["email"]
-          }
+            "required" => ["email"],
+          },
         },
-        "type"=>["object"]
+        "type" => ["object"],
       },
-      "title"=>"Create"
+      "title" => "Create",
     }
   end
 
   def link_multiple_nested_required
     {
-      "description"=>"Create user",
-      "href"=>"/users",
-      "method"=>"POST",
-      "rel"=>"create",
-      "schema"=> {
-        "properties"=>{
-          "user"=>{
-            "type"=>["object"],
-            "properties"=>{
-              "email"=>"string",
-              "name"=>"string"
+      "description" => "Create user",
+      "href" => "/users",
+      "method" => "POST",
+      "rel" => "create",
+      "schema" => {
+        "properties" => {
+          "user" => {
+            "type" => ["object"],
+            "properties" => {
+              "email" => "string",
+              "name" => "string",
             },
-            "required" =>  ["email"]
+            "required" => ["email"],
           },
           "address" => {
-            "type"=>["object"],
-            "properties"=>{
-              "street"=>"string",
-              "zip"=>"string"
-            }
-          }
+            "type" => ["object"],
+            "properties" => {
+              "street" => "string",
+              "zip" => "string",
+            },
+          },
         },
-        "type"=>["object"],
-        "required" => ["address"]
+        "type" => ["object"],
+        "required" => ["address"],
       },
-      "title"=>"Create"
+      "title" => "Create",
     }
-
   end
 end

@@ -1,2 +1,2 @@
 # alias for yaml
-require_relative 'yaml'
+require_relative "yaml"

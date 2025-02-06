@@ -1,8 +1,8 @@
-require_relative 'loader'
-require 'yaml'
+require_relative "loader"
+require "yaml"
 
-module Prmd #:nodoc:
-  module MultiLoader #:nodoc:
+module Prmd # :nodoc:
+  module MultiLoader # :nodoc:
     # YAML MultiLoader
     module Yaml
       extend Prmd::MultiLoader::Loader
@@ -13,7 +13,7 @@ module Prmd #:nodoc:
       end
 
       # register this loader for all .yaml and .yml files
-      extensions '.yaml', '.yml'
+      extensions ".yaml", ".yml"
     end
   end
 end

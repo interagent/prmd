@@ -1,8 +1,8 @@
-require_relative 'loader'
-require 'toml'
+require_relative "loader"
+require "toml"
 
-module Prmd #:nodoc:
-  module MultiLoader #:nodoc:
+module Prmd # :nodoc:
+  module MultiLoader # :nodoc:
     # TOML MultiLoader
     module Toml
       extend Prmd::MultiLoader::Loader
@@ -13,7 +13,7 @@ module Prmd #:nodoc:
       end
 
       # register this loader for all .toml files
-      extensions '.toml'
+      extensions ".toml"
     end
   end
 end

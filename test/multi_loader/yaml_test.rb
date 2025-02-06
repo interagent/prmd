@@ -1,5 +1,5 @@
-require_relative 'common'
-require 'prmd/multi_loader/yaml'
+require_relative "common"
+require "prmd/multi_loader/yaml"
 
 class PrmdMultiLoaderYamlTest < Minitest::Test
   include PrmdLoaderTests
@@ -9,6 +9,6 @@ class PrmdMultiLoaderYamlTest < Minitest::Test
   end
 
   def testing_filename
-    schemas_path('data/test.yaml')
+    schemas_path("data/test.yaml")
   end
 end

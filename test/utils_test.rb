@@ -1,4 +1,4 @@
-require_relative 'helpers'
+require_relative "helpers"
 
 class UtilsTest < Minitest::Test
   def test_blank?

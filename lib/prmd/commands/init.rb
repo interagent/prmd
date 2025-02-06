@@ -1,6 +1,6 @@
-require 'json'
-require_relative '../template'
-require_relative '../core/generator'
+require "json"
+require_relative "../template"
+require_relative "../core/generator"
 
 # :nodoc:
 module Prmd
@@ -10,9 +10,9 @@ module Prmd
     #
     # @return [Prmd::Generator]
     def self.make_generator(options)
-      base = Prmd::Template.load_json('init_default.json')
+      base = Prmd::Template.load_json("init_default.json")
       template_name = options.fetch(:template) do
-        abort 'render: Template was not provided'
+        abort "render: Template was not provided"
       end
       if template_name && !template_name.empty?
         template_dir = File.expand_path(template_name)
@@ -20,8 +20,8 @@ module Prmd
         template_dir = File.dirname(template_name) unless File.directory?(template_dir)
         template_name = File.basename(template_name)
       else
-        template_name = 'init_resource.json.erb'
-        template_dir  = ''
+        template_name = "init_resource.json.erb"
+        template_dir = ""
       end
       template = Prmd::Template.load_template(template_name, template_dir)
       Prmd::Generator.new(base: base, template: template)
@@ -39,7 +39,7 @@ module Prmd
     generator_options = { resource: nil, parent: nil }
     if resource
       parent = nil
-      parent, resource = resource.split('/') if resource.include?('/')
+      parent, resource = resource.split("/") if resource.include?("/")
       generator_options[:parent] = parent
       generator_options[:resource] = resource
     end

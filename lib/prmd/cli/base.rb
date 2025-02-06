@@ -1,6 +1,6 @@
-require 'json'
-require_relative '../core_ext/optparse'
-require_relative '../load_schema_file'
+require "json"
+require_relative "../core_ext/optparse"
+require_relative "../load_schema_file"
 
 module Prmd
   module CLI
@@ -23,7 +23,6 @@ module Prmd
       # @return [OptionParser] newly created parser
       # @abstract
       def make_parser(options = {})
-        #
       end
 
       # Runs the provided parser with the provided argv.
@@ -82,9 +81,7 @@ module Prmd
       def write_result(data, options = {})
         output_file = options[:output_file]
         if output_file
-          File.open(output_file, 'w') do |f|
-            f.write(data)
-          end
+          File.write(output_file, data)
         else
           $stdout.puts data
         end
@@ -96,11 +93,11 @@ module Prmd
       # @return [Array[Symbol, String]] source, data
       def try_read(filename = nil)
         if filename && !filename.empty?
-          return :file, Prmd.load_schema_file(filename)
+          [:file, Prmd.load_schema_file(filename)]
         elsif !$stdin.tty?
-          return :io, JSON.load($stdin.read)
+          [:io, JSON.load($stdin.read)]
         else
-          abort 'Nothing to read'
+          abort "Nothing to read"
         end
       end
 
@@ -111,7 +108,6 @@ module Prmd
       # @return [void]
       # @abstract
       def execute(options = {})
-        #
       end
 
       # Method called when the command is ran with the :noop option enabled.
@@ -120,7 +116,7 @@ module Prmd
       # @param [Hash<Symbol, Object>] options
       # @return [void]
       def noop_execute(options = {})
-        $stderr.puts options
+        warn options
       end
 
       # Run this command given a argv and optional options Hash.

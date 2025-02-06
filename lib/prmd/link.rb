@@ -1,20 +1,20 @@
-require 'ostruct'
+require "ostruct"
 
 module Prmd
   class Link
     def initialize(link_schema)
-      @link_schema = link_schema 
+      @link_schema = link_schema
     end
 
     def required_and_optional_parameters
-      @params = {required: {}, optional: {} }
+      @params = { required: {}, optional: {} }
       recurse_properties(Schema.new(@link_schema["schema"]), "")
       [@params[:required], @params[:optional]]
     end
 
     private
 
-    def recurse_properties(schema, prefix ="", parent_required= false )
+    def recurse_properties(schema, prefix = "", parent_required = false)
       return unless schema.has_properties?
 
       schema.properties.keys.each do |prop_name|
@@ -27,8 +27,7 @@ module Prmd
     end
 
     def handle_property(property, prefix, required = false)
-      case
-      when property_is_object?(property["type"])
+      if property_is_object?(property["type"])
         recurse_properties(Schema.new(property), "#{prefix}:", required)
       else
         categorize_parameter(prefix, property, required)
@@ -40,18 +39,18 @@ module Prmd
       type == "object" || type.include?("object")
     end
 
-    def categorize_parameter(name, param,  required=false)
+    def categorize_parameter(name, param, required = false)
       @params[(required ? :required : :optional)][name] = param
     end
 
     class Schema < OpenStruct
       def has_properties?
-        self.properties && !self.properties.empty?
+        properties && !properties.empty?
       end
 
       def property_is_required?(property_name)
         return false unless required
-        return required.include?(property_name)
+        required.include?(property_name)
       end
     end
   end

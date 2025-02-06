@@ -1,6 +1,6 @@
-require_relative 'base'
-require_relative '../commands/init'
-require_relative '../utils'
+require_relative "base"
+require_relative "../commands/init"
+require_relative "../utils"
 
 module Prmd
   module CLI
@@ -15,17 +15,17 @@ module Prmd
       # @param (see Prmd::CLI::Base#make_parser)
       # @return (see Prmd::CLI::Base#make_parser)
       def self.make_parser(options = {})
-        binname = options.fetch(:bin, 'prmd')
+        binname = options.fetch(:bin, "prmd")
 
         OptionParser.new do |opts|
           opts.banner = "#{binname} init [options] <resource name>"
-          opts.on('-t', '--template templates', String, 'Use alternate template') do |t|
+          opts.on("-t", "--template templates", String, "Use alternate template") do |t|
             yield :template, t
           end
-          opts.on('-y', '--yaml', 'Generate YAML') do |y|
+          opts.on("-y", "--yaml", "Generate YAML") do |y|
             yield :yaml, y
           end
-          opts.on('-o', '--output-file FILENAME', String, 'File to write result to') do |n|
+          opts.on("-o", "--output-file FILENAME", String, "File to write result to") do |n|
             yield :output_file, n
           end
         end

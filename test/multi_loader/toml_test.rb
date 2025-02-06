@@ -1,18 +1,19 @@
-require_relative 'common'
+require_relative "common"
 begin
-  require 'prmd/multi_loader/toml'
+  require "prmd/multi_loader/toml"
 rescue LoadError
-  #
 end
 
-class PrmdMultiLoaderTomlTest < Minitest::Test
-  include PrmdLoaderTests
+if defined?(TOML)
+  class PrmdMultiLoaderTomlTest < Minitest::Test
+    include PrmdLoaderTests
 
-  def loader_module
-    Prmd::MultiLoader::Toml
-  end
+    def loader_module
+      Prmd::MultiLoader::Toml
+    end
 
-  def testing_filename
-    schemas_path('data/test.toml')
+    def testing_filename
+      schemas_path("data/test.toml")
+    end
   end
-end if defined?(TOML)
+end

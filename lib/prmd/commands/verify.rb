@@ -1,5 +1,5 @@
-require 'json'
-require 'json_schema'
+require "json"
+require "json_schema"
 
 # :nodoc:
 module Prmd
@@ -8,9 +8,9 @@ module Prmd
     # These schemas are listed manually and in order because they reference each
     # other.
     SCHEMAS = [
-      'schema.json',
-      'hyper-schema.json',
-      'interagent-hyper-schema.json'
+      "schema.json",
+      "hyper-schema.json",
+      "interagent-hyper-schema.json",
     ]
 
     # @return [JsonSchema::DocumentStore]
@@ -62,8 +62,8 @@ module Prmd
     # @param [Hash] schema_data
     # @return [Array<String>] errors from failed verfication
     def self.verify_schema(schema_data)
-      schema_uri = schema_data['$schema']
-      return ['Missing $schema key.'] unless schema_uri
+      schema_uri = schema_data["$schema"]
+      return ["Missing $schema key."] unless schema_uri
 
       meta_schema = document_store.lookup_schema(schema_uri)
       return ["Unknown $schema: #{schema_uri}."] unless meta_schema

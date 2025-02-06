@@ -1,5 +1,5 @@
-require_relative 'url_generators/generators/default'
-require_relative 'url_generators/generators/json'
+require_relative "url_generators/generators/default"
+require_relative "url_generators/generators/json"
 
 # :nodoc:
 module Prmd
@@ -15,10 +15,10 @@ module Prmd
 
     # @return [Array]
     def url_params
-      if @options[:doc][:url_style].downcase == 'json'
-        klass = Generators::JSON
+      klass = if @options[:doc][:url_style].downcase == "json"
+        Generators::JSON
       else
-        klass = Generators::Default
+        Generators::Default
       end
 
       klass.generate(schema: @schema, link: @link)

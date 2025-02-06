@@ -1,10 +1,10 @@
-require_relative 'core_ext/optparse'
-require_relative 'cli/combine'
-require_relative 'cli/doc'
-require_relative 'cli/generate'
-require_relative 'cli/render'
-require_relative 'cli/stub'
-require_relative 'cli/verify'
+require_relative "core_ext/optparse"
+require_relative "cli/combine"
+require_relative "cli/doc"
+require_relative "cli/generate"
+require_relative "cli/render"
+require_relative "cli/stub"
+require_relative "cli/verify"
 
 # :nodoc:
 module Prmd
@@ -15,11 +15,11 @@ module Prmd
     def self.make_command_parsers(props = {})
       {
         combine: CLI::Combine.make_parser(props),
-        doc:     CLI::Doc.make_parser(props),
-        init:    CLI::Generate.make_parser(props),
-        render:  CLI::Render.make_parser(props),
-        stub:    CLI::Stub.make_parser(props),
-        verify:  CLI::Verify.make_parser(props)
+        doc: CLI::Doc.make_parser(props),
+        init: CLI::Generate.make_parser(props),
+        render: CLI::Render.make_parser(props),
+        stub: CLI::Stub.make_parser(props),
+        verify: CLI::Verify.make_parser(props),
       }
     end
 
@@ -35,7 +35,7 @@ module Prmd
     # @param [Hash<Symbol, Object>] options
     # @param [Hash<Symbol, Object>] props
     def self.make_parser(options, props = {})
-      binname = props.fetch(:bin, 'prmd')
+      binname = props.fetch(:bin, "prmd")
 
       # This is only used to attain the help commands
       commands = make_command_parsers(props)
@@ -43,21 +43,19 @@ module Prmd
         "   #{command.banner}"
       end.join("\n")
 
-      global = OptionParser.new do |opts|
+      OptionParser.new do |opts|
         opts.banner = "Usage: #{binname} [options] [command [options]]"
         opts.separator "\nAvailable options:"
-        opts.on('--version', 'Return version') do
+        opts.on("--version", "Return version") do
           puts "prmd #{Prmd::VERSION}"
           exit(0)
         end
-        opts.on('--noop', 'Commands will not execute') do |v|
+        opts.on("--noop", "Commands will not execute") do |v|
           options[:noop] = v
         end
         opts.separator "\nAvailable commands:"
         opts.separator help_text
       end
-
-      global
     end
 
     # Parse top level CLI options from argv

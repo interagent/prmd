@@ -1,5 +1,5 @@
-require 'prmd/commands/combine'
-require 'prmd/rake_tasks/base'
+require "prmd/commands/combine"
+require "prmd/rake_tasks/base"
 
 # :nodoc:
 module Prmd
@@ -30,11 +30,11 @@ module Prmd
       #   @param [Hash<Symbol, Object>] options
       #     .option [String] output_file
       #     .option [Array<String>] paths
-      def initialize(*args, &block)
-        options = legacy_parameters(*args)
+      def initialize(*, &)
+        options = legacy_parameters(*)
         @paths = options.fetch(:paths) { [] }
         @output_file = options[:output_file]
-        super options, &block
+        super(options, &)
       end
 
       private
@@ -51,13 +51,11 @@ module Prmd
       # Defines the rake task
       # @return [void]
       def define
-        desc 'Combine schemas' unless Rake.application.last_description
+        desc "Combine schemas" unless Rake.application.last_description
         task(name) do
           result = Prmd.combine(paths, options)
           if output_file
-            File.open(output_file, 'w') do |file|
-              file.write(result)
-            end
+            File.write(output_file, result)
           end
         end
       end

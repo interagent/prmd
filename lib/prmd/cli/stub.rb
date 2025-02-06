@@ -1,4 +1,4 @@
-require_relative 'base'
+require_relative "base"
 
 module Prmd
   module CLI
@@ -11,7 +11,7 @@ module Prmd
       # @param (see Prmd::CLI::Base#make_parser)
       # @return (see Prmd::CLI::Base#make_parser)
       def self.make_parser(options = {})
-        binname = options.fetch(:bin, 'prmd')
+        binname = options.fetch(:bin, "prmd")
 
         OptionParser.new do |opts|
           opts.banner = "#{binname} stub [options] <combined schema>"

@@ -1,5 +1,5 @@
-require 'json'
-require 'yaml'
+require "json"
+require "yaml"
 
 # :nodoc:
 module Prmd
@@ -7,16 +7,16 @@ module Prmd
   DefaultExamples = {
     "boolean" => true,
     "integer" => 42,
-    "number"  => 42.0,
-    "string"  => "example",
+    "number" => 42.0,
+    "string" => "example",
 
-    "date"      => "2015-01-01",
+    "date" => "2015-01-01",
     "date-time" => "2015-01-01T12:00:00Z",
-    "email"     => "username@example.com",
-    "hostname"  => "example.com",
-    "ipv4"      => "192.0.2.1",
-    "ipv6"      => "2001:DB8::1",
-    "uuid"      => "01234567-89ab-cdef-0123-456789abcdef",
+    "email" => "username@example.com",
+    "hostname" => "example.com",
+    "ipv4" => "192.0.2.1",
+    "ipv6" => "2001:DB8::1",
+    "uuid" => "01234567-89ab-cdef-0123-456789abcdef",
   }
 
   # Schema object
@@ -38,14 +38,14 @@ module Prmd
       when Array
         datum.map { |element| convert_type_to_array(element, options) }
       when Hash
-        if datum.key?('type') && datum['type'].is_a?(String) && !options[:type_as_string]
-          datum['type'] = [*datum['type']]
+        if datum.key?("type") && datum["type"].is_a?(String) && !options[:type_as_string]
+          datum["type"] = [*datum["type"]]
         end
         datum.each_with_object({}) do |(k, v), hash|
-          if k != 'example'
-            hash[k] = convert_type_to_array(v, options)
+          hash[k] = if k != "example"
+            convert_type_to_array(v, options)
           else
-            hash[k] = v
+            v
           end
         end
       else
@@ -81,9 +81,9 @@ module Prmd
     # @param [Hash, String] reference
     def dereference(reference)
       if reference.is_a?(Hash)
-        if reference.key?('$ref')
+        if reference.key?("$ref")
           value = reference.dup
-          key = value.delete('$ref')
+          key = value.delete("$ref")
         else
           return [nil, reference] # no dereference needed
         end
@@ -92,7 +92,7 @@ module Prmd
       end
       begin
         datum = @data
-        key.gsub(/[^#]*#\//, '').split('/').each do |fragment|
+        key.gsub(/[^#]*#\//, "").split("/").each do |fragment|
           datum = datum[fragment]
         end
         # last dereference will have nil key, so compact it out
@@ -100,41 +100,41 @@ module Prmd
         dereferenced_key, dereferenced_value = dereference(datum)
         [
           [key, dereferenced_key].compact.last,
-          [dereferenced_value, value].inject({}, &:merge)
+          [dereferenced_value, value].inject({}, &:merge),
         ]
       rescue => error
-        $stderr.puts("Failed to dereference `#{key}`")
+        warn("Failed to dereference `#{key}`")
         raise error
       end
     end
 
     # @param [Hash] value
     def schema_value_example(value)
-      if value.key?('example')
-        value['example']
-      elsif value.key?('anyOf')
-        id_ref = value['anyOf'].find do |ref|
-          ref['$ref'] && ref['$ref'].split('/').last == 'id'
+      if value.key?("example")
+        value["example"]
+      elsif value.key?("anyOf")
+        id_ref = value["anyOf"].find do |ref|
+          ref["$ref"] && ref["$ref"].split("/").last == "id"
         end
-        ref = id_ref || value['anyOf'].first
+        ref = id_ref || value["anyOf"].first
         schema_example(ref)
-      elsif value.key?('allOf')
-        value['allOf'].map { |ref| schema_example(ref) }.reduce({}, &:merge)
-      elsif value.key?('properties') # nested properties
+      elsif value.key?("allOf")
+        value["allOf"].map { |ref| schema_example(ref) }.reduce({}, &:merge)
+      elsif value.key?("properties") # nested properties
         schema_example(value)
-      elsif value.key?('items') # array of objects
-        _, items = dereference(value['items'])
-        if value['items'].key?('example')
+      elsif value.key?("items") # array of objects
+        _, items = dereference(value["items"])
+        if value["items"].key?("example")
           if items["example"].is_a?(Array)
             items["example"]
           else
-            [items['example']]
+            [items["example"]]
           end
         else
           [schema_example(items)]
         end
-      elsif value.key?('enum')
-        value['enum'][0]
+      elsif value.key?("enum")
+        value["enum"][0]
       elsif DefaultExamples.key?(value["format"])
         DefaultExamples[value["format"]]
       elsif DefaultExamples.key?(value["type"][0])
@@ -146,16 +146,16 @@ module Prmd
     def schema_example(schema)
       _, dff_schema = dereference(schema)
 
-      if dff_schema.key?('example')
-        dff_schema['example']
-      elsif dff_schema.key?('properties')
+      if dff_schema.key?("example")
+        dff_schema["example"]
+      elsif dff_schema.key?("properties")
         example = {}
-        dff_schema['properties'].each do |key, value|
+        dff_schema["properties"].each do |key, value|
           _, value = dereference(value)
           example[key] = schema_value_example(value)
         end
         example
-      elsif dff_schema.key?('items')
+      elsif dff_schema.key?("items")
         schema_value_example(dff_schema)
       end
     end
@@ -163,16 +163,14 @@ module Prmd
     # @param [String] schemata_id
     def schemata_example(schemata_id)
       _, schema = dereference("#/definitions/#{schemata_id}")
-      @schemata_examples[schemata_id] ||= begin
-        schema_example(schema)
-      end
+      @schemata_examples[schemata_id] ||= schema_example(schema)
     end
 
     # Retrieve this schema's href
     #
     # @return [String, nil]
     def href
-      (@data['links'] && @data['links'].find { |link| link['rel'] == 'self' } || {})['href']
+      (@data["links"] && @data["links"].find { |link| link["rel"] == "self" } || {})["href"]
     end
 
     # Convert Schema to JSON
@@ -181,8 +179,7 @@ module Prmd
     def to_json
       new_json = JSON.pretty_generate(@data)
       # nuke empty lines
-      new_json = new_json.split("\n").reject(&:empty?).join("\n") + "\n"
-      new_json
+      new_json.split("\n").reject(&:empty?).join("\n") + "\n"
     end
 
     # Convert Schema to YAML
