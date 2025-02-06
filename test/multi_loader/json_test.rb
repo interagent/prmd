@@ -1,5 +1,5 @@
-require_relative 'common'
-require 'prmd/multi_loader/json'
+require_relative "common"
+require "prmd/multi_loader/json"
 
 class PrmdMultiLoaderJsonTest < Minitest::Test
   include PrmdLoaderTests
@@ -9,6 +9,6 @@ class PrmdMultiLoaderJsonTest < Minitest::Test
   end
 
   def testing_filename
-    schemas_path('data/test.json')
+    schemas_path("data/test.json")
   end
 end

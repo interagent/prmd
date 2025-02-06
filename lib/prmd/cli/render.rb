@@ -1,5 +1,5 @@
-require_relative 'base'
-require_relative '../commands/render'
+require_relative "base"
+require_relative "../commands/render"
 
 module Prmd
   module CLI
@@ -12,20 +12,20 @@ module Prmd
       # @param (see Prmd::CLI::Base#make_parser)
       # @return (see Prmd::CLI::Base#make_parser)
       def self.make_parser(options = {})
-        binname = options.fetch(:bin, 'prmd')
+        binname = options.fetch(:bin, "prmd")
 
         OptionParser.new do |opts|
           opts.banner = "#{binname} render [options] <combined schema>"
-          opts.on('-c', '--content-type application/json', String, 'Content-Type header') do |c|
+          opts.on("-c", "--content-type application/json", String, "Content-Type header") do |c|
             yield :content_type, c
           end
-          opts.on('-o', '--output-file FILENAME', String, 'File to write result to') do |n|
+          opts.on("-o", "--output-file FILENAME", String, "File to write result to") do |n|
             yield :output_file, n
           end
-          opts.on('-p', '--prepend header,overview', Array, 'Prepend files to output') do |p|
+          opts.on("-p", "--prepend header,overview", Array, "Prepend files to output") do |p|
             yield :prepend, p
           end
-          opts.on('-t', '--template templates', String, 'Use alternate template') do |t|
+          opts.on("-t", "--template templates", String, "Use alternate template") do |t|
             yield :template, t
           end
         end

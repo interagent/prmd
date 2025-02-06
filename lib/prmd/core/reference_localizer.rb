@@ -60,15 +60,15 @@ module Prmd
       end
 
       def localize_ref
-        return unless hash.key?('$ref')
-        hash['$ref'] = '#/definitions' + local_reference
+        return unless hash.key?("$ref")
+        hash["$ref"] = "#/definitions" + local_reference
       end
 
       def localize_href
-        return unless hash.key?('href') && hash['href'].is_a?(String)
-        hash['href'] = hash['href'].gsub('%23', '')
-                       .gsub(/%2Fschemata(%2F[^%]*%2F)/,
-                             '%23%2Fdefinitions\1')
+        return unless hash.key?("href") && hash["href"].is_a?(String)
+        hash["href"] = hash["href"].gsub("%23", "")
+          .gsub(/%2Fschemata(%2F[^%]*%2F)/,
+            '%23%2Fdefinitions\1',)
       end
 
       # @return [Hash]
@@ -78,10 +78,10 @@ module Prmd
 
       # @return [String]
       def local_reference
-        ref = hash['$ref']
+        ref = hash["$ref"]
         # clean out leading #/definitions to not create a duplicate one
-        ref = ref.gsub(/^#\/definitions\//, '#/') while ref.match(/^#\/definitions\//)
-        ref.gsub('#', '').gsub('/schemata', '')
+        ref = ref.gsub(/^#\/definitions\//, "#/") while ref.match(/^#\/definitions\//)
+        ref.gsub("#", "").gsub("/schemata", "")
       end
 
       private :localize_ref

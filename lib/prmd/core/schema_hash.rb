@@ -1,4 +1,4 @@
-require 'forwardable'
+require "forwardable"
 
 # :nodoc:
 module Prmd
@@ -20,7 +20,7 @@ module Prmd
     # @param [Hash<Symbol, Object>] options
     def initialize(data, options = {})
       @data = data
-      @filename = options.fetch(:filename, '')
+      @filename = options.fetch(:filename, "")
     end
 
     # @param [Prmd::SchemaHash] other

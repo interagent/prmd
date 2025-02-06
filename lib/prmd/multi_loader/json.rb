@@ -1,8 +1,8 @@
-require_relative 'loader'
-require 'json'
+require_relative "loader"
+require "json"
 
-module Prmd #:nodoc:
-  module MultiLoader #:nodoc:
+module Prmd # :nodoc:
+  module MultiLoader # :nodoc:
     # JSON MultiLoader
     module Json
       extend Prmd::MultiLoader::Loader
@@ -13,7 +13,7 @@ module Prmd #:nodoc:
       end
 
       # register this loader for all .json files
-      extensions '.json'
+      extensions ".json"
     end
   end
 end

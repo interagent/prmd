@@ -1,6 +1,6 @@
-require 'prmd/commands/verify'
-require 'prmd/rake_tasks/base'
-require 'prmd/load_schema_file'
+require "prmd/commands/verify"
+require "prmd/rake_tasks/base"
+require "prmd/load_schema_file"
 
 # :nodoc:
 module Prmd
@@ -24,10 +24,10 @@ module Prmd
       # @overload initialize(options)
       #   @param [Hash<Symbol, Object>] options
       #     .option [Array<String>] files  schema files to verify
-      def initialize(*args, &block)
-        options = legacy_parameters(*args)
+      def initialize(*, &)
+        options = legacy_parameters(*)
         @files = options.fetch(:files) { [] }
-        super options, &block
+        super(options, &)
       end
 
       private
@@ -48,7 +48,7 @@ module Prmd
         errors = Prmd.verify(data)
         unless errors.empty?
           errors.map! { |error| "#{filename}: #{error}" } if filename
-          errors.each { |error| $stderr.puts(error) }
+          errors.each { |error| warn(error) }
         end
         errors
       end
@@ -58,7 +58,7 @@ module Prmd
       # Defines the rake task
       # @return [void]
       def define
-        desc 'Verify schemas' unless Rake.application.last_description
+        desc "Verify schemas" unless Rake.application.last_description
         task(name) do
           all_errors = []
           files.each do |filename|

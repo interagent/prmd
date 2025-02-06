@@ -1,4 +1,4 @@
-require 'cgi'
+require "cgi"
 
 # :nodoc:
 module Prmd
@@ -13,12 +13,12 @@ module Prmd
         # @param [Hash<Symbol, Object>] params
         def self.generate(params)
           data = {}
-          data.merge!(params[:schema].schema_example(params[:link]['schema']))
+          data.merge!(params[:schema].schema_example(params[:link]["schema"]))
 
           result = []
-          data.sort_by {|k,_| k.to_s }.each do |key, values|
+          data.sort_by { |k, _| k.to_s }.each do |key, values|
             [values].flatten.each do |value|
-              result << [key.to_s, CGI.escape(value.to_s)].join('=')
+              result << [key.to_s, CGI.escape(value.to_s)].join("=")
             end
           end
 

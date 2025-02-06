@@ -1,6 +1,6 @@
-require_relative '../schema'
-require_relative 'schema_hash'
-require_relative 'reference_localizer'
+require_relative "../schema"
+require_relative "schema_hash"
+require_relative "reference_localizer"
 
 # :nodoc:
 module Prmd
@@ -34,24 +34,24 @@ module Prmd
       data.merge!(@meta)
 
       schemata.each do |schema|
-        id = schema.fetch('id')
-        id_ary = id.split('/').last
+        id = schema.fetch("id")
+        id_ary = id.split("/").last
 
         if s = schemata_map[id]
-          $stderr.puts "`#{id}` (from #{schema.filename}) was already defined " \
+          warn "`#{id}` (from #{schema.filename}) was already defined " \
                        "in `#{s.filename}` and will overwrite the first " \
                        "definition"
         end
         # avoinding damaging the original schema
         embedded_schema = schema.dup
         # schemas are now in a single scope by combine
-        embedded_schema.delete('id')
+        embedded_schema.delete("id")
         schemata_map[id] = embedded_schema
 
-        data['definitions'][id_ary] = embedded_schema.to_h
-        data['properties'][id_ary] = { '$ref' => "#/definitions/#{id_ary}" }
+        data["definitions"][id_ary] = embedded_schema.to_h
+        data["properties"][id_ary] = { "$ref" => "#/definitions/#{id_ary}" }
 
-        reference_localizer(data['definitions'][id_ary])
+        reference_localizer(data["definitions"][id_ary])
       end
 
       Prmd::Schema.new(data, @options)

@@ -1,5 +1,5 @@
-require 'rake'
-require 'rake/tasklib'
+require "rake"
+require "rake/tasklib"
 
 # :nodoc:
 module Prmd
@@ -37,15 +37,15 @@ module Prmd
       # @api private
       def legacy_parameters(*args)
         if args.size == 0
-          return {}
+          {}
         else
           arg, = *args
           case arg
           when String, Symbol
             warn "#{self.class}.new(name) has been deprecated, use .new(name: name) instead"
-            return { name: arg }
+            { name: arg }
           else
-            return arg
+            arg
           end
         end
       end

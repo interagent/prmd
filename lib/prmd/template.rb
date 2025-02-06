@@ -1,5 +1,5 @@
-require 'erubis'
-require 'json'
+require "erubis"
+require "json"
 
 # :nodoc:
 module Prmd
@@ -11,13 +11,13 @@ module Prmd
 
     # @return [String] location of the prmd templates directory
     def self.template_dirname
-      File.join(File.dirname(__FILE__), 'templates')
+      File.join(File.dirname(__FILE__), "templates")
     end
 
     # @param [String] args
     # @return [String] path in prmd's template directory
-    def self.template_path(*args)
-      File.expand_path(File.join(*args), template_dirname)
+    def self.template_path(*)
+      File.expand_path(File.join(*), template_dirname)
     end
 
     # Clear internal template cache
@@ -60,8 +60,8 @@ module Prmd
     # @param [String] path
     # @param [String] base
     # @return [String] result from template render
-    def self.render(path, base, *args, &block)
-      load_template(path, base).result(*args, &block)
+    def self.render(path, base, *, &)
+      load_template(path, base).result(*, &)
     end
 
     # Load a JSON file from prmd's templates directory.

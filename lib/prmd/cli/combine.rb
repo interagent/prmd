@@ -1,5 +1,5 @@
-require_relative 'base'
-require_relative '../commands/combine'
+require_relative "base"
+require_relative "../commands/combine"
 
 module Prmd
   module CLI
@@ -12,17 +12,17 @@ module Prmd
       # @param (see Prmd::CLI::Base#make_parser)
       # @return (see Prmd::CLI::Base#make_parser)
       def self.make_parser(options = {})
-        binname = options.fetch(:bin, 'prmd')
+        binname = options.fetch(:bin, "prmd")
 
         OptionParser.new do |opts|
           opts.banner = "#{binname} combine [options] <file or directory>"
-          opts.on('-m', '--meta FILENAME', String, 'Set defaults for schemata') do |m|
+          opts.on("-m", "--meta FILENAME", String, "Set defaults for schemata") do |m|
             yield :meta, m
           end
-          opts.on('-o', '--output-file FILENAME', String, 'File to write result to') do |n|
+          opts.on("-o", "--output-file FILENAME", String, "File to write result to") do |n|
             yield :output_file, n
           end
-          opts.on('-t', '--type-as-string', 'Allow type as string') do |t|
+          opts.on("-t", "--type-as-string", "Allow type as string") do |t|
             options[:type_as_string] = t
           end
         end

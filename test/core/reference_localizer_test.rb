@@ -1,4 +1,4 @@
-require_relative '../helpers'
+require_relative "../helpers"
 
 module Prmd
   class ReferenceLocalizerTest < Minitest::Test
@@ -32,7 +32,7 @@ module Prmd
 
       new_object = ReferenceLocalizer.localize(object)
       assert_equal "#/definitions/attributes/definitions/name",
-                   new_object["properties"]["name"]["$ref"]
+        new_object["properties"]["name"]["$ref"]
     end
 
     def test_simple_href
@@ -56,10 +56,10 @@ module Prmd
       new_object = ReferenceLocalizer.localize(object)
 
       assert_equal "#/definitions/attributes/definitions/name",
-                   new_object["properties"]["name"]["$ref"]
+        new_object["properties"]["name"]["$ref"]
 
       assert_equal "#/definitions/attributes/definitions/name",
-                   new_object["properties"]["translated_name"]["$ref"]
+        new_object["properties"]["translated_name"]["$ref"]
     end
   end
 end

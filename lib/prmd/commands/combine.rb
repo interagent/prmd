@@ -1,6 +1,6 @@
-require_relative '../load_schema_file'
-require_relative '../core/schema_hash'
-require_relative '../core/combiner'
+require_relative "../load_schema_file"
+require_relative "../core/schema_hash"
+require_relative "../core/combiner"
 
 # :nodoc:
 module Prmd
@@ -12,9 +12,9 @@ module Prmd
     # @return [void]
     def self.handle_faulty_load(given, expected)
       unless given.size == expected.size
-        abort 'Somes files have failed to parse. ' \
-              'If you wish to continue without them,' \
-              'please enable faulty_load using --faulty-load'
+        abort "Somes files have failed to parse. " \
+              "If you wish to continue without them," \
+              "please enable faulty_load using --faulty-load"
       end
     end
 
@@ -25,7 +25,7 @@ module Prmd
     def self.crawl_map(paths, options = {})
       files = [*paths].map do |path|
         if File.directory?(path)
-          Dir.glob(File.join(path, '**', '*.{json,yml,yaml}'))
+          Dir.glob(File.join(path, "**", "*.{json,yml,yaml}"))
         else
           path
         end
@@ -49,11 +49,9 @@ module Prmd
     # @return [Array<SchemaHash>] schema hashes
     def self.load_files(files, options = {})
       files.each_with_object([]) do |filename, result|
-        begin
-          result << load_schema_hash(filename)
-        rescue JSON::ParserError, Psych::SyntaxError => ex
-          $stderr.puts "unable to parse #{filename} (#{ex.inspect})"
-        end
+        result << load_schema_hash(filename)
+      rescue JSON::ParserError, Psych::SyntaxError => ex
+        warn "unable to parse #{filename} (#{ex.inspect})"
       end
     end
 
@@ -79,15 +77,15 @@ module Prmd
     # @return [Array<SchemaHash>] schema hashes
     def self.escape_hrefs(data)
       if data.is_a? Array
-        data.map! {
-          |x| escape_hrefs(x)
+        data.map! { |x|
+          escape_hrefs(x)
         }
       elsif data.is_a?(Hash) || data.is_a?(Prmd::SchemaHash)
-        data.each { |k,v|
-          if k == 'href'
+        data.each { |k, v|
+          if k == "href"
             if v.is_a? String
               v = v.gsub(/\{\(.*?\)\}/) { |x|
-                x.gsub('#', '%23').gsub('/', '%2F')
+                x.gsub("#", "%23").gsub("/", "%2F")
               }
             end
           else
@@ -106,8 +104,8 @@ module Prmd
     # @return (see Prmd::Combiner#combine)
     def self.combine(paths, options = {})
       schemata = escape_hrefs(load_schemas(paths))
-      base = Prmd::Template.load_json('combine_head.json')
-      schema = base['$schema']
+      base = Prmd::Template.load_json("combine_head.json")
+      schema = base["$schema"]
       meta = {}
       filename = options[:meta]
       meta = Prmd.load_schema_file(filename) if filename

@@ -1,4 +1,4 @@
-require_relative '../core/renderer'
+require_relative "../core/renderer"
 
 # :nodoc:
 module Prmd
@@ -10,12 +10,12 @@ module Prmd
     # @return (see Prmd::Template.load_template)
     def self.get_template(options)
       template = options.fetch(:template) do
-        abort 'render: Template was not provided'
+        abort "render: Template was not provided"
       end
       template_dir = File.expand_path(template)
       # to keep backward compatibility
       template_dir = File.dirname(template) unless File.directory?(template_dir)
-      Prmd::Template.load_template('schema.erb', template_dir)
+      Prmd::Template.load_template("schema.erb", template_dir)
     end
   end
 
@@ -25,11 +25,11 @@ module Prmd
   # @return [String] rendered schema in Markdown
   def self.render(schema, options = {})
     renderer = Prmd::Renderer.new(template: Render.get_template(options))
-    doc = ''
+    doc = ""
     if options[:prepend]
       doc <<
-      options[:prepend].map { |path| File.read(path) }.join("\n") <<
-      "\n"
+        options[:prepend].map { |path| File.read(path) }.join("\n") <<
+        "\n"
     end
     doc << renderer.render(schema, options)
     doc

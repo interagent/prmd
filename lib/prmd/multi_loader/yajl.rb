@@ -1,8 +1,8 @@
-require_relative 'loader'
-require 'yajl'
+require_relative "loader"
+require "yajl"
 
-module Prmd #:nodoc:
-  module MultiLoader #:nodoc:
+module Prmd # :nodoc:
+  module MultiLoader # :nodoc:
     # JSON MultiLoader using Yajl
     module Yajl
       extend Prmd::MultiLoader::Loader
@@ -13,7 +13,7 @@ module Prmd #:nodoc:
       end
 
       # register this loader for all .json files
-      extensions '.json'
+      extensions ".json"
     end
   end
 end

@@ -1,11 +1,11 @@
-require 'prmd/commands/render'
-require 'prmd/rake_tasks/base'
-require 'prmd/load_schema_file'
-require 'prmd/url_generator'
-require 'prmd/template'
-require 'prmd/schema'
-require 'prmd/link'
-require_relative '../hash_helpers'
+require "prmd/commands/render"
+require "prmd/rake_tasks/base"
+require "prmd/load_schema_file"
+require "prmd/url_generator"
+require "prmd/template"
+require "prmd/schema"
+require "prmd/link"
+require_relative "../hash_helpers"
 
 # :nodoc:
 module Prmd
@@ -31,10 +31,10 @@ module Prmd
       # @overload initialize(options)
       #   @param [Hash<Symbol, Object>] options
       #     .option [Array<String>, Hash<String, String>] files  schema files
-      def initialize(*args, &block)
-        options = legacy_parameters(*args)
+      def initialize(*, &)
+        options = legacy_parameters(*)
         @files = options.fetch(:files) { [] }
-        super options, &block
+        super(options, &)
         if @options[:settings].is_a? String
           settings = Prmd.load_schema_file(@options[:settings])
           @options.merge! HashHelpers.deep_symbolize_keys(settings)
@@ -69,9 +69,7 @@ module Prmd
       def render_to_file(infile, outfile)
         result = render_file(infile)
         if outfile
-          File.open(outfile, 'w') do |file|
-            file.write(result)
-          end
+          File.write(outfile, result)
         end
       end
 
@@ -80,7 +78,7 @@ module Prmd
       # Defines the rake task
       # @return [void]
       def define
-        desc 'Generate documentation' unless Rake.application.last_description
+        desc "Generate documentation" unless Rake.application.last_description
         task(name) do
           if files.is_a?(Hash)
             files.each do |infile, outfile|
@@ -88,7 +86,7 @@ module Prmd
             end
           else
             files.each do |infile|
-              render_to_file(infile, infile.ext('md'))
+              render_to_file(infile, infile.ext("md"))
             end
           end
         end
