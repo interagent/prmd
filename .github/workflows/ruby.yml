@@ -22,5 +22,3 @@ jobs:
         bundler-cache: true
     - name: Run tests
       run: bundle exec rake
-      env:
-        MT_COMPAT: 'true'
