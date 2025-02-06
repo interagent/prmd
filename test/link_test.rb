@@ -1,7 +1,7 @@
 require_relative 'helpers'
 
 module Prmd
-  class LinkTest < MiniTest::Test
+  class LinkTest < Minitest::Test
     include PrmdLinkTestHelpers
 
     [
