@@ -9,7 +9,7 @@
   title = schemata['title'].split(' - ', 2).last
 -%>
 <%- unless options[:doc][:disable_title_and_description] %>
-<a name="#resource-<%= resource %>"></a>
+<a name="resource-<%= resource %>"></a>
 ## <%= title %>
 
 <%- if schemata['stability'] && !schemata['stability'].empty? %>
