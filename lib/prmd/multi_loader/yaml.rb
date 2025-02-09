@@ -9,7 +9,11 @@ module Prmd # :nodoc:
 
       # @see (Prmd::MultiLoader::Loader#load_data)
       def self.load_data(data)
-        ::YAML.load(data)
+        if ::YAML.respond_to?(:unsafe_load)
+          ::YAML.unsafe_load(data)
+        else
+          ::YAML.load(data)
+        end
       end
 
       # register this loader for all .yaml and .yml files
